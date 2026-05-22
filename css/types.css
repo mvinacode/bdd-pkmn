@@ -1,0 +1,104 @@
+/* ============================================================
+   COULEURS PAR TYPE — 18 types officiels
+   Utilisé pour les badges ET les chips de filtre actifs
+   ============================================================ */
+
+/* Badges image (remplacement par image Cloudinary) */
+.type-badge-img {
+  height: 16px;
+  width: auto;
+  vertical-align: middle;
+  border-radius: 0;
+  background: none;
+  padding: 0;
+}
+
+.modal .type-badge-img,
+.modal-types .type-badge-img {
+  height: 24px;
+}
+
+/* Backgrounds pour les badges */
+.type-badge.normal    { background: #9099A1; }
+.type-badge.fire,
+.type-badge.feu       { background: #FF9741; }
+.type-badge.water,
+.type-badge.eau       { background: #3692DC; }
+.type-badge.electric,
+.type-badge.electrik  { background: #FBD100; color: #2a2a00; }
+.type-badge.grass,
+.type-badge.plante    { background: #38BF4B; }
+.type-badge.ice,
+.type-badge.glace     { background: #4CD1C0; }
+.type-badge.fighting,
+.type-badge.combat    { background: #CE406A; }
+.type-badge.poison    { background: #AB6AC8; }
+.type-badge.ground,
+.type-badge.sol       { background: #D97845; }
+.type-badge.flying,
+.type-badge.vol       { background: #89AAE3; }
+.type-badge.psychic,
+.type-badge.psy       { background: #FF6675; }
+.type-badge.bug,
+.type-badge.insecte   { background: #83C300; color: #1a2a00; }
+.type-badge.rock,
+.type-badge.roche     { background: #C5B78C; color: #1a1500; }
+.type-badge.ghost,
+.type-badge.spectre   { background: #536FB4; }
+.type-badge.dragon    { background: #006FC9; }
+.type-badge.dark,
+.type-badge.tenebres,
+.type-badge.ténèbres  { background: #595761; }
+.type-badge.steel,
+.type-badge.acier     { background: #52869D; }
+.type-badge.fairy,
+.type-badge.fee,
+.type-badge.fée       { background: #E46AB2; }
+
+/* Chips de filtre actifs — même couleurs */
+.chip.active[data-type="normal"]    { background: #9099A1; border-color: #9099A1; }
+.chip.active[data-type="fire"]      { background: #FF9741; border-color: #FF9741; color: #fff; }
+.chip.active[data-type="water"]     { background: #3692DC; border-color: #3692DC; }
+.chip.active[data-type="electric"]  { background: #FBD100; border-color: #FBD100; color: #2a2a00; }
+.chip.active[data-type="grass"]     { background: #38BF4B; border-color: #38BF4B; }
+.chip.active[data-type="ice"]       { background: #4CD1C0; border-color: #4CD1C0; }
+.chip.active[data-type="fighting"]  { background: #CE406A; border-color: #CE406A; }
+.chip.active[data-type="poison"]    { background: #AB6AC8; border-color: #AB6AC8; }
+.chip.active[data-type="ground"]    { background: #D97845; border-color: #D97845; }
+.chip.active[data-type="flying"]    { background: #89AAE3; border-color: #89AAE3; color: #1a1a2e; }
+.chip.active[data-type="psychic"]   { background: #FF6675; border-color: #FF6675; }
+.chip.active[data-type="bug"]       { background: #83C300; border-color: #83C300; color: #1a2a00; }
+.chip.active[data-type="rock"]      { background: #C5B78C; border-color: #C5B78C; color: #1a1500; }
+.chip.active[data-type="ghost"]     { background: #536FB4; border-color: #536FB4; }
+.chip.active[data-type="dragon"]    { background: #006FC9; border-color: #006FC9; }
+.chip.active[data-type="dark"]      { background: #595761; border-color: #595761; }
+.chip.active[data-type="steel"]     { background: #52869D; border-color: #52869D; }
+.chip.active[data-type="fairy"]     { background: #E46AB2; border-color: #E46AB2; }
+
+/* Couleur de fond subtile sur les cartes selon le type primaire */
+.poke-card[data-primary-type="normal"]   { --card-accent: #9099A1; }
+.poke-card[data-primary-type="fire"]     { --card-accent: #e62829; }
+.poke-card[data-primary-type="water"]    { --card-accent: #3692DC; }
+.poke-card[data-primary-type="electric"] { --card-accent: #FBD100; }
+.poke-card[data-primary-type="grass"]    { --card-accent: #3da224; }
+.poke-card[data-primary-type="ice"]      { --card-accent: #4CD1C0; }
+.poke-card[data-primary-type="fighting"] { --card-accent: #CE406A; }
+.poke-card[data-primary-type="poison"]   { --card-accent: #AB6AC8; }
+.poke-card[data-primary-type="ground"]   { --card-accent: #D97845; }
+.poke-card[data-primary-type="flying"]   { --card-accent: #81b9ef; }
+.poke-card[data-primary-type="psychic"]  { --card-accent: #FF6675; }
+.poke-card[data-primary-type="bug"]      { --card-accent: #83C300; }
+.poke-card[data-primary-type="rock"]     { --card-accent: #C5B78C; }
+.poke-card[data-primary-type="ghost"]    { --card-accent: #536FB4; }
+.poke-card[data-primary-type="dragon"]   { --card-accent: #006FC9; }
+.poke-card[data-primary-type="dark"]     { --card-accent: #595761; }
+.poke-card[data-primary-type="steel"]    { --card-accent: #52869D; }
+.poke-card[data-primary-type="fairy"]    { --card-accent: #E46AB2; }
+
+.poke-card[data-primary-type] {
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--card-accent) 12%, var(--bg-card)),
+    var(--bg-card)
+  );
+}

@@ -1,0 +1,12 @@
+# Fichiers de données volumineux (non versionnés)
+*.xlsx
+*.xls
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp

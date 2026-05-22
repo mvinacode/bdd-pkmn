@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokéDex — Base de données</title>
+  <link rel="stylesheet" href="css/styles.css?v=10">
+  <link rel="stylesheet" href="css/types.css?v=10">
+  <link rel="stylesheet" href="css/drawer.css?v=10">
+  <link rel="preconnect" href="https://mymkrfqpluimluehorby.supabase.co">
+  <link rel="preconnect" href="https://res.cloudinary.com">
+  <link rel="preconnect" href="https://raw.githubusercontent.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-ball">
+          <div class="logo-ball-top"></div>
+          <div class="logo-ball-middle"></div>
+          <div class="logo-ball-bottom"></div>
+        </div>
+        <span class="logo-text">PokéDex</span>
+      </a>
+      <div class="search-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input
+          type="search"
+          id="search"
+          placeholder="Rechercher un Pokémon..."
+          autocomplete="off"
+          maxlength="100"
+          aria-label="Rechercher un Pokémon"
+        >
+      </div>
+      <div class="header-count">
+        <span id="header-count">0</span> Pokémon
+      </div>
+      <button id="add-seen-btn" class="add-seen-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M12 5v14M5 12h14"/></svg>
+        Vu
+      </button>
+      <button id="add-catch-fab" class="catches-add-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><path d="M12 5v14M5 12h14"/></svg>
+        Capture
+      </button>
+      <div class="header-captured" title="Pokémon capturés">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M2 12h4.5M17.5 12H22" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 7.27A8 8 0 0 1 17 7.27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M7 16.73A8 8 0 0 0 17 16.73" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+        </svg>
+        <span id="captured-count">0</span> / 1025
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- SIDEBAR FILTRES -->
+    <aside class="sidebar">
+
+      <div class="filter-section">
+        <h3 class="filter-title">Génération</h3>
+        <div class="chips-group" id="gen-filters" role="group" aria-label="Filtrer par génération">
+          <button class="chip active" data-gen="all">Tous</button>
+          <button class="chip" data-gen="1">I</button>
+          <button class="chip" data-gen="2">II</button>
+          <button class="chip" data-gen="3">III</button>
+          <button class="chip" data-gen="4">IV</button>
+          <button class="chip" data-gen="5">V</button>
+          <button class="chip" data-gen="6">VI</button>
+          <button class="chip" data-gen="7">VII</button>
+          <button class="chip" data-gen="8">VIII</button>
+          <button class="chip" data-gen="9">IX</button>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h3 class="filter-title">Type</h3>
+        <div class="chips-group types-group" id="type-filters" role="group" aria-label="Filtrer par type">
+          <button class="chip active" data-type="all">Tous</button>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h3 class="filter-title">Trier par</h3>
+        <select id="sort" class="select-input" aria-label="Trier les Pokémon">
+          <option value="number">Numéro</option>
+          <option value="name_fr">Nom</option>
+        </select>
+      </div>
+
+      <div class="filter-section">
+        <h3 class="filter-title">Collection</h3>
+        <div class="chips-group">
+          <button class="chip" id="filter-seen-btn" data-status="seen">Vus</button>
+          <button class="chip" id="filter-caught-btn" data-status="caught">Capturés</button>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <button class="btn-reset" id="reset-filters">Réinitialiser</button>
+      </div>
+
+    </aside>
+
+    <!-- GRILLE PRINCIPALE -->
+    <main class="main-content">
+      <div class="pokemon-grid" id="pokemon-grid" role="list" aria-label="Liste des Pokémon"></div>
+
+      <div class="loader" id="loader" aria-live="polite" hidden>
+        <div class="pokeball-loader">
+          <div class="pb-top"></div>
+          <div class="pb-middle"><div class="pb-btn"></div></div>
+          <div class="pb-bottom"></div>
+        </div>
+        <p>Chargement des Pokémon...</p>
+      </div>
+
+      <div class="empty-state" id="empty-state" hidden>
+        <div class="empty-icon">🔍</div>
+        <p>Aucun Pokémon trouvé.</p>
+        <small>Essaie un autre nom ou retire les filtres.</small>
+      </div>
+
+      <div class="setup-state" id="setup-state" hidden>
+        <div class="setup-icon">⚡</div>
+        <h2>Configuration requise</h2>
+        <p>Ouvre <code>js/config.js</code> et renseigne tes clés Supabase et Cloudinary.</p>
+        <p>Ensuite, lance <code>js/populate.js</code> pour peupler la base de données.</p>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- DRAWER CAPTURE -->
+  <div id="catch-drawer" class="catch-drawer" hidden>
+    <div id="drawer-overlay" class="drawer-overlay"></div>
+    <div class="drawer-panel">
+      <div class="drawer-header">
+        <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+          <div id="drawer-mode-label" class="drawer-mode-label">Nouvelle capture</div>
+          <div id="drawer-poke-preview" class="drawer-poke-preview" style="display:flex;align-items:center;gap:12px;"></div>
+        </div>
+        <button id="close-drawer-btn" class="drawer-close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-field">
+          <label class="drawer-label">Pokémon</label>
+          <div id="poke-search-wrap" class="poke-search-wrap">
+            <input id="poke-search" class="drawer-input" type="text" placeholder="Rechercher…" autocomplete="off">
+            <div id="poke-dropdown" class="poke-dropdown" hidden></div>
+          </div>
+          <div id="selected-pokemon" class="selected-pokemon" hidden></div>
+        </div>
+        <div id="form-selector-field" class="drawer-field" hidden>
+          <label class="drawer-label">Forme</label>
+          <div id="form-grid" class="form-grid"></div>
+        </div>
+        <div class="drawer-field drawer-field--capture-only">
+          <label class="drawer-label">Ball</label>
+          <div id="ball-grid" class="ball-grid"></div>
+        </div>
+        <div class="drawer-field">
+          <label class="drawer-label">Date</label>
+          <input id="catch-date" class="drawer-input" type="date">
+        </div>
+        <div class="drawer-field">
+          <label class="drawer-label">Jeu <span class="optional">(optionnel)</span></label>
+          <input id="catch-game" class="drawer-input" type="text" placeholder="ex : Pokémon Écarlate">
+        </div>
+        <div class="drawer-field">
+          <label class="drawer-label">Notes <span class="optional">(optionnel)</span></label>
+          <textarea id="catch-notes" class="drawer-input drawer-textarea" rows="3" placeholder="Méthode, lieu, compteur…"></textarea>
+        </div>
+        <button id="save-catch-btn" class="save-catch-btn">Sauvegarder</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DÉTAIL -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-poke-name" hidden>
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modal-close" aria-label="Fermer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Supabase SDK via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/utils.js?v=10"></script>
+  <script src="js/config.js?v=10"></script>
+  <script src="js/supabase-client.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
+  <script src="js/populate.js?v=10"></script>
+
+</body>
+</html>
