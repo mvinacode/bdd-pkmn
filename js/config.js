@@ -1,8 +1,3 @@
-/**
- * CONFIG — À remplir avec tes propres clés.
- * Ne jamais committer ce fichier avec de vraies clés dans un dépôt public.
- * Utilise uniquement la clé ANON (publique) de Supabase, jamais la service_role.
- */
 const CONFIG = {
   // ── Supabase ───────────────────────────────────────────────
   SUPABASE_URL:      'https://mymkrfqpluimluehorby.supabase.co',
