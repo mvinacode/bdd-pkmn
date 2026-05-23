@@ -392,10 +392,24 @@ function buildEditModal() {
     const name = je?.dataset.name || 'ce Pokémon';
     if (!confirm(`Supprimer cette capture de ${name} ?`)) return;
 
+    // Récupère le numéro avant suppression
+    const sessionCatch  = allCatches.find(c => (c.session_id || String(c.id)) === _editSessionId);
+    const pokemonNumber = sessionCatch?.pokemon_number;
+
     const { error } = await deleteCatchesBySession(_editSessionId);
     if (error) { alert('Erreur lors de la suppression.'); return; }
 
     allCatches = allCatches.filter(c => (c.session_id || String(c.id)) !== _editSessionId);
+
+    // Si c'était la dernière session pour ce Pokémon, nettoyer pokemon_seen
+    // (évite l'icône NB résiduelle sur la page principale)
+    if (pokemonNumber) {
+      const stillHasCatch = allCatches.some(c => c.pokemon_number === pokemonNumber);
+      if (!stillHasCatch) {
+        await deleteAllSeenForPokemon(getOwnerUuid(), pokemonNumber);
+      }
+    }
+
     closeModal();
     render();
   });
