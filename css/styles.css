@@ -1558,11 +1558,12 @@ body {
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 5px 14px 5px 8px;
+  padding: 5px 12px;
   border-radius: 12px;
   background: rgba(255,255,255,0.06);
   position: relative;
-  min-width: 160px;
+  width: 200px;
+  box-sizing: border-box;
 }
 
 .evo-condition-item::before {
@@ -1630,6 +1631,9 @@ body {
   background: none;
   border: none;
   padding: 0;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
 }
 
 .evo-item-img {
