@@ -120,10 +120,11 @@
   flex-shrink: 0;
 }
 
-.je-form {
-  font-size: 0.73rem;
-  color: var(--text-muted);
-  font-style: italic;
+.je-form-icons {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 1px;
 }
 
 .je-catch-info {
