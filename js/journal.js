@@ -91,10 +91,6 @@ function renderSession(session) {
     .map(f => `<span class="je-form-icon-group">${formLabelToIcons(f.form_label, f.is_shiny)}</span>`)
     .join('');
 
-  const ballOptions = BALLS.map(b =>
-    `<option value="${esc(b.slug)}"${b.name === session.ball_name ? ' selected' : ''}>${esc(b.name)}</option>`
-  ).join('');
-
   return `
     <div class="je" data-session-id="${esc(session.sessionId)}" data-name="${esc(session.pokemon_name_fr)}">
       <div class="je-main-row">
@@ -114,18 +110,6 @@ function renderSession(session) {
         <button class="je-edit-btn" title="Modifier">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
         </button>
-      </div>
-      <div class="je-edit-panel" hidden>
-        <div class="je-edit-row">
-          <select class="je-edit-ball drawer-input">${ballOptions}</select>
-          <input type="date" class="je-edit-date drawer-input" value="${esc(session.caught_at || '')}">
-          <input type="text" class="je-edit-game drawer-input" value="${esc(session.game || '')}" placeholder="Jeu (optionnel)">
-        </div>
-        <div class="je-edit-actions">
-          <button class="je-save-btn btn-primary">Sauvegarder</button>
-          <button class="je-cancel-btn">Annuler</button>
-          <button class="je-del-btn">Supprimer</button>
-        </div>
       </div>
     </div>`;
 }
@@ -174,9 +158,9 @@ function renderByGame(sessions) {
 }
 
 function render() {
-  const content = $('journal-content');
-  const empty   = $('journal-empty');
-  const total   = $('journal-total');
+  const content  = $('journal-content');
+  const empty    = $('journal-empty');
+  const total    = $('journal-total');
   const sessions = groupBySession(allCatches);
 
   if (!sessions.length) {
@@ -191,79 +175,139 @@ function render() {
   content.innerHTML = currentView === 'chrono' ? renderChrono(sessions) : renderByGame(sessions);
 }
 
-// ── Événements (délégation) ────────────────────────────────────
+// ── Modal d'édition ────────────────────────────────────────────
 
-$('journal-content').addEventListener('click', async e => {
-  const editBtn   = e.target.closest('.je-edit-btn');
-  const cancelBtn = e.target.closest('.je-cancel-btn');
-  const saveBtn   = e.target.closest('.je-save-btn');
-  const delBtn    = e.target.closest('.je-del-btn');
+let _editSessionId = null;
 
-  if (editBtn) {
-    const je    = editBtn.closest('.je');
-    const panel = je.querySelector('.je-edit-panel');
-    panel.hidden = !panel.hidden;
-    return;
-  }
+function buildEditModal() {
+  const overlay = document.createElement('div');
+  overlay.id        = 'journal-edit-overlay';
+  overlay.className = 'journal-modal-overlay';
+  overlay.hidden    = true;
 
-  if (cancelBtn) {
-    cancelBtn.closest('.je').querySelector('.je-edit-panel').hidden = true;
-    return;
-  }
+  const ballOptions = BALLS.map(b =>
+    `<option value="${esc(b.slug)}">${esc(b.name)}</option>`
+  ).join('');
 
-  if (saveBtn) {
-    const je        = saveBtn.closest('.je');
-    const sessionId = je.dataset.sessionId;
-    const ballSlug  = je.querySelector('.je-edit-ball').value;
+  overlay.innerHTML = `
+    <div class="journal-modal" role="dialog" aria-modal="true" aria-labelledby="jm-title">
+      <div class="journal-modal-header">
+        <img class="journal-modal-sprite" id="jm-sprite" src="" alt="" width="44" height="44">
+        <span class="journal-modal-title" id="jm-title"></span>
+        <button class="journal-modal-close" id="jm-close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="journal-modal-body">
+        <div class="journal-modal-field">
+          <label class="journal-modal-label">Ball</label>
+          <select class="drawer-input" id="jm-ball">${ballOptions}</select>
+        </div>
+        <div class="journal-modal-field">
+          <label class="journal-modal-label">Date</label>
+          <input type="date" class="drawer-input" id="jm-date">
+        </div>
+        <div class="journal-modal-field">
+          <label class="journal-modal-label">Jeu <span class="optional">(optionnel)</span></label>
+          <input type="text" class="drawer-input" id="jm-game" placeholder="ex : Pokémon Écarlate">
+        </div>
+      </div>
+      <div class="journal-modal-footer">
+        <button class="btn-primary" id="jm-save">Sauvegarder</button>
+        <button class="journal-modal-cancel" id="jm-cancel">Annuler</button>
+        <button class="journal-modal-del" id="jm-del">Supprimer</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+
+  const closeModal = () => { overlay.hidden = true; _editSessionId = null; };
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  $('jm-close').addEventListener('click', closeModal);
+  $('jm-cancel').addEventListener('click', closeModal);
+
+  $('jm-save').addEventListener('click', async () => {
+    if (!_editSessionId) return;
+    const ballSlug  = $('jm-ball').value;
     const ballEntry = BALLS.find(b => b.slug === ballSlug);
-    const date      = je.querySelector('.je-edit-date').value  || null;
-    const game      = je.querySelector('.je-edit-game').value.trim() || null;
+    const date      = $('jm-date').value || null;
+    const game      = $('jm-game').value.trim() || null;
 
-    saveBtn.disabled    = true;
-    saveBtn.textContent = 'Sauvegarde…';
+    const btn = $('jm-save');
+    btn.disabled    = true;
+    btn.textContent = 'Sauvegarde…';
 
     const updates = {
-      caught_at:       date,
+      caught_at: date,
       game,
       ...(ballEntry ? { ball_name: ballEntry.name, ball_image_url: ballUrl(ballEntry.slug) } : {}),
     };
 
-    const { error } = await updateCatchesBySession(sessionId, updates);
-    if (error) {
-      alert('Erreur lors de la sauvegarde.');
-      saveBtn.disabled    = false;
-      saveBtn.textContent = 'Sauvegarder';
-      return;
-    }
+    const { error } = await updateCatchesBySession(_editSessionId, updates);
+    btn.disabled    = false;
+    btn.textContent = 'Sauvegarder';
+    if (error) { alert('Erreur lors de la sauvegarde.'); return; }
 
     allCatches.forEach(c => {
-      if ((c.session_id || String(c.id)) === sessionId) {
-        c.caught_at       = date;
-        c.game            = game;
+      if ((c.session_id || String(c.id)) === _editSessionId) {
+        c.caught_at = date;
+        c.game      = game;
         if (ballEntry) { c.ball_name = ballEntry.name; c.ball_image_url = ballUrl(ballEntry.slug); }
       }
     });
+    closeModal();
     render();
-    return;
-  }
+  });
 
-  if (delBtn) {
-    const je        = delBtn.closest('.je');
-    const sessionId = je.dataset.sessionId;
-    const name      = je.dataset.name;
+  $('jm-del').addEventListener('click', async () => {
+    if (!_editSessionId) return;
+    const je   = document.querySelector(`.je[data-session-id="${_editSessionId}"]`);
+    const name = je?.dataset.name || 'ce Pokémon';
     if (!confirm(`Supprimer cette capture de ${name} ?`)) return;
 
-    const { error } = await deleteCatchesBySession(sessionId);
+    const { error } = await deleteCatchesBySession(_editSessionId);
     if (error) { alert('Erreur lors de la suppression.'); return; }
 
-    allCatches = allCatches.filter(c => (c.session_id || String(c.id)) !== sessionId);
+    allCatches = allCatches.filter(c => (c.session_id || String(c.id)) !== _editSessionId);
+    closeModal();
     render();
-  }
+  });
+}
+
+function openEditModal(session) {
+  _editSessionId = session.sessionId;
+
+  const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  $('jm-sprite').src = spriteSrc;
+  $('jm-sprite').alt = session.pokemon_name_fr;
+  $('jm-title').textContent = `${session.pokemon_name_fr}  #${padNumber(session.pokemon_number)}`;
+
+  const ballEntry = BALLS.find(b => b.name === session.ball_name);
+  if (ballEntry) $('jm-ball').value = ballEntry.slug;
+  $('jm-date').value = session.caught_at || '';
+  $('jm-game').value = session.game || '';
+
+  $('journal-edit-overlay').hidden = false;
+}
+
+// ── Événements (délégation) ────────────────────────────────────
+
+$('journal-content').addEventListener('click', e => {
+  const editBtn = e.target.closest('.je-edit-btn');
+  if (!editBtn) return;
+
+  const je        = editBtn.closest('.je');
+  const sessionId = je.dataset.sessionId;
+  const session   = groupBySession(allCatches).find(s => s.sessionId === sessionId);
+  if (session) openEditModal(session);
 });
 
 // ── Initialisation ─────────────────────────────────────────────
 
 async function init() {
+  buildEditModal();
+
   const loader = $('journal-loader');
   loader.hidden = false;
   try {
