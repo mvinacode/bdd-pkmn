@@ -86,7 +86,7 @@ let allCatches  = [];
 function renderSession(session) {
   const ballEntry = BALLS.find(b => b.name === session.ball_name);
   const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (session.ball_image_url || '');
-  const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  const spriteSrc = spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
 
   const formIcons = session.forms
     .map(f => `<span class="je-form-icon-group">${formLabelToIcons(f.form_label, f.is_shiny)}</span>`)
@@ -455,7 +455,7 @@ function openEditModal(session) {
   _formEntries     = [];
   _editSessionForms = [];
 
-  const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  const spriteSrc = spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
   $('jm-sprite').src = spriteSrc;
   $('jm-sprite').alt = session.pokemon_name_fr;
   $('jm-title').textContent = `${session.pokemon_name_fr}  #${padNumber(session.pokemon_number)}`;
