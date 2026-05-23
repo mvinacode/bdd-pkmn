@@ -6,7 +6,7 @@ const OWNER_KEY = 'pokedex_owner_uuid';
 
 const BALLS = [
   { name: 'Poké Ball',    slug: 'poke-ball', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779138950/poke_ball_gdlzec.png' },
-  { name: 'Super Ball',   slug: 'great-ball'   },
+  { name: 'Super Ball',   slug: 'great-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779544047/super_ball_hljkjm.png' },
   { name: 'Hyper Ball',   slug: 'ultra-ball'   },
   { name: 'Master Ball',  slug: 'master-ball'  },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },

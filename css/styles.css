@@ -574,6 +574,30 @@ body {
   font-weight: 600;
 }
 
+/* Boutons + Vu / + Capture dans le header de la modal */
+.modal-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 12px;
+  height: 32px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+.modal-add-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.05);
+}
+
 /* ============================================================
    BADGES TYPE (styles de base — couleurs dans types.css)
    ============================================================ */

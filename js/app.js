@@ -842,6 +842,10 @@ async function openModal(number) {
       </div>
       <div class="modal-header-actions">
         <span class="gen-badge">Gén. ${esc(toRoman(p.generation))}</span>
+        <button class="modal-add-btn" id="modal-edit-btn" title="Modifier la collection">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          Modifier
+        </button>
       </div>
     </div>
 
@@ -895,6 +899,11 @@ async function openModal(number) {
       updateCardAfterCatch(num);
       closeModal();
     });
+  });
+
+  $('modal-edit-btn')?.addEventListener('click', () => {
+    closeModal();
+    openDrawerWithPokemon(p.number);
   });
 
   // Statut d'une forme spéciale (mega/gigamax)
@@ -1171,7 +1180,7 @@ function getFormIcon(vt) {
   return '';
 }
 
-function renderDrawerForms(variants, iconMap, megas = []) {
+function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
   const field = $('form-selector-field');
   const grid  = $('form-grid');
   if (!field || !grid) return;
@@ -1229,15 +1238,22 @@ function renderDrawerForms(variants, iconMap, megas = []) {
   const hasGenderVariants = !!(maleVariant || femaleVariant);
   const defaultIdx = hasGenderVariants ? 0 : 4; // 0=Mâle, 4=Unisexe
 
-  grid.innerHTML = entries.map((e, i) => `
-    <button class="form-opt${i === defaultIdx ? ' selected' : ''}" data-idx="${i}" title="${esc(e.label)}">
+  const usePreselect = preselectedVts.length > 0;
+  grid.innerHTML = entries.map((e, i) => {
+    const sel = usePreselect ? preselectedVts.includes(e.variant_type) : i === defaultIdx;
+    return `<button class="form-opt${sel ? ' selected' : ''}" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
       <div class="form-opt-icon">${e.iconHtml}</div>
       <span>${esc(e.label)}</span>
-    </button>`).join('');
+    </button>`;
+  }).join('');
 
-  // Sélection multiple par toggle dans les deux modes
-  drawerForms = [entries[defaultIdx]];
-  if (drawerMode === 'caught') selectDrawerForm(entries[defaultIdx]);
+  if (usePreselect) {
+    drawerForms = entries.filter(e => preselectedVts.includes(e.variant_type));
+    if (drawerMode === 'caught' && drawerForms.length > 0) selectDrawerForm(drawerForms[0]);
+  } else {
+    drawerForms = [entries[defaultIdx]];
+    if (drawerMode === 'caught') selectDrawerForm(entries[defaultIdx]);
+  }
 
   grid.querySelectorAll('.form-opt').forEach(btn =>
     btn.addEventListener('click', () => {
@@ -1490,4 +1506,76 @@ async function saveCatchFromMain() {
   updateCapturedCounter();
   updateCardAfterCatch(drawerPokemon.number);
   closeCatchDrawer();
+}
+
+// ── Ouvre le drawer pré-rempli avec un Pokémon ────────────────
+
+async function openDrawerWithPokemon(number) {
+  const catch_ = catchByNumber[number] || null;
+  const mode   = catch_ ? 'caught' : 'seen';
+
+  let pokemon = state.pokemon.find(p => p.number === number);
+  if (!pokemon) {
+    const { data } = await fetchPokemonByNumber(number).catch(() => ({ data: null }));
+    if (!data) return;
+    pokemon = data;
+  }
+
+  const ico = iconCache[number] || {};
+
+  openCatchDrawer(mode);
+
+  drawerPokemon = {
+    number:     pokemon.number,
+    name_fr:    pokemon.name_fr,
+    iconNormal: ico.normal || null,
+    iconShiny:  ico.shiny  || null,
+  };
+
+  const src = drawerPokemon.iconNormal
+    ? normalizeVariantUrl(drawerPokemon.iconNormal)
+    : spriteUrl(pokemon.number, false);
+
+  const searchInp = $('poke-search');
+  const sel       = $('selected-pokemon');
+  if (searchInp) searchInp.value = pokemon.name_fr;
+  if (sel) {
+    sel.innerHTML = `
+      <img id="drawer-poke-img" src="${esc(src)}" width="52" height="52"
+           alt="${esc(pokemon.name_fr)}" style="image-rendering:pixelated">
+      <div>
+        <div style="font-size:0.65rem;color:var(--text-muted)">#${esc(padNumber(pokemon.number))}</div>
+        <div style="font-weight:700">${esc(pokemon.name_fr)}</div>
+      </div>`;
+    sel.hidden = false;
+  }
+
+  // Formes déjà enregistrées → pré-sélection
+  const savedVts = seenMap[number] ? Object.keys(seenMap[number]) : [];
+
+  const [variantData, megaData] = await Promise.all([
+    fetchVariants(pokemon.number).catch(() => []),
+    fetchMegaEvolutions([pokemon.number]).catch(() => []),
+  ]);
+  renderDrawerForms(variantData, ico, megaData, savedVts);
+
+  // Pré-remplir ball, date, jeu
+  if (catch_) {
+    const ballEntry = BALLS.find(b => b.name === catch_.ball_name);
+    if (ballEntry) {
+      const ballBtn = $('ball-grid')?.querySelector(`[data-slug="${ballEntry.slug}"]`);
+      if (ballBtn) {
+        $('ball-grid').querySelectorAll('.ball-opt').forEach(b => b.classList.remove('selected'));
+        ballBtn.classList.add('selected');
+        drawerBall = ballEntry;
+      }
+    }
+    if (catch_.caught_at) $('catch-date').value = catch_.caught_at;
+    if (catch_.game)      $('catch-game').value  = catch_.game;
+    if (catch_.notes)     $('catch-notes').value = catch_.notes;
+  } else if (savedVts.length > 0) {
+    const firstForm = seenMap[number][savedVts[0]];
+    if (firstForm?.caught_at) $('catch-date').value = firstForm.caught_at;
+    if (firstForm?.game)      $('catch-game').value  = firstForm.game;
+  }
 }
