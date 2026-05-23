@@ -26,6 +26,12 @@ function formatCatchDate(dateStr) {
   if (!dateStr) return '';
   return new Date(dateStr + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
 }
+
+function formatCatchDateShort(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T12:00:00');
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getFullYear()).slice(-2)}`;
+}
 const MEGA_ICON_URL        = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128811/mega_evolution_t9nlsa.svg';
 const GIGAMAX_ICON_URL     = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128704/gigantamax_yescyy.png';
 const SHINY_ICON_URL       = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779139479/shiny_abqivl.png';
@@ -258,9 +264,13 @@ function renderCard(pokemon, icons = {}) {
 
   const seenForms  = !catch_ && seenMap[pokemon.number] ? Object.values(seenMap[pokemon.number]) : [];
   const seenIsShiny = seenForms.length > 0 && seenForms.every(f => f.is_shiny);
-  const isShinyDisplay = catch_ ? catch_.is_shiny : seenIsShiny;
+  // Priorité au shiny : si une forme owned est shiny, l'afficher en priorité
+  const ownedShinyForm = catch_ && seenMap[pokemon.number]
+    ? Object.values(seenMap[pokemon.number]).find(f => f.status === 'owned' && f.is_shiny)
+    : null;
+  const isShinyDisplay = ownedShinyForm ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
   const imgSrc = isShinyDisplay
-    ? (icons.shiny  ? normalizeVariantUrl(icons.shiny)  : (catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true)))
+    ? (icons.shiny  ? normalizeVariantUrl(icons.shiny)  : (ownedShinyForm?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true)))
     : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
 
   const card = document.createElement('article');
@@ -276,7 +286,7 @@ function renderCard(pokemon, icons = {}) {
     return `
     <div class="poke-catch-badge">
       <img class="poke-catch-ball-img" src="${esc(ballSrc)}" alt="${esc(catch_.ball_name)}" title="${esc(catch_.ball_name)}" width="22" height="22" loading="lazy">
-      <span class="poke-catch-date-label">${esc(formatCatchDate(catch_.caught_at))}</span>
+      <span class="poke-catch-date-label">${esc(formatCatchDateShort(catch_.caught_at))}</span>
       ${catch_.is_shiny ? '<span class="poke-catch-shiny">✦</span>' : ''}
     </div>`;
   })() : '';
@@ -300,7 +310,7 @@ function renderCard(pokemon, icons = {}) {
     ${catchBadgeHtml}
     <div class="poke-number">#${esc(padNumber(pokemon.number))}</div>
     <div class="poke-image-wrapper">
-      <img class="poke-image loading" src="${esc(imgSrc)}" alt="${esc(pokemon.name_fr)}" loading="lazy" decoding="async" width="80" height="80">
+      <img class="poke-image loading" src="${esc(imgSrc)}" alt="${esc(pokemon.name_fr)}" loading="lazy" decoding="async" width="60" height="60">
     </div>
     <div class="poke-name">${esc(pokemon.name_fr)}</div>
     <div class="poke-types">${types}</div>
