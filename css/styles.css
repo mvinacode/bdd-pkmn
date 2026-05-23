@@ -870,76 +870,23 @@ body {
   flex-shrink: 0;
 }
 
-.collect-banner__body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.collect-banner__line1 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.collect-banner__ball-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.01em;
-}
-
-.collect-banner__form {
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 2px 9px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.13);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.85);
-}
-
-.collect-banner__shiny {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--yellow);
-  text-shadow: 0 0 8px rgba(253,216,53,0.5);
-}
-
-.collect-banner__line2 {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.76rem;
-  color: rgba(255,255,255,0.45);
-}
-
-.collect-banner__line2 em {
-  font-style: italic;
-  color: rgba(255,255,255,0.6);
-}
-
 .collect-banner__del {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 14px;
+  width: 32px;
   height: 32px;
+  padding: 0;
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.8);
+  font-size: 1.1rem;
+  line-height: 1;
+  font-family: inherit;
   cursor: pointer;
   transition: all 0.18s;
   flex-shrink: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: inherit;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
 }
 
 .collect-banner__del:hover {
@@ -993,8 +940,7 @@ body {
 .seen-pill-v2--shiny { border-color: rgba(253,216,53,0.3); }
 .seen-pill-v2--shiny:hover { border-color: rgba(253,216,53,0.5); }
 
-.seen-pill-v2__star { color: var(--yellow); font-size: 0.62rem; }
-.seen-pill-v2__name { font-weight: 600; color: #fff; font-size: 0.76rem; }
+.seen-pill-v2__icon { display: flex; align-items: center; gap: 2px; }
 .seen-pill-v2__date { color: rgba(255,255,255,0.4); }
 .seen-pill-v2__game {
   color: rgba(255,255,255,0.4);

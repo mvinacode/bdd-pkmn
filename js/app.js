@@ -186,6 +186,9 @@ function getVariantStatus(pokemonNumber, variantType) {
   if (variantType === 'female')       return seenMap[pokemonNumber]?.['male']?.status         || '';
   if (variantType === 'shiny_male')   return seenMap[pokemonNumber]?.['shiny_female']?.status || '';
   if (variantType === 'shiny_female') return seenMap[pokemonNumber]?.['shiny_male']?.status   || '';
+  // Équivalence normal ↔ male/female : pour les Pokémon sans dimorphisme (variante "normal" seule)
+  if (variantType === 'normal')
+    return seenMap[pokemonNumber]?.['male']?.status || seenMap[pokemonNumber]?.['female']?.status || '';
   return '';
 }
 
@@ -587,6 +590,31 @@ async function openModal(number) {
   const ballEntry  = catch_ ? BALLS.find(b => b.name === catch_.ball_name) : null;
   const ballSrc    = ballEntry ? ballUrl(ballEntry.slug) : (catch_?.ball_image_url || '');
   const seenForms = seenMap[p.number] ? Object.values(seenMap[p.number]) : [];
+
+  function seenFormIcon(vt) {
+    const S = 14;
+    const male   = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="${S}" height="${S}"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+    const female = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="${S}" height="${S}"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+    const shiny  = `<img src="${SHINY_ICON_URL}"   width="${S}" height="${S}" alt="Shiny">`;
+    const mega   = `<img src="${MEGA_ICON_URL}"    width="${S}" height="${S}" alt="Méga">`;
+    const gmax   = `<img src="${GIGAMAX_ICON_URL}" width="${S}" height="${S}" alt="Gigamax">`;
+    const baron  = `<img src="${BARON_ICON_URL}"   width="${S}" height="${S}" alt="Baron">`;
+    switch (vt) {
+      case 'normal':        return male + female;
+      case 'male':          return male;
+      case 'female':        return female;
+      case 'shiny':         return shiny;
+      case 'shiny_male':    return male + shiny;
+      case 'shiny_female':  return female + shiny;
+      case 'mega': case 'mega_x': case 'mega_y':               return mega;
+      case 'shiny_mega': case 'shiny_mega_x': case 'shiny_mega_y': return mega + shiny;
+      case 'gigamax':       return gmax;
+      case 'shiny_gigamax': return gmax + shiny;
+      case 'baron':         return baron;
+      default:              return male + female;
+    }
+  }
+
   const seenStatusHtml = seenForms.length ? `
     <div class="collect-banner collect-banner--seen">
       <div class="collect-banner__seen-inner">
@@ -597,8 +625,7 @@ async function openModal(number) {
         <div class="collect-banner__seen-chips">
           ${seenForms.map(s => `
             <div class="seen-pill-v2${s.is_shiny ? ' seen-pill-v2--shiny' : ''}">
-              ${s.is_shiny ? '<span class="seen-pill-v2__star">✦</span>' : ''}
-              <span class="seen-pill-v2__name">${esc(s.form_label || 'Normale')}</span>
+              <span class="seen-pill-v2__icon">${seenFormIcon(s.variant_type)}</span>
               ${s.caught_at ? `<span class="seen-pill-v2__date">${esc(formatCatchDate(s.caught_at))}</span>` : ''}
               ${s.game ? `<span class="seen-pill-v2__game">${esc(s.game)}</span>` : ''}
               <button class="seen-pill-v2__del modal-unsee-btn" data-pokemon-number="${p.number}" data-variant-type="${esc(s.variant_type)}" aria-label="Retirer des vus">
@@ -609,25 +636,43 @@ async function openModal(number) {
       </div>
     </div>` : '';
 
+  const ownedForms = seenMap[p.number]
+    ? Object.values(seenMap[p.number]).filter(f => f.status === 'owned')
+    : [];
+  const captureIcons = ownedForms.length
+    ? ownedForms.map(f => seenFormIcon(f.variant_type)).join('')
+    : (() => {
+        if (catch_?.is_shiny) return seenFormIcon('shiny');
+        const fl = (catch_?.form_label || '').toLowerCase();
+        if (fl.includes('mâle') || fl.includes('male'))     return seenFormIcon('male');
+        if (fl.includes('femelle') || fl.includes('female')) return seenFormIcon('female');
+        return seenFormIcon('normal');
+      })();
+
+  const capturePills = (ownedForms.length ? ownedForms : [{
+      variant_type: catch_?.is_shiny ? 'shiny' : 'normal',
+      is_shiny:     catch_?.is_shiny || false,
+      caught_at:    catch_?.caught_at || null,
+      game:         catch_?.game     || null,
+    }]).map(f => `
+    <div class="seen-pill-v2${f.is_shiny ? ' seen-pill-v2--shiny' : ''}">
+      <span class="seen-pill-v2__icon">${seenFormIcon(f.variant_type)}</span>
+      ${f.caught_at ? `<span class="seen-pill-v2__date">${esc(formatCatchDate(f.caught_at))}</span>` : ''}
+      ${f.game ? `<span class="seen-pill-v2__game">${esc(f.game)}</span>` : ''}
+      <button class="seen-pill-v2__del modal-capture-del" data-pokemon-number="${p.number}" data-variant-type="${esc(f.variant_type)}" data-catch-id="${esc(catch_.id)}" aria-label="Retirer cette capture">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="9" height="9"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>`).join('');
+
   const collectStatusHtml = catch_ ? `
     <div class="collect-banner">
       <div class="collect-banner__ball">
         <img src="${esc(ballSrc)}" width="42" height="42" alt="${esc(catch_.ball_name)}">
       </div>
-      <div class="collect-banner__body">
-        <div class="collect-banner__line1">
-          <span class="collect-banner__ball-name">${esc(catch_.ball_name)}</span>
-          ${catch_.form_label ? `<span class="collect-banner__form">${esc(catch_.form_label)}</span>` : ''}
-          ${catch_.is_shiny ? '<span class="collect-banner__shiny">✦ Shiny</span>' : ''}
-        </div>
-        <div class="collect-banner__line2">
-          <span>${esc(formatCatchDate(catch_.caught_at))}</span>
-          ${catch_.game ? `<span aria-hidden="true">·</span><em>${esc(catch_.game)}</em>` : ''}
-        </div>
+      <div class="collect-banner__seen-inner">
+        <div class="collect-banner__seen-label">${esc(catch_.ball_name)}</div>
+        <div class="collect-banner__seen-chips">${capturePills}</div>
       </div>
-      <button class="collect-banner__del modal-catch-delete" data-catch-id="${esc(catch_.id)}" data-pokemon-number="${p.number}" aria-label="Annuler la capture">
-        Annuler
-      </button>
     </div>` : seenStatusHtml;
   const imgSrc     = p.image_url || getImageUrl(p.number);
   const types      = (p.types || []).map(typeBadge).join('');
@@ -686,7 +731,7 @@ async function openModal(number) {
     if (fl === 'femelle'|| fl === 'female') return `${FEMALE_SVG} Femelle`;
     if (maleVariants.length && !femaleVariants.length && !neutralVariants.length) return `${MALE_SVG} Mâle`;
     if (femaleVariants.length && !maleVariants.length && !neutralVariants.length) return `${FEMALE_SVG} Femelle`;
-    return `${MALE_SVG} ${FEMALE_SVG}`;
+    return 'Sexe';
   })();
 
   const variantsHtml = variants.length
@@ -821,20 +866,24 @@ async function openModal(number) {
     });
   });
 
-  const deleteCatchBtn = els.modal.querySelector('.modal-catch-delete:not(.modal-unsee-btn)');
-  if (deleteCatchBtn) {
-    deleteCatchBtn.addEventListener('click', async () => {
-      if (!confirm('Annuler cette capture ?')) return;
-      const id  = deleteCatchBtn.dataset.catchId;
-      const num = parseInt(deleteCatchBtn.dataset.pokemonNumber);
-      const { error } = await deleteCatch(id);
-      if (error) { alert('Erreur lors de la suppression.'); return; }
-      delete catchByNumber[num];
-      updateCapturedCounter();
+  els.modal.querySelectorAll('.modal-capture-del').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Retirer cette capture ?')) return;
+      const num     = parseInt(btn.dataset.pokemonNumber);
+      const vt      = btn.dataset.variantType;
+      const catchId = btn.dataset.catchId;
+      await removeFormFromSeen(num, vt);
+      const stillOwned = seenMap[num] && Object.values(seenMap[num]).some(f => f.status === 'owned');
+      if (!stillOwned) {
+        const { error } = await deleteCatch(catchId);
+        if (error) { alert('Erreur lors de la suppression.'); return; }
+        delete catchByNumber[num];
+        updateCapturedCounter();
+      }
       updateCardAfterCatch(num);
       closeModal();
     });
-  }
+  });
 
   // Statut d'une forme spéciale (mega/gigamax)
   function formStatus(num, formType) {
@@ -1148,15 +1197,19 @@ function renderDrawerForms(variants, iconMap, megas = []) {
       entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: `<img src="${SHINY_ICON_URL}"   width="28" height="28" alt="">`, sprite: v.image_url });
   }
 
+  // Pré-sélectionner "Unisexe" (normal) si le Pokémon n'a pas de variantes mâle/femelle en BDD
+  const hasGenderVariants = !!(maleVariant || femaleVariant);
+  const defaultIdx = hasGenderVariants ? 0 : 2; // 0=Mâle, 2=Unisexe
+
   grid.innerHTML = entries.map((e, i) => `
-    <button class="form-opt${i === 0 ? ' selected' : ''}" data-idx="${i}" title="${esc(e.label)}">
+    <button class="form-opt${i === defaultIdx ? ' selected' : ''}" data-idx="${i}" title="${esc(e.label)}">
       <div class="form-opt-icon">${e.iconHtml}</div>
       <span>${esc(e.label)}</span>
     </button>`).join('');
 
   // Sélection multiple par toggle dans les deux modes
-  drawerForms = [entries[0]];
-  if (drawerMode === 'caught') selectDrawerForm(entries[0]);
+  drawerForms = [entries[defaultIdx]];
+  if (drawerMode === 'caught') selectDrawerForm(entries[defaultIdx]);
 
   grid.querySelectorAll('.form-opt').forEach(btn =>
     btn.addEventListener('click', () => {
