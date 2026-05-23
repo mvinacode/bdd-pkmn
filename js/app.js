@@ -789,7 +789,7 @@ async function openModal(number) {
   const megas = megasByNumber[p.number] || [];
   const specialForms = [
     ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, description_fr: m.description_fr, types: m.types || '', isMega: true, formIcon: MEGA_ICON })),
-    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, description_fr: g.description_fr, types: '', isMega: false, formIcon: GIGAMAX_ICON })),
+    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, formIcon: GIGAMAX_ICON })),
   ];
 
   function illustrationCol(name, artworkUrl, descriptionFr, extraClass = '', formTypes = '', shinyUrl = '', formIcon = '') {
