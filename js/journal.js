@@ -52,6 +52,10 @@ function formLabelToIcons(label, isShiny) {
 
 // ── Groupement par session ─────────────────────────────────────
 
+function isSpecialForm(label) {
+  return !!(label?.startsWith('Méga') || label?.startsWith('Gigamax'));
+}
+
 function groupBySession(catches) {
   const map = {};
   const order = [];
@@ -60,18 +64,22 @@ function groupBySession(catches) {
     const key = c.session_id || String(c.id);
     if (!map[key]) {
       map[key] = {
-        sessionId:       key,
-        pokemon_number:  c.pokemon_number,
-        pokemon_name_fr: c.pokemon_name_fr,
-        sprite_url:      c.sprite_url,
-        ball_name:       c.ball_name,
-        ball_image_url:  c.ball_image_url,
-        caught_at:       c.caught_at,
-        game:            c.game,
-        notes:           c.notes,
-        forms:           [],
+        sessionId:        key,
+        pokemon_number:   c.pokemon_number,
+        pokemon_name_fr:  c.pokemon_name_fr,
+        sprite_url:       c.sprite_url,
+        _sprite_is_special: isSpecialForm(c.form_label),
+        ball_name:        c.ball_name,
+        ball_image_url:   c.ball_image_url,
+        caught_at:        c.caught_at,
+        game:             c.game,
+        notes:            c.notes,
+        forms:            [],
       };
       order.push(key);
+    } else if (map[key]._sprite_is_special && !isSpecialForm(c.form_label)) {
+      map[key].sprite_url = c.sprite_url;
+      map[key]._sprite_is_special = false;
     }
     map[key].forms.push({ form_label: c.form_label, is_shiny: c.is_shiny });
   }
@@ -86,7 +94,7 @@ let allCatches  = [];
 function renderSession(session) {
   const ballEntry = BALLS.find(b => b.name === session.ball_name);
   const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (session.ball_image_url || '');
-  const spriteSrc = spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
 
   const formIcons = session.forms
     .map(f => `<span class="je-form-icon-group">${formLabelToIcons(f.form_label, f.is_shiny)}</span>`)
@@ -455,7 +463,7 @@ function openEditModal(session) {
   _formEntries     = [];
   _editSessionForms = [];
 
-  const spriteSrc = spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
   $('jm-sprite').src = spriteSrc;
   $('jm-sprite').alt = session.pokemon_name_fr;
   $('jm-title').textContent = `${session.pokemon_name_fr}  #${padNumber(session.pokemon_number)}`;
