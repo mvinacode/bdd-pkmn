@@ -19,6 +19,7 @@ const TYPE_IMAGES = {
   water:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779574460/eau_fruvvb.png',
   flying:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555974/vol_u7plhv.png',
   dragon:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555977/dragon_nbjoqm.png',
+  bug:     'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779580557/insecte_rccof2.png',
 };
 
 const CAPTURED_KEY         = 'pokedex_captured'; // legacy, conservé pour compatibilité
