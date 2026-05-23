@@ -13,9 +13,9 @@ const TYPE_FR = {
 };
 
 const TYPE_IMAGES = {
-  grass:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779552886/plante_rh14jo.png',
+  grass:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555659/Miniature_Type_Plante_LPZA_fjro4k.png',
   poison:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779553093/poison_kocclt.png',
-  fire:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779117403/feu_t38zxd.png',
+  fire:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555395/feu_axcfsz.png',
   flying:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779118687/vol_nio7sv.png',
   dragon:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779122546/dragon_swpzzs.png',
 };
