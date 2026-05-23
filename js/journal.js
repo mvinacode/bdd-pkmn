@@ -175,10 +175,66 @@ function render() {
   content.innerHTML = currentView === 'chrono' ? renderChrono(sessions) : renderByGame(sessions);
 }
 
+// ── Entrées de formes (même logique que renderDrawerForms dans app.js) ────────
+
+function buildFormEntries(variants, megas, iconMap) {
+  const M26 = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const F26 = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const U26 = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const M20 = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const F20 = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const U20 = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const SH20   = `<img src="${_SHINY_URL}"   width="20" height="20" alt="">`;
+  const BAR28  = `<img src="${_BARON_URL}"   width="28" height="28" alt="">`;
+  const BAR22  = `<img src="${_BARON_URL}"   width="22" height="22" alt="">`;
+  const MEGA28 = `<img src="${_MEGA_URL}"    width="28" height="28" alt="">`;
+  const MEGA22 = `<img src="${_MEGA_URL}"    width="22" height="22" alt="">`;
+  const GMAX28 = `<img src="${_GIGAMAX_URL}" width="28" height="28" alt="">`;
+  const GMAX22 = `<img src="${_GIGAMAX_URL}" width="22" height="22" alt="">`;
+
+  const maleV      = variants.find(v => v.variant_type === 'male');
+  const femaleV    = variants.find(v => v.variant_type === 'female');
+  const gmaxV      = variants.find(v => v.variant_type === 'gigamax');
+  const gmaxShinyV = variants.find(v => v.variant_type === 'shiny_gigamax');
+
+  const entries = [
+    { label: 'Mâle',          variant_type: 'male',         iconHtml: M26,            sprite: maleV?.image_url   || iconMap.normal || null },
+    { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: M20 + SH20,     sprite: iconMap.shiny  || null },
+    { label: 'Femelle',       variant_type: 'female',       iconHtml: F26,            sprite: femaleV?.image_url || iconMap.normal || null },
+    { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: F20 + SH20,     sprite: iconMap.shiny  || null },
+    { label: 'Unisexe',       variant_type: 'normal',       iconHtml: U26,            sprite: iconMap.normal || null },
+    { label: 'Unisexe Shiny', variant_type: 'shiny',        iconHtml: U20 + SH20,     sprite: iconMap.shiny  || null },
+    { label: 'Baron',         variant_type: 'baron',        iconHtml: BAR28,          sprite: iconMap.normal || null },
+    { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: BAR22 + SH20,   sprite: iconMap.normal || null },
+  ];
+
+  const megasWithImg = megas.filter(m => m.image_url);
+  if (megasWithImg.length > 0) {
+    for (const m of megasWithImg) {
+      const vt      = m.name?.toLowerCase().includes(' x') ? 'mega_x'
+                    : m.name?.toLowerCase().includes(' y') ? 'mega_y' : 'mega';
+      const vtShiny = vt === 'mega_x' ? 'shiny_mega_x' : vt === 'mega_y' ? 'shiny_mega_y' : 'shiny_mega';
+      const label   = vt === 'mega_x' ? 'Méga-Évo. X' : vt === 'mega_y' ? 'Méga-Évo. Y' : 'Méga-Évolution';
+      entries.push({ label,                 variant_type: vt,      iconHtml: MEGA28,           sprite: m.image_url });
+      entries.push({ label: label+' Shiny', variant_type: vtShiny, iconHtml: MEGA22 + SH20,    sprite: null });
+    }
+  } else {
+    entries.push({ label: 'Méga-Évolution',       variant_type: 'mega',       iconHtml: MEGA28,        sprite: null });
+    entries.push({ label: 'Méga-Évolution Shiny', variant_type: 'shiny_mega', iconHtml: MEGA22 + SH20, sprite: null });
+  }
+
+  entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: GMAX28,        sprite: gmaxV?.image_url      || null });
+  entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX22 + SH20, sprite: gmaxShinyV?.image_url || null });
+
+  return entries;
+}
+
 // ── Modal d'édition ────────────────────────────────────────────
 
-let _editSessionId = null;
-let _editBall      = null;
+let _editSessionId   = null;
+let _editBall        = null;
+let _formEntries     = [];
+let _editSessionForms = [];
 
 function buildEditModal() {
   const overlay = document.createElement('div');
@@ -195,6 +251,10 @@ function buildEditModal() {
         </button>
       </div>
       <div class="journal-modal-body">
+        <div class="journal-modal-field">
+          <label class="drawer-label">Forme(s)</label>
+          <div id="jm-form-grid" class="form-grid"></div>
+        </div>
         <div class="journal-modal-field">
           <label class="drawer-label">Ball</label>
           <div id="jm-ball-grid" class="ball-grid"></div>
@@ -217,7 +277,7 @@ function buildEditModal() {
 
   document.body.appendChild(overlay);
 
-  // Grille de balls (même rendu que le drawer)
+  // Grille de balls
   const ballGrid = $('jm-ball-grid');
   ballGrid.innerHTML = BALLS.map(b => `
     <button class="ball-opt" data-slug="${esc(b.slug)}" title="${esc(b.name)}">
@@ -240,6 +300,14 @@ function buildEditModal() {
 
   $('jm-save').addEventListener('click', async () => {
     if (!_editSessionId) return;
+
+    const formGrid      = $('jm-form-grid');
+    const selectedBtns  = [...formGrid.querySelectorAll('.form-opt.selected')];
+    if (_formEntries.length > 0 && selectedBtns.length === 0) {
+      alert('Sélectionne au moins une forme.');
+      return;
+    }
+
     const ballEntry = _editBall;
     const date      = $('jm-date').value || null;
     const game      = $('jm-game').value.trim() || null;
@@ -248,17 +316,19 @@ function buildEditModal() {
     btn.disabled    = true;
     btn.textContent = 'Sauvegarde…';
 
+    // 1. Mettre à jour ball / date / jeu sur tous les records de la session
     const updates = {
       caught_at: date,
       game,
       ...(ballEntry ? { ball_name: ballEntry.name, ball_image_url: ballUrl(ballEntry.slug) } : {}),
     };
-
     const { error } = await updateCatchesBySession(_editSessionId, updates);
-    btn.disabled    = false;
-    btn.textContent = 'Sauvegarder';
-    if (error) { alert('Erreur lors de la sauvegarde.'); return; }
-
+    if (error) {
+      alert('Erreur lors de la sauvegarde.');
+      btn.disabled    = false;
+      btn.textContent = 'Sauvegarder';
+      return;
+    }
     allCatches.forEach(c => {
       if ((c.session_id || String(c.id)) === _editSessionId) {
         c.caught_at = date;
@@ -266,6 +336,52 @@ function buildEditModal() {
         if (ballEntry) { c.ball_name = ballEntry.name; c.ball_image_url = ballUrl(ballEntry.slug); }
       }
     });
+
+    // 2. Synchroniser les formes (diff ajout / suppression)
+    if (_formEntries.length > 0) {
+      const selectedEntries = selectedBtns.map(b => _formEntries[parseInt(b.dataset.idx)]);
+      const origLabels      = new Set(_editSessionForms.map(f => f.form_label));
+      const selLabels       = new Set(selectedEntries.map(e => e.label));
+
+      // Supprimer les formes désélectionnées
+      for (const form of _editSessionForms) {
+        if (selLabels.has(form.form_label)) continue;
+        const rec = allCatches.find(c =>
+          (c.session_id || String(c.id)) === _editSessionId && c.form_label === form.form_label
+        );
+        if (rec) {
+          const { error: de } = await deleteCatch(rec.id);
+          if (!de) allCatches = allCatches.filter(c => c.id !== rec.id);
+        }
+      }
+
+      // Insérer les nouvelles formes sélectionnées
+      const base = allCatches.find(c => (c.session_id || String(c.id)) === _editSessionId);
+      if (base) {
+        for (const entry of selectedEntries) {
+          if (origLabels.has(entry.label)) continue;
+          const isShiny = entry.variant_type.includes('shiny');
+          const { data: newRec, error: ie } = await insertCatch({
+            owner_uuid:      getOwnerUuid(),
+            pokemon_number:  base.pokemon_number,
+            pokemon_name_fr: base.pokemon_name_fr,
+            is_shiny:        isShiny,
+            sprite_url:      entry.sprite || spriteUrl(base.pokemon_number, isShiny),
+            ball_name:       (ballEntry ?? { name: base.ball_name }).name,
+            ball_image_url:  ballEntry ? ballUrl(ballEntry.slug) : base.ball_image_url,
+            caught_at:       date,
+            game,
+            notes:           base.notes,
+            form_label:      entry.label,
+            session_id:      _editSessionId,
+          });
+          if (!ie && newRec) allCatches.push(newRec);
+        }
+      }
+    }
+
+    btn.disabled    = false;
+    btn.textContent = 'Sauvegarder';
     closeModal();
     render();
   });
@@ -285,8 +401,40 @@ function buildEditModal() {
   });
 }
 
+async function loadModalFormGrid(session) {
+  const formGrid = $('jm-form-grid');
+  formGrid.innerHTML = '<span style="font-size:0.75rem;color:var(--text-muted);padding:4px 0">Chargement…</span>';
+
+  const [variantData, megaData] = await Promise.all([
+    fetchVariants(session.pokemon_number).catch(() => []),
+    fetchMegaEvolutions([session.pokemon_number]).catch(() => []),
+  ]);
+
+  const iconMap = {
+    normal: session.sprite_url || spriteUrl(session.pokemon_number, false),
+    shiny:  spriteUrl(session.pokemon_number, true),
+  };
+
+  _formEntries      = buildFormEntries(variantData, megaData, iconMap);
+  _editSessionForms = [...session.forms];
+
+  const selectedLabels = new Set(session.forms.map(f => f.form_label));
+
+  formGrid.innerHTML = _formEntries.map((e, i) => `
+    <button class="form-opt${selectedLabels.has(e.label) ? ' selected' : ''}" data-idx="${i}" title="${esc(e.label)}">
+      <div class="form-opt-icon">${e.iconHtml}</div>
+      <span>${esc(e.label)}</span>
+    </button>`).join('');
+
+  formGrid.querySelectorAll('.form-opt').forEach(btn =>
+    btn.addEventListener('click', () => btn.classList.toggle('selected'))
+  );
+}
+
 function openEditModal(session) {
-  _editSessionId = session.sessionId;
+  _editSessionId   = session.sessionId;
+  _formEntries     = [];
+  _editSessionForms = [];
 
   const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
   $('jm-sprite').src = spriteSrc;
@@ -302,6 +450,7 @@ function openEditModal(session) {
   $('jm-game').value = session.game || '';
 
   $('journal-edit-overlay').classList.add('is-open');
+  loadModalFormGrid(session);
 }
 
 // ── Événements (délégation) ────────────────────────────────────
