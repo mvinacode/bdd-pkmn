@@ -187,12 +187,7 @@ function updateCardAfterCatch(pokemonNumber) {
 function getVariantStatus(pokemonNumber, variantType) {
   const direct = seenMap[pokemonNumber]?.[variantType]?.status;
   if (direct) return direct;
-  // Équivalence mâle/femelle : si l'un est vu/obtenu, l'autre l'est aussi
-  if (variantType === 'male')         return seenMap[pokemonNumber]?.['female']?.status       || '';
-  if (variantType === 'female')       return seenMap[pokemonNumber]?.['male']?.status         || '';
-  if (variantType === 'shiny_male')   return seenMap[pokemonNumber]?.['shiny_female']?.status || '';
-  if (variantType === 'shiny_female') return seenMap[pokemonNumber]?.['shiny_male']?.status   || '';
-  // Équivalence normal ↔ male/female : pour les Pokémon sans dimorphisme (variante "normal" seule)
+  // Équivalence normal ↔ male/female uniquement : Pokémon sans dimorphisme visuel
   if (variantType === 'normal')
     return seenMap[pokemonNumber]?.['male']?.status || seenMap[pokemonNumber]?.['female']?.status || '';
   return '';
@@ -908,10 +903,13 @@ async function openModal(number) {
 
   // Statut d'une forme spéciale (mega/gigamax)
   function formStatus(num, formType) {
-    const catch_ = catchByNumber[num];
-    if (catch_ && (catch_.variant_type?.includes(formType) || catch_.form_label?.toLowerCase().includes(formType === 'mega' ? 'méga' : 'gigamax'))) return 'caught';
     const seenVariants = seenMap[num];
-    if (seenVariants && Object.keys(seenVariants).some(vt => vt.includes(formType))) return 'seen';
+    if (seenVariants) {
+      if (Object.entries(seenVariants).some(([vt, d]) => vt.includes(formType) && d.status === 'owned')) return 'caught';
+      if (Object.keys(seenVariants).some(vt => vt.includes(formType))) return 'seen';
+    }
+    const c = catchByNumber[num];
+    if (c && (c.variant_type?.includes(formType) || c.form_label?.toLowerCase().includes(formType === 'mega' ? 'méga' : 'gigamax'))) return 'caught';
     return 'unseen';
   }
 
@@ -980,6 +978,36 @@ async function openModal(number) {
   }
   refreshArtworks();
 
+  function refreshEvoPortraits() {
+    els.modalContent.querySelectorAll('.evo-portrait[data-number]').forEach(portrait => {
+      const num      = parseInt(portrait.dataset.number);
+      const formType = portrait.dataset.formType || null;
+      const img      = portrait.querySelector('.evo-img-wrap img');
+      if (!img || !formType) return;
+      const st = formStatus(num, formType);
+      portrait.className = portrait.className.replace(/\bevo-portrait--\S+/g, '').trim();
+      portrait.classList.add('evo-portrait--' + st);
+      img.classList.remove('evo-portrait-nb', 'evo-portrait-silhouette');
+      if      (st === 'seen')   img.classList.add('evo-portrait-nb');
+      else if (st === 'unseen') img.classList.add('evo-portrait-silhouette');
+    });
+    const refreshPill = (portrait, pill) => {
+      if (!portrait?.dataset.formType || !pill) return;
+      const st = formStatus(parseInt(portrait.dataset.number), portrait.dataset.formType);
+      pill.className = pill.className.replace(/\bevo-condition--\S+/g, '').trim();
+      pill.classList.add('evo-condition--' + st);
+    };
+    els.modalContent.querySelectorAll('.evo-branch-item').forEach(item =>
+      refreshPill(item.querySelector('.evo-portrait[data-form-type]'), item.querySelector('.evo-condition-item'))
+    );
+    els.modalContent.querySelectorAll('.evo-portrait[data-form-type]').forEach(portrait => {
+      if (portrait.closest('.evo-branch-item')) return;
+      const prev = portrait.closest('.evo-stage')?.previousElementSibling;
+      if (prev?.classList.contains('evo-arrow'))
+        refreshPill(portrait, prev.querySelector('.evo-condition-item'));
+    });
+  }
+
   // Clics sur les boutons de statut des variantes
   els.modalContent.querySelectorAll('.variant-status').forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -992,6 +1020,7 @@ async function openModal(number) {
       const card = btn.closest('.variant-card');
       if (card) card.dataset.status = newStatus;
       refreshArtworks();
+      refreshEvoPortraits();
     });
   });
 
