@@ -948,32 +948,50 @@ async function openModal(number) {
 
   // Artworks : silhouette/N&B/couleur selon statut vu ou capturé
   function refreshArtworks() {
-    const forms      = seenMap[p.number] || {};
-    const entries    = Object.entries(forms);
-    const captNormal = (catch_ && !catch_.is_shiny)
-                    || entries.some(([vt, d]) => !vt.includes('shiny') && d.status === 'owned');
-    const captShiny  = (catch_ &&  catch_.is_shiny)
-                    || entries.some(([vt, d]) =>  vt.includes('shiny') && d.status === 'owned');
+    const forms   = seenMap[p.number] || {};
+    const entries = Object.entries(forms);
+
+    const captNormal = (catch_ && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && d.status === 'owned');
+    const captShiny  = (catch_ &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && d.status === 'owned');
     const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && d.status === 'seen');
     const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && d.status === 'seen');
-    const artworkItems = els.modalContent.querySelectorAll('.illus-artwork-item');
-    if (artworkItems.length >= 2) {
-      artworkItems.forEach(el => {
-        const img = el.querySelector('.modal-artwork');
-        if (img) { img.classList.remove('modal-artwork--nb'); img.classList.add('modal-artwork--silhouette'); }
-      });
-      if (captNormal || seenNormal) {
-        const t = artworkItems[0].querySelector('.modal-artwork');
-        if (t) { t.classList.remove('modal-artwork--silhouette'); if (!captNormal) t.classList.add('modal-artwork--nb'); }
-      }
-      if (captShiny || seenShiny) {
-        const t = artworkItems[1].querySelector('.modal-artwork');
-        if (t) { t.classList.remove('modal-artwork--silhouette'); if (!captShiny) t.classList.add('modal-artwork--nb'); }
-      }
-    } else {
-      const first = els.modalContent.querySelector('.illus-col .modal-artwork');
-      if (first) { first.classList.remove('modal-artwork--nb'); if (!catch_) first.classList.add('modal-artwork--nb'); }
+
+    function applyImg(img, owned, seen) {
+      if (!img) return;
+      img.classList.remove('modal-artwork--nb', 'modal-artwork--silhouette');
+      if      (!owned && !seen) img.classList.add('modal-artwork--silhouette');
+      else if (!owned)          img.classList.add('modal-artwork--nb');
     }
+
+    els.modalContent.querySelectorAll('.illus-col-wrapper').forEach(wrapper => {
+      const col       = wrapper.querySelector('.illus-col');
+      const isMega    = col?.classList.contains('is-mega');
+      const isGigamax = col?.classList.contains('is-gigamax');
+      const items     = wrapper.querySelectorAll('.illus-artwork-item');
+
+      let ownedNorm, seenNorm, ownedShiny, seenShinyF;
+      if (isMega) {
+        ownedNorm  = entries.some(([vt, d]) => vt.includes('mega') && !vt.includes('shiny') && d.status === 'owned');
+        seenNorm   = entries.some(([vt, d]) => vt.includes('mega') && !vt.includes('shiny') && d.status === 'seen');
+        ownedShiny = entries.some(([vt, d]) => vt.includes('mega') &&  vt.includes('shiny') && d.status === 'owned');
+        seenShinyF = entries.some(([vt, d]) => vt.includes('mega') &&  vt.includes('shiny') && d.status === 'seen');
+      } else if (isGigamax) {
+        ownedNorm  = entries.some(([vt, d]) => vt.includes('gigamax') && !vt.includes('shiny') && d.status === 'owned');
+        seenNorm   = entries.some(([vt, d]) => vt.includes('gigamax') && !vt.includes('shiny') && d.status === 'seen');
+        ownedShiny = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'owned');
+        seenShinyF = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'seen');
+      } else {
+        ownedNorm  = captNormal; seenNorm   = seenNormal;
+        ownedShiny = captShiny;  seenShinyF = seenShiny;
+      }
+
+      if (items.length >= 2) {
+        applyImg(items[0].querySelector('.modal-artwork'), ownedNorm,  seenNorm);
+        applyImg(items[1].querySelector('.modal-artwork'), ownedShiny, seenShinyF);
+      } else {
+        applyImg(wrapper.querySelector('.modal-artwork'), ownedNorm, seenNorm);
+      }
+    });
   }
   refreshArtworks();
 
