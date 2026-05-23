@@ -348,4 +348,4 @@ $('view-game').addEventListener('click', () => {
   render();
 });
 
-init();
+initAuth().then(ok => { if (ok) init(); });

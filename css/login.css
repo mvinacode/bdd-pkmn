@@ -1,0 +1,128 @@
+/* ============================================================
+   LOGIN.CSS — Page de connexion / inscription
+   ============================================================ */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: var(--bg);
+}
+
+/* ── Logo ── */
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  text-decoration: none;
+}
+
+.login-logo .logo-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+/* ── Carte ── */
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Onglets ── */
+
+.login-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.login-tab {
+  flex: 1;
+  padding: 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition), background var(--transition);
+}
+
+.login-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.login-tab.active {
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--red);
+  margin-bottom: -1px;
+}
+
+/* ── Corps ── */
+
+.login-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Messages ── */
+
+.login-error {
+  padding: 10px 12px;
+  background: rgba(229, 57, 53, 0.1);
+  border: 1px solid rgba(229, 57, 53, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--red);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.login-success {
+  padding: 10px 12px;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  border-radius: var(--radius-md);
+  color: #66bb6a;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+/* ── Bouton principal ── */
+
+.login-submit {
+  width: 100%;
+  padding: 12px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-top: 4px;
+}
+
+.login-submit:hover:not(:disabled) { filter: brightness(1.15); }
+.login-submit:disabled { opacity: 0.5; cursor: not-allowed; }

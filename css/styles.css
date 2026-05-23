@@ -109,6 +109,42 @@ body {
   background: rgba(255,255,255,0.1);
 }
 
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.header-user-email {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.header-logout-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
 /* Logo */
 .logo {
   display: flex;

@@ -1154,7 +1154,7 @@ async function init() {
   loadPokemon(false);
 }
 
-init();
+initAuth().then(ok => { if (ok) init(); });
 
 // ── Catch drawer (page principale) ───────────────────────────
 

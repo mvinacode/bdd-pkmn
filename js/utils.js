@@ -2,7 +2,6 @@
  * UTILS.JS — Fonctions utilitaires partagées entre app.js et catches.js
  */
 
-const OWNER_KEY = 'pokedex_owner_uuid';
 
 const BALLS = [
   { name: 'Poké Ball',    slug: 'poke-ball', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779138950/poke_ball_gdlzec.png' },
@@ -41,9 +40,7 @@ function spriteUrl(number, shiny) {
 }
 
 function getOwnerUuid() {
-  let uuid = localStorage.getItem(OWNER_KEY);
-  if (!uuid) { uuid = crypto.randomUUID(); localStorage.setItem(OWNER_KEY, uuid); }
-  return uuid;
+  return window._ownerUuid || null;
 }
 
 function esc(str) {

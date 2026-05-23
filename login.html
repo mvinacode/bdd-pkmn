@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokéDex — Connexion</title>
+  <link rel="stylesheet" href="css/styles.css?v=35">
+  <link rel="stylesheet" href="css/login.css?v=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="login-page">
+
+  <a href="login.html" class="login-logo">
+    <div class="logo-ball">
+      <div class="logo-ball-top"></div>
+      <div class="logo-ball-middle"></div>
+      <div class="logo-ball-bottom"></div>
+    </div>
+    <span class="logo-text">PokéDex</span>
+  </a>
+
+  <div class="login-card">
+    <div class="login-tabs">
+      <button class="login-tab active" id="tab-login">Se connecter</button>
+      <button class="login-tab" id="tab-signup">S'inscrire</button>
+    </div>
+    <form class="login-body" id="auth-form" novalidate>
+      <div class="login-field">
+        <label class="drawer-label" for="auth-email">Email</label>
+        <input type="email" class="drawer-input" id="auth-email" placeholder="ton@email.com" autocomplete="email" required>
+      </div>
+      <div class="login-field">
+        <label class="drawer-label" for="auth-password">Mot de passe</label>
+        <input type="password" class="drawer-input" id="auth-password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <div id="auth-error" class="login-error" hidden></div>
+      <div id="auth-success" class="login-success" hidden></div>
+      <button type="submit" class="login-submit" id="auth-submit">Se connecter</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js?v=35"></script>
+  <script src="js/supabase-client.js?v=35"></script>
+  <script>
+  (async () => {
+    // Rediriger si déjà connecté
+    const client = getSupabaseClient();
+    if (client) {
+      const { data: { session } } = await client.auth.getSession();
+      if (session?.user) { window.location.href = 'index.html'; return; }
+    }
+
+    let mode = 'login';
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById('tab-login').classList.toggle('active', m === 'login');
+      document.getElementById('tab-signup').classList.toggle('active', m === 'signup');
+      document.getElementById('auth-submit').textContent = m === 'login' ? 'Se connecter' : "S'inscrire";
+      document.getElementById('auth-password').autocomplete = m === 'login' ? 'current-password' : 'new-password';
+      document.getElementById('auth-error').hidden   = true;
+      document.getElementById('auth-success').hidden = true;
+    }
+
+    document.getElementById('tab-login').addEventListener('click', () => setMode('login'));
+    document.getElementById('tab-signup').addEventListener('click', () => setMode('signup'));
+
+    document.getElementById('auth-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email    = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      const btn      = document.getElementById('auth-submit');
+      const errEl    = document.getElementById('auth-error');
+      const okEl     = document.getElementById('auth-success');
+
+      btn.disabled    = true;
+      errEl.hidden    = true;
+      okEl.hidden     = true;
+
+      if (mode === 'login') {
+        btn.textContent = 'Connexion…';
+        const { error } = await client.auth.signInWithPassword({ email, password });
+        if (error) {
+          errEl.textContent = error.message === 'Invalid login credentials'
+            ? 'Email ou mot de passe incorrect.'
+            : error.message;
+          errEl.hidden = false;
+          btn.disabled    = false;
+          btn.textContent = 'Se connecter';
+        } else {
+          window.location.href = 'index.html';
+        }
+      } else {
+        btn.textContent = "Inscription…";
+        const { data, error } = await client.auth.signUp({ email, password });
+        if (error) {
+          errEl.textContent = error.message;
+          errEl.hidden = false;
+          btn.disabled    = false;
+          btn.textContent = "S'inscrire";
+        } else if (data.session) {
+          window.location.href = 'index.html';
+        } else {
+          okEl.textContent = 'Compte créé ! Vérifie ton email pour confirmer ton inscription, puis connecte-toi.';
+          okEl.hidden  = false;
+          btn.disabled    = false;
+          btn.textContent = "S'inscrire";
+          setMode('login');
+        }
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

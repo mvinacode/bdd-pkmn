@@ -11,7 +11,7 @@ function getSupabaseClient() {
     if (!isSupabaseConfigured()) return null;
     try {
       _supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, {
-        auth: { persistSession: false },
+        auth: { persistSession: true },
       });
     } catch (e) {
       console.error('[Supabase] SDK non disponible :', e);
