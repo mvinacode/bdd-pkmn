@@ -788,8 +788,8 @@ async function openModal(number) {
 
   const megas = megasByNumber[p.number] || [];
   const specialForms = [
-    ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, description_fr: m.description_fr, types: m.types || '', isMega: true, formIcon: MEGA_ICON })),
-    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, formIcon: GIGAMAX_ICON })),
+    ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true, formIcon: MEGA_ICON })),
+    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, formIcon: GIGAMAX_ICON })),
   ];
 
   function illustrationCol(name, artworkUrl, descriptionFr, extraClass = '', formTypes = '', shinyUrl = '', formIcon = '') {
@@ -851,7 +851,7 @@ async function openModal(number) {
         f.description_fr,
         f.isMega ? 'is-mega' : 'is-gigamax',
         f.types || '',
-        '',
+        f.shiny_artwork_url || '',
         f.formIcon || ''
       )).join('')}
     </div>

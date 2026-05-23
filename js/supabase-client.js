@@ -189,7 +189,7 @@ async function fetchMegaEvolutions(pokemonNumbers) {
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
     .from('pokemon_mega_evolutions')
-    .select('pokemon_number, name, condition_label, image_url, item_image_url, artwork_url, description_fr, types')
+    .select('pokemon_number, name, condition_label, image_url, item_image_url, artwork_url, shiny_artwork_url, description_fr, types')
     .in('pokemon_number', pokemonNumbers);
   return data || [];
 }
@@ -202,7 +202,7 @@ async function fetchGigamax(pokemonNumber) {
   if (!client) return [];
   const { data } = await client
     .from('pokemon_gigamax')
-    .select('name, description_fr, artwork_url, item_image_url')
+    .select('name, description_fr, artwork_url, shiny_artwork_url, item_image_url')
     .eq('pokemon_number', pokemonNumber)
     .order('sort_order');
   return data || [];
