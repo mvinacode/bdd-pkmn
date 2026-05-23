@@ -665,7 +665,7 @@ async function openModal(number) {
       <span class="seen-pill-v2__icon">${seenFormIcon(f.variant_type)}</span>
       ${f.caught_at ? `<span class="seen-pill-v2__date">${esc(formatCatchDate(f.caught_at))}</span>` : ''}
       ${f.game ? `<span class="seen-pill-v2__game">${esc(f.game)}</span>` : ''}
-      <button class="seen-pill-v2__del modal-capture-del" data-pokemon-number="${p.number}" data-variant-type="${esc(f.variant_type)}" data-catch-id="${esc(catch_.id)}" aria-label="Retirer cette capture">
+      <button class="seen-pill-v2__del modal-capture-del" data-pokemon-number="${p.number}" data-variant-type="${esc(f.variant_type)}" data-catch-id="${esc(catch_?.id ?? '')}" aria-label="Retirer cette capture">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="9" height="9"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>`).join('');
@@ -884,9 +884,12 @@ async function openModal(number) {
       const catchId = btn.dataset.catchId;
       await removeFormFromSeen(num, vt);
       const stillOwned = seenMap[num] && Object.values(seenMap[num]).some(f => f.status === 'owned');
-      if (!stillOwned) {
+      if (!stillOwned && catchId) {
         const { error } = await deleteCatch(catchId);
         if (error) { alert('Erreur lors de la suppression.'); return; }
+        delete catchByNumber[num];
+        updateCapturedCounter();
+      } else if (!stillOwned) {
         delete catchByNumber[num];
         updateCapturedCounter();
       }

@@ -56,6 +56,7 @@ function groupBySession(catches) {
   const map = {};
   const order = [];
   for (const c of catches) {
+    if (!c) continue;
     const key = c.session_id || String(c.id);
     if (!map[key]) {
       map[key] = {
@@ -330,7 +331,7 @@ function buildEditModal() {
       return;
     }
     allCatches.forEach(c => {
-      if ((c.session_id || String(c.id)) === _editSessionId) {
+      if (c && (c.session_id || String(c.id)) === _editSessionId) {
         c.caught_at = date;
         c.game      = game;
         if (ballEntry) { c.ball_name = ballEntry.name; c.ball_image_url = ballUrl(ballEntry.slug); }
@@ -347,16 +348,16 @@ function buildEditModal() {
       for (const form of _editSessionForms) {
         if (selLabels.has(form.form_label)) continue;
         const rec = allCatches.find(c =>
-          (c.session_id || String(c.id)) === _editSessionId && c.form_label === form.form_label
+          c && (c.session_id || String(c.id)) === _editSessionId && c.form_label === form.form_label
         );
         if (rec) {
           const { error: de } = await deleteCatch(rec.id);
-          if (!de) allCatches = allCatches.filter(c => c.id !== rec.id);
+          if (!de) allCatches = allCatches.filter(c => c && c.id !== rec.id);
         }
       }
 
       // Insérer les nouvelles formes sélectionnées
-      const base = allCatches.find(c => (c.session_id || String(c.id)) === _editSessionId);
+      const base = allCatches.find(c => c && (c.session_id || String(c.id)) === _editSessionId);
       if (base) {
         for (const entry of selectedEntries) {
           if (origLabels.has(entry.label)) continue;
@@ -393,18 +394,22 @@ function buildEditModal() {
     if (!confirm(`Supprimer cette capture de ${name} ?`)) return;
 
     // Récupère le numéro avant suppression
-    const sessionCatch  = allCatches.find(c => (c.session_id || String(c.id)) === _editSessionId);
-    const pokemonNumber = sessionCatch?.pokemon_number;
+    const sessionCatches = allCatches.filter(c => c && (c.session_id || String(c.id)) === _editSessionId);
+    const pokemonNumber  = sessionCatches[0]?.pokemon_number;
 
-    const { error } = await deleteCatchesBySession(_editSessionId);
-    if (error) { alert('Erreur lors de la suppression.'); return; }
+    let deleteError = null;
+    for (const c of sessionCatches) {
+      const { error: de } = await deleteCatch(c.id);
+      if (de) { deleteError = de; break; }
+    }
+    if (deleteError) { alert('Erreur lors de la suppression.'); return; }
 
-    allCatches = allCatches.filter(c => (c.session_id || String(c.id)) !== _editSessionId);
+    allCatches = allCatches.filter(c => c && (c.session_id || String(c.id)) !== _editSessionId);
 
     // Si c'était la dernière session pour ce Pokémon, nettoyer pokemon_seen
     // (évite l'icône NB résiduelle sur la page principale)
     if (pokemonNumber) {
-      const stillHasCatch = allCatches.some(c => c.pokemon_number === pokemonNumber);
+      const stillHasCatch = allCatches.some(c => c && c.pokemon_number === pokemonNumber);
       if (!stillHasCatch) {
         await deleteAllSeenForPokemon(getOwnerUuid(), pokemonNumber);
       }

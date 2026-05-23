@@ -1996,8 +1996,6 @@ body {
   width: 128px;
   height: 128px;
   object-fit: contain;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
 }
 
 .variant-label {
