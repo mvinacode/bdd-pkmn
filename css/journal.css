@@ -194,23 +194,27 @@
 /* ── Modal d'édition ── */
 
 .journal-modal-overlay {
+  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 900;
-  display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
 }
 
+.journal-modal-overlay.is-open {
+  display: flex;
+}
+
 .journal-modal {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg, 12px);
+  border-radius: var(--radius-md);
   width: 100%;
   max-width: 380px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   overflow: hidden;
 }
 
@@ -218,7 +222,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 20px 20px 16px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -231,91 +235,100 @@
 .journal-modal-title {
   flex: 1;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--text-primary);
 }
 
 .journal-modal-close {
   flex-shrink: 0;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: none;
   border: none;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 50%;
   color: var(--text-muted);
   cursor: pointer;
-  border-radius: var(--radius-sm);
-  transition: color var(--transition);
+  transition: all var(--transition);
   padding: 0;
 }
 
 .journal-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
 }
 
 .journal-modal-body {
-  padding: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 }
 
 .journal-modal-field {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-}
-
-.journal-modal-label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+  gap: 8px;
 }
 
 .journal-modal-footer {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
-  background: var(--bg-surface);
+  padding: 0 20px 20px;
 }
 
+.journal-modal-save {
+  flex: 1;
+  padding: 10px;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.journal-modal-save:hover:not(:disabled) { filter: brightness(1.15); }
+.journal-modal-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
 .journal-modal-cancel {
-  padding: 6px 14px;
-  font-size: 0.82rem;
+  padding: 10px 14px;
+  font-size: 0.875rem;
   font-weight: 600;
-  background: none;
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: border-color var(--transition), color var(--transition);
+  transition: all var(--transition);
 }
 
 .journal-modal-cancel:hover {
-  border-color: var(--border-hover);
+  background: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
 }
 
 .journal-modal-del {
-  margin-left: auto;
-  padding: 6px 14px;
-  font-size: 0.82rem;
+  padding: 10px 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   background: none;
-  border: 1px solid var(--error, #e05252);
-  border-radius: var(--radius-sm);
-  color: var(--error, #e05252);
+  border: 1px solid rgba(229, 57, 53, 0.4);
+  border-radius: var(--radius-md);
+  color: var(--red);
   cursor: pointer;
-  opacity: 0.7;
-  transition: opacity var(--transition);
+  opacity: 0.75;
+  transition: all var(--transition);
 }
 
 .journal-modal-del:hover {
   opacity: 1;
+  background: rgba(229, 57, 53, 0.08);
 }
 
 /* ── États vides / loader ── */

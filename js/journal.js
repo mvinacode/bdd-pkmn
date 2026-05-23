@@ -183,7 +183,6 @@ function buildEditModal() {
   const overlay = document.createElement('div');
   overlay.id        = 'journal-edit-overlay';
   overlay.className = 'journal-modal-overlay';
-  overlay.hidden    = true;
 
   const ballOptions = BALLS.map(b =>
     `<option value="${esc(b.slug)}">${esc(b.name)}</option>`
@@ -200,20 +199,20 @@ function buildEditModal() {
       </div>
       <div class="journal-modal-body">
         <div class="journal-modal-field">
-          <label class="journal-modal-label">Ball</label>
+          <label class="drawer-label">Ball</label>
           <select class="drawer-input" id="jm-ball">${ballOptions}</select>
         </div>
         <div class="journal-modal-field">
-          <label class="journal-modal-label">Date</label>
+          <label class="drawer-label">Date</label>
           <input type="date" class="drawer-input" id="jm-date">
         </div>
         <div class="journal-modal-field">
-          <label class="journal-modal-label">Jeu <span class="optional">(optionnel)</span></label>
+          <label class="drawer-label">Jeu <span class="optional">(optionnel)</span></label>
           <input type="text" class="drawer-input" id="jm-game" placeholder="ex : Pokémon Écarlate">
         </div>
       </div>
       <div class="journal-modal-footer">
-        <button class="btn-primary" id="jm-save">Sauvegarder</button>
+        <button class="journal-modal-save" id="jm-save">Sauvegarder</button>
         <button class="journal-modal-cancel" id="jm-cancel">Annuler</button>
         <button class="journal-modal-del" id="jm-del">Supprimer</button>
       </div>
@@ -221,7 +220,7 @@ function buildEditModal() {
 
   document.body.appendChild(overlay);
 
-  const closeModal = () => { overlay.hidden = true; _editSessionId = null; };
+  const closeModal = () => { overlay.classList.remove('is-open'); _editSessionId = null; };
 
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
   $('jm-close').addEventListener('click', closeModal);
@@ -288,7 +287,7 @@ function openEditModal(session) {
   $('jm-date').value = session.caught_at || '';
   $('jm-game').value = session.game || '';
 
-  $('journal-edit-overlay').hidden = false;
+  $('journal-edit-overlay').classList.add('is-open');
 }
 
 // ── Événements (délégation) ────────────────────────────────────
