@@ -178,15 +178,12 @@ function render() {
 // ── Modal d'édition ────────────────────────────────────────────
 
 let _editSessionId = null;
+let _editBall      = null;
 
 function buildEditModal() {
   const overlay = document.createElement('div');
   overlay.id        = 'journal-edit-overlay';
   overlay.className = 'journal-modal-overlay';
-
-  const ballOptions = BALLS.map(b =>
-    `<option value="${esc(b.slug)}">${esc(b.name)}</option>`
-  ).join('');
 
   overlay.innerHTML = `
     <div class="journal-modal" role="dialog" aria-modal="true" aria-labelledby="jm-title">
@@ -200,7 +197,7 @@ function buildEditModal() {
       <div class="journal-modal-body">
         <div class="journal-modal-field">
           <label class="drawer-label">Ball</label>
-          <select class="drawer-input" id="jm-ball">${ballOptions}</select>
+          <div id="jm-ball-grid" class="ball-grid"></div>
         </div>
         <div class="journal-modal-field">
           <label class="drawer-label">Date</label>
@@ -220,6 +217,21 @@ function buildEditModal() {
 
   document.body.appendChild(overlay);
 
+  // Grille de balls (même rendu que le drawer)
+  const ballGrid = $('jm-ball-grid');
+  ballGrid.innerHTML = BALLS.map(b => `
+    <button class="ball-opt" data-slug="${esc(b.slug)}" title="${esc(b.name)}">
+      <img src="${esc(ballUrl(b.slug))}" alt="${esc(b.name)}" width="28" height="28">
+      <span>${esc(b.name)}</span>
+    </button>`).join('');
+  ballGrid.querySelectorAll('.ball-opt').forEach(btn =>
+    btn.addEventListener('click', () => {
+      _editBall = BALLS.find(b => b.slug === btn.dataset.slug);
+      ballGrid.querySelectorAll('.ball-opt').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    })
+  );
+
   const closeModal = () => { overlay.classList.remove('is-open'); _editSessionId = null; };
 
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
@@ -228,8 +240,7 @@ function buildEditModal() {
 
   $('jm-save').addEventListener('click', async () => {
     if (!_editSessionId) return;
-    const ballSlug  = $('jm-ball').value;
-    const ballEntry = BALLS.find(b => b.slug === ballSlug);
+    const ballEntry = _editBall;
     const date      = $('jm-date').value || null;
     const game      = $('jm-game').value.trim() || null;
 
@@ -282,8 +293,11 @@ function openEditModal(session) {
   $('jm-sprite').alt = session.pokemon_name_fr;
   $('jm-title').textContent = `${session.pokemon_name_fr}  #${padNumber(session.pokemon_number)}`;
 
-  const ballEntry = BALLS.find(b => b.name === session.ball_name);
-  if (ballEntry) $('jm-ball').value = ballEntry.slug;
+  _editBall = BALLS.find(b => b.name === session.ball_name) || BALLS[0];
+  const ballGrid = $('jm-ball-grid');
+  ballGrid.querySelectorAll('.ball-opt').forEach(b => b.classList.remove('selected'));
+  if (_editBall) ballGrid.querySelector(`[data-slug="${_editBall.slug}"]`)?.classList.add('selected');
+
   $('jm-date').value = session.caught_at || '';
   $('jm-game').value = session.game || '';
 
