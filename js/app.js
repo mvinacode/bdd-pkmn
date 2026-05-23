@@ -282,7 +282,6 @@ function renderCard(pokemon, icons = {}) {
     <div class="poke-catch-badge">
       <img class="poke-catch-ball-img" src="${esc(ballSrc)}" alt="${esc(catch_.ball_name)}" title="${esc(catch_.ball_name)}" width="22" height="22" loading="lazy">
       <span class="poke-catch-date-label">${esc(formatCatchDateShort(catch_.caught_at))}</span>
-      ${catch_.is_shiny ? '<span class="poke-catch-shiny">✦</span>' : ''}
     </div>`;
   })() : '';
 
