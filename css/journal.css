@@ -1,0 +1,197 @@
+/* ============================================================
+   JOURNAL.CSS — Page journal des captures
+   ============================================================ */
+
+.journal-layout {
+  max-width: 860px;
+  margin: 32px auto;
+  padding: 0 24px 60px;
+}
+
+.journal-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.journal-total {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Section (mois ou jeu) ── */
+
+.journal-section {
+  margin-bottom: 28px;
+}
+
+.journal-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.journal-section-header h3 {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.journal-section-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.journal-section-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── Entrée ── */
+
+.je {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.je:hover {
+  border-color: var(--border-hover);
+  background: var(--bg-card-hover);
+}
+
+.je-sprite {
+  image-rendering: pixelated;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.je-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.je-poke-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.je-number {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.je-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.je-shiny {
+  color: var(--yellow);
+  font-size: 0.78rem;
+  flex-shrink: 0;
+}
+
+.je-form {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.je-catch-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.je-ball {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.je-date {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.je-game {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 150px;
+  text-align: right;
+}
+
+.je-game--empty {
+  opacity: 0.3;
+}
+
+/* Masquer la colonne jeu quand on est en vue "par jeu" */
+.journal-content.view-game .je-game {
+  display: none;
+}
+
+/* ── États vides / loader ── */
+
+.journal-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+}
+
+.journal-empty .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.journal-empty p {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.journal-empty small {
+  font-size: 0.82rem;
+  opacity: 0.7;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 540px) {
+  .je-game  { display: none; }
+  .je-date  { font-size: 0.72rem; }
+}

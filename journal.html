@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PokéDex — Journal</title>
+  <link rel="stylesheet" href="css/styles.css?v=33">
+  <link rel="stylesheet" href="css/types.css?v=33">
+  <link rel="stylesheet" href="css/journal.css?v=1">
+  <link rel="preconnect" href="https://mymkrfqpluimluehorby.supabase.co">
+  <link rel="preconnect" href="https://res.cloudinary.com">
+  <link rel="preconnect" href="https://raw.githubusercontent.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-ball">
+          <div class="logo-ball-top"></div>
+          <div class="logo-ball-middle"></div>
+          <div class="logo-ball-bottom"></div>
+        </div>
+        <span class="logo-text">PokéDex</span>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html" class="header-nav-link">Pokédex</a>
+        <a href="journal.html" class="header-nav-link active">Journal</a>
+      </nav>
+      <div class="header-captured" title="Pokémon capturés">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M2 12h4.5M17.5 12H22" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M7 7.27A8 8 0 0 1 17 7.27" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M7 16.73A8 8 0 0 0 17 16.73" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+        </svg>
+        <span id="captured-count">0</span> / 1025
+      </div>
+    </div>
+  </header>
+
+  <div class="journal-layout">
+    <div class="journal-controls">
+      <div class="chips-group">
+        <button class="chip active" id="view-chrono">Chronologique</button>
+        <button class="chip" id="view-game">Par jeu</button>
+      </div>
+      <div id="journal-total" class="journal-total"></div>
+    </div>
+
+    <div id="journal-loader" class="loader" hidden>
+      <div class="pokeball-loader">
+        <div class="pb-top"></div>
+        <div class="pb-middle"><div class="pb-btn"></div></div>
+        <div class="pb-bottom"></div>
+      </div>
+      <p>Chargement du journal…</p>
+    </div>
+
+    <div id="journal-empty" class="journal-empty" hidden>
+      <div class="empty-icon">📖</div>
+      <p>Aucune capture enregistrée.</p>
+      <small>Ajoute des captures depuis la page Pokédex.</small>
+    </div>
+
+    <div id="journal-content" class="journal-content"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/utils.js?v=33"></script>
+  <script src="js/config.js?v=33"></script>
+  <script src="js/supabase-client.js?v=33"></script>
+  <script src="js/journal.js?v=1"></script>
+
+</body>
+</html>

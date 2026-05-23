@@ -82,6 +82,33 @@ body {
   gap: 20px;
 }
 
+/* Nav header */
+.header-nav {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.header-nav-link {
+  padding: 6px 13px;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition);
+}
+
+.header-nav-link:hover {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.06);
+}
+
+.header-nav-link.active {
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.1);
+}
+
 /* Logo */
 .logo {
   display: flex;
