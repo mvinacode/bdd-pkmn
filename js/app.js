@@ -13,7 +13,7 @@ const TYPE_FR = {
 };
 
 const TYPE_IMAGES = {
-  grass:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779097009/plante_cunkaq.png',
+  grass:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779551215/plante_ehyx1d.svg',
   poison:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779097005/poison_rmllzk.png',
   fire:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779117403/feu_t38zxd.png',
   flying:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779118687/vol_nio7sv.png',
