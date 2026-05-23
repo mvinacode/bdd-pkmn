@@ -1097,8 +1097,9 @@ body {
   display: flex;
   gap: 20px;
   margin-bottom: 24px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: stretch;
+  overflow-x: auto;
 }
 
 .illus-col {
