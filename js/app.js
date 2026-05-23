@@ -13,11 +13,11 @@ const TYPE_FR = {
 };
 
 const TYPE_IMAGES = {
-  grass:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555659/Miniature_Type_Plante_LPZA_fjro4k.png',
-  poison:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779553093/poison_kocclt.png',
-  fire:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555395/feu_axcfsz.png',
-  flying:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779118687/vol_nio7sv.png',
-  dragon:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779122546/dragon_swpzzs.png',
+  grass:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555831/plante_mfw11z.png',
+  poison:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555976/poison_efsrlh.png',
+  fire:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555975/feu_v9z2lm.png',
+  flying:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555974/vol_u7plhv.png',
+  dragon:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555977/dragon_nbjoqm.png',
 };
 
 const CAPTURED_KEY         = 'pokedex_captured'; // legacy, conservé pour compatibilité
