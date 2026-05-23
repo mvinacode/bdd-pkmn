@@ -16,6 +16,7 @@ const TYPE_IMAGES = {
   grass:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555831/plante_mfw11z.png',
   poison:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555976/poison_efsrlh.png',
   fire:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555975/feu_v9z2lm.png',
+  water:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779574460/eau_fruvvb.png',
   flying:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555974/vol_u7plhv.png',
   dragon:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555977/dragon_nbjoqm.png',
 };
@@ -38,39 +39,6 @@ const SHINY_ICON_URL       = 'https://res.cloudinary.com/dkgfa4apm/image/upload/
 const BARON_ICON_URL       = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779139486/baron_jvi4lm.png';
 const MALE_SVG             = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
 const FEMALE_SVG           = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-
-// ── Cache localStorage ────────────────────────────────────────
-
-const CACHE_KEY = 'pokedex_grid_v1';
-const CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
-
-function cacheGet(key) {
-  try {
-    const store = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
-    if (!store) return null;
-    const entry = store[key];
-    if (!entry || Date.now() - entry.ts > CACHE_TTL) return null;
-    return entry;
-  } catch { return null; }
-}
-
-function cacheSet(key, data, count, iconMap) {
-  try {
-    const store = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
-    store[key] = { ts: Date.now(), data, count, iconMap };
-    const entries = Object.entries(store).sort((a, b) => a[1].ts - b[1].ts);
-    while (entries.length > 40) delete store[entries.shift()[0]];
-    localStorage.setItem(CACHE_KEY, JSON.stringify(store));
-  } catch {}
-}
-
-function cacheClear() {
-  localStorage.removeItem(CACHE_KEY);
-  iconCache = {};
-  console.info('[PokéDex] Cache vidé.');
-}
-
-window.clearPokedexCache = cacheClear;
 
 // ── État ─────────────────────────────────────────────────────
 
@@ -358,23 +326,6 @@ async function loadPokemon(append = false) {
     if (state.statusFilter === 'caught') capturedNums = Object.keys(catchByNumber).map(Number);
     else if (state.statusFilter === 'seen') capturedNums = [...seenSet].filter(n => !catchByNumber[n]);
 
-    // Cache localStorage — uniquement pour les vues sans filtre de statut ni recherche
-    const canCache = state.statusFilter === 'all' && !state.search;
-    const ck = canCache ? `${state.gen}|${state.type}|${state.sortBy}|${state.from}` : null;
-    const cached = ck ? cacheGet(ck) : null;
-
-    if (cached) {
-      state.total     = cached.count;
-      state.from     += cached.data.length;
-      state.allLoaded = state.from >= cached.count;
-      if (append) state.pokemon.push(...cached.data); else state.pokemon = cached.data;
-      Object.assign(iconCache, cached.iconMap || {});
-      renderGrid(cached.data, append, cached.iconMap || {});
-      els.headerCount.textContent = cached.count;
-      els.loader.hidden = state.allLoaded;
-      return;
-    }
-
     const { data, count, error } = await fetchPokemon({
       from:            state.from,
       to:              state.from + CONFIG.PAGE_SIZE - 1,
@@ -420,7 +371,6 @@ async function loadPokemon(append = false) {
       const needsUpdate = numbers.filter(n => iconMap[n] && !cachedIconMap[n]);
       Object.assign(iconCache, iconMap);
       needsUpdate.forEach(n => updateCardAfterCatch(n));
-      if (ck) cacheSet(ck, data, count, iconMap);
     }).catch(() => {});
 
   } catch (err) {

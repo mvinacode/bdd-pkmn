@@ -1129,8 +1129,8 @@ body {
 }
 
 .illus-artworks .modal-artwork {
-  width: 160px;
-  height: 160px;
+  width: 190px;
+  height: 190px;
 }
 
 .illus-artwork-item {
@@ -1176,7 +1176,7 @@ body {
   align-items: center;
   gap: 8px;
   flex: 1;
-  min-width: 340px;
+  min-width: 400px;
 }
 
 .illus-col-wrapper .illus-col {
@@ -1274,8 +1274,8 @@ body {
 }
 
 .modal-artwork {
-  width: 200px;
-  height: 200px;
+  width: 240px;
+  height: 240px;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 8px 24px rgba(0,0,0,0.5));

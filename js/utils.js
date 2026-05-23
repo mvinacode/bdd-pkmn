@@ -7,7 +7,8 @@ const BALLS = [
   { name: 'Poké Ball',    slug: 'poke-ball', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779138950/poke_ball_gdlzec.png' },
   { name: 'Super Ball',   slug: 'great-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779544047/super_ball_hljkjm.png' },
   { name: 'Hyper Ball',   slug: 'ultra-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779557250/hyper_ball_gkxwfs.png' },
-  { name: 'Master Ball',  slug: 'master-ball'  },
+  { name: 'Master Ball',  slug: 'master-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779568469/master_ball_cj1rzg.png' },
+  { name: 'Safari Ball',  slug: 'safari-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779568476/safari_ball_dqzmhg.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
   { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Chrono',  slug: 'timer-ball'   },
@@ -23,7 +24,6 @@ const BALLS = [
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
   { name: 'Ball Lasso',   slug: 'lure-ball'    },
   { name: 'Ball Amour',   slug: 'love-ball'    },
-  { name: 'Ball Bête',    slug: 'safari-ball'  },
   { name: 'Ball Lourde',  slug: 'heavy-ball'   },
   { name: 'Ball Rapido',  slug: 'fast-ball'    },
 ];
