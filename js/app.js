@@ -294,7 +294,7 @@ function renderCard(pokemon, icons = {}) {
   const seenFormsMap = seenMap[pokemon.number] || {};
   const SPECIAL_FORMS = [
     { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female'] },
-    { key: 'baron',   icon: BARON_ICON_URL,   variants: ['baron'] },
+    { key: 'baron',   icon: BARON_ICON_URL,   variants: ['baron', 'shiny_baron'] },
     { key: 'mega',    icon: MEGA_ICON_URL,    variants: ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y'] },
     { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
   ];
@@ -609,11 +609,12 @@ async function openModal(number) {
     const mega   = `<img src="${MEGA_ICON_URL}"    width="${S}" height="${S}" alt="Méga">`;
     const gmax   = `<img src="${GIGAMAX_ICON_URL}" width="${S}" height="${S}" alt="Gigamax">`;
     const baron  = `<img src="${BARON_ICON_URL}"   width="${S}" height="${S}" alt="Baron">`;
+    const genderless = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="${S}" height="${S}"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
     switch (vt) {
-      case 'normal':        return male + female;
+      case 'normal':        return genderless;
       case 'male':          return male;
       case 'female':        return female;
-      case 'shiny':         return shiny;
+      case 'shiny':         return genderless + shiny;
       case 'shiny_male':    return male + shiny;
       case 'shiny_female':  return female + shiny;
       case 'mega': case 'mega_x': case 'mega_y':               return mega;
@@ -621,7 +622,8 @@ async function openModal(number) {
       case 'gigamax':       return gmax;
       case 'shiny_gigamax': return gmax + shiny;
       case 'baron':         return baron;
-      default:              return male + female;
+      case 'shiny_baron':   return baron + shiny;
+      default:              return genderless;
     }
   }
 
@@ -1176,40 +1178,56 @@ function renderDrawerForms(variants, iconMap, megas = []) {
 
   const MALE_ICON     = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
   const FEMALE_ICON   = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_ICON  = `<div style="display:flex;gap:1px;align-items:center;color:var(--text-muted)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg></div>`;
+  const UNISEXE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
 
   const maleVariant   = variants.find(v => v.variant_type === 'male');
   const femaleVariant = variants.find(v => v.variant_type === 'female');
 
+  const MALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const FEMALE_SM  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const UNISEXE_SM = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const SHINY_SM   = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+
   // Entrées fixes (toujours présentes pour tous les Pokémon)
   const entries = [
-    { label: 'Mâle',    variant_type: 'male',    iconHtml: MALE_ICON,                                                            sprite: maleVariant?.image_url   || iconMap.normal || null },
-    { label: 'Femelle', variant_type: 'female',  iconHtml: FEMALE_ICON,                                                          sprite: femaleVariant?.image_url || iconMap.normal || null },
-    { label: 'Unisexe', variant_type: 'normal',  iconHtml: UNISEXE_ICON,                                                         sprite: iconMap.normal || null },
-    { label: 'Shiny',   variant_type: 'shiny',   iconHtml: `<img src="${SHINY_ICON_URL}" width="28" height="28" alt="">`,         sprite: iconMap.shiny  || null },
-    { label: 'Baron',   variant_type: 'baron',   iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,         sprite: iconMap.normal || null },
+    { label: 'Mâle',          variant_type: 'male',         iconHtml: MALE_ICON,                sprite: maleVariant?.image_url   || iconMap.normal || null },
+    { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: MALE_SM + SHINY_SM,       sprite: iconMap.shiny  || null },
+    { label: 'Femelle',       variant_type: 'female',       iconHtml: FEMALE_ICON,              sprite: femaleVariant?.image_url || iconMap.normal || null },
+    { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: FEMALE_SM + SHINY_SM,     sprite: iconMap.shiny  || null },
+    { label: 'Unisexe',       variant_type: 'normal',       iconHtml: UNISEXE_ICON,             sprite: iconMap.normal || null },
+    { label: 'Unisexe Shiny', variant_type: 'shiny',        iconHtml: UNISEXE_SM + SHINY_SM,    sprite: iconMap.shiny  || null },
+    { label: 'Baron',         variant_type: 'baron',        iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                              sprite: iconMap.normal || null },
+    { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: iconMap.normal || null },
   ];
 
-  // Mégas — label générique + suffix X/Y si nécessaire
-  for (const m of megas) {
-    if (!m.image_url) continue;
-    const vt    = m.name?.toLowerCase().includes(' x') ? 'mega_x'
-                : m.name?.toLowerCase().includes(' y') ? 'mega_y' : 'mega';
-    const label = vt === 'mega_x' ? 'Méga-Évo. X' : vt === 'mega_y' ? 'Méga-Évo. Y' : 'Méga-Évolution';
-    entries.push({ label, variant_type: vt, iconHtml: `<img src="${MEGA_ICON_URL}" width="28" height="28" alt="">`, sprite: m.image_url });
+  // Mégas — toujours présents avec variante shiny (sprite si disponible en BDD)
+  const MEGA_SM  = `<img src="${MEGA_ICON_URL}"    width="22" height="22" alt="">`;
+  const GMAX_SM  = `<img src="${GIGAMAX_ICON_URL}" width="22" height="22" alt="">`;
+  const SHINY_SM2 = `<img src="${SHINY_ICON_URL}"  width="20" height="20" alt="">`;
+  const megasWithImg = megas.filter(m => m.image_url);
+  if (megasWithImg.length > 0) {
+    for (const m of megasWithImg) {
+      const vt      = m.name?.toLowerCase().includes(' x') ? 'mega_x'
+                    : m.name?.toLowerCase().includes(' y') ? 'mega_y' : 'mega';
+      const vtShiny = vt === 'mega_x' ? 'shiny_mega_x' : vt === 'mega_y' ? 'shiny_mega_y' : 'shiny_mega';
+      const label   = vt === 'mega_x' ? 'Méga-Évo. X' : vt === 'mega_y' ? 'Méga-Évo. Y' : 'Méga-Évolution';
+      entries.push({ label,                 variant_type: vt,      iconHtml: `<img src="${MEGA_ICON_URL}" width="28" height="28" alt="">`, sprite: m.image_url });
+      entries.push({ label: label+' Shiny', variant_type: vtShiny, iconHtml: MEGA_SM + SHINY_SM2, sprite: null });
+    }
+  } else {
+    entries.push({ label: 'Méga-Évolution',       variant_type: 'mega',       iconHtml: `<img src="${MEGA_ICON_URL}" width="28" height="28" alt="">`, sprite: null });
+    entries.push({ label: 'Méga-Évolution Shiny', variant_type: 'shiny_mega', iconHtml: MEGA_SM + SHINY_SM2, sprite: null });
   }
 
-  // Gigamax — label fixe
-  for (const v of variants) {
-    if (v.variant_type === 'gigamax')
-      entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`, sprite: v.image_url });
-    else if (v.variant_type === 'shiny_gigamax')
-      entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: `<img src="${SHINY_ICON_URL}"   width="28" height="28" alt="">`, sprite: v.image_url });
-  }
+  // Gigamax — toujours présent avec variante shiny (sprite si disponible en BDD)
+  const gmaxV      = variants.find(v => v.variant_type === 'gigamax');
+  const gmaxShinyV = variants.find(v => v.variant_type === 'shiny_gigamax');
+  entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`, sprite: gmaxV?.image_url      || null });
+  entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX_SM + SHINY_SM2,                                           sprite: gmaxShinyV?.image_url || null });
 
   // Pré-sélectionner "Unisexe" (normal) si le Pokémon n'a pas de variantes mâle/femelle en BDD
   const hasGenderVariants = !!(maleVariant || femaleVariant);
-  const defaultIdx = hasGenderVariants ? 0 : 2; // 0=Mâle, 2=Unisexe
+  const defaultIdx = hasGenderVariants ? 0 : 4; // 0=Mâle, 4=Unisexe
 
   grid.innerHTML = entries.map((e, i) => `
     <button class="form-opt${i === defaultIdx ? ' selected' : ''}" data-idx="${i}" title="${esc(e.label)}">
