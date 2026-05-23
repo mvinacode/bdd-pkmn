@@ -187,9 +187,17 @@ function updateCardAfterCatch(pokemonNumber) {
 function getVariantStatus(pokemonNumber, variantType) {
   const direct = seenMap[pokemonNumber]?.[variantType]?.status;
   if (direct) return direct;
-  // Équivalence normal ↔ male/female uniquement : Pokémon sans dimorphisme visuel
+  const seen = seenMap[pokemonNumber];
+  if (!seen) return '';
+  // Équivalences bidirectionnelles pour les Pokémon sans dimorphisme visuel
   if (variantType === 'normal')
-    return seenMap[pokemonNumber]?.['male']?.status || seenMap[pokemonNumber]?.['female']?.status || '';
+    return seen['male']?.status || seen['female']?.status || '';
+  if (variantType === 'male' || variantType === 'female')
+    return seen['normal']?.status || '';
+  if (variantType === 'shiny')
+    return seen['shiny_male']?.status || seen['shiny_female']?.status || '';
+  if (variantType === 'shiny_male' || variantType === 'shiny_female')
+    return seen['shiny']?.status || '';
   return '';
 }
 
