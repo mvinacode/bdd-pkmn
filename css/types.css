@@ -23,7 +23,7 @@
 .type-badge.fire,
 .type-badge.feu       { background: #FF9741; }
 .type-badge.water,
-.type-badge.eau       { background: #3692DC; }
+.type-badge.eau       { background: #2980ef; }
 .type-badge.electric,
 .type-badge.electrik  { background: #FBD100; color: #2a2a00; }
 .type-badge.grass,
@@ -58,7 +58,7 @@
 /* Chips de filtre actifs — même couleurs */
 .chip.active[data-type="normal"]    { background: #9099A1; border-color: #9099A1; }
 .chip.active[data-type="fire"]      { background: #FF9741; border-color: #FF9741; color: #fff; }
-.chip.active[data-type="water"]     { background: #3692DC; border-color: #3692DC; }
+.chip.active[data-type="water"]     { background: #2980ef; border-color: #2980ef; }
 .chip.active[data-type="electric"]  { background: #FBD100; border-color: #FBD100; color: #2a2a00; }
 .chip.active[data-type="grass"]     { background: #38BF4B; border-color: #38BF4B; }
 .chip.active[data-type="ice"]       { background: #4CD1C0; border-color: #4CD1C0; }
@@ -78,7 +78,7 @@
 /* Couleur de fond subtile sur les cartes selon le type primaire */
 .poke-card[data-primary-type="normal"]   { --card-accent: #9099A1; }
 .poke-card[data-primary-type="fire"]     { --card-accent: #e62829; }
-.poke-card[data-primary-type="water"]    { --card-accent: #3692DC; }
+.poke-card[data-primary-type="water"]    { --card-accent: #2980ef; }
 .poke-card[data-primary-type="electric"] { --card-accent: #FBD100; }
 .poke-card[data-primary-type="grass"]    { --card-accent: #3da224; }
 .poke-card[data-primary-type="ice"]      { --card-accent: #4CD1C0; }
