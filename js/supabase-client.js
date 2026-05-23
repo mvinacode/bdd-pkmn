@@ -346,6 +346,26 @@ async function deleteCatch(id) {
 }
 
 /**
+ * Met à jour toutes les captures d'une session (même session_id).
+ */
+async function updateCatchesBySession(sessionId, updates) {
+  const client = getSupabaseClient();
+  if (!client) return { error: { message: 'Supabase non configuré' } };
+  const { error } = await client.from('catches').update(updates).eq('session_id', sessionId);
+  return { error };
+}
+
+/**
+ * Supprime toutes les captures d'une session (même session_id).
+ */
+async function deleteCatchesBySession(sessionId) {
+  const client = getSupabaseClient();
+  if (!client) return { error: { message: 'Supabase non configuré' } };
+  const { error } = await client.from('catches').delete().eq('session_id', sessionId);
+  return { error };
+}
+
+/**
  * Récupère la liste des types distincts présents en base.
  */
 async function fetchTypes() {

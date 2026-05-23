@@ -1507,6 +1507,8 @@ async function saveCatchFromMain() {
   let lastData  = null;
   let lastError = null;
 
+  const sessionId = crypto.randomUUID();
+
   for (const form of formsToCapture) {
     const isShiny = form.variant_type?.includes('shiny') || false;
     const sprite  = form.sprite
@@ -1526,6 +1528,7 @@ async function saveCatchFromMain() {
       caught_at:       date,
       game,
       notes,
+      session_id:      sessionId,
     });
     if (error) { lastError = error; break; }
     lastData = data;

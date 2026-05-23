@@ -61,19 +61,25 @@
 /* ── Entrée ── */
 
 .je {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 14px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   transition: border-color var(--transition), background var(--transition);
+  overflow: hidden;
 }
 
 .je:hover {
   border-color: var(--border-hover);
   background: var(--bg-card-hover);
+}
+
+/* Ligne principale */
+
+.je-main-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
 }
 
 .je-sprite {
@@ -82,7 +88,7 @@
   height: 48px;
 }
 
-.je-main {
+.je-info {
   flex: 1;
   min-width: 0;
   display: flex;
@@ -113,17 +119,18 @@
   text-overflow: ellipsis;
 }
 
-.je-shiny {
-  color: var(--yellow);
-  font-size: 0.78rem;
-  flex-shrink: 0;
-}
-
 .je-form-icons {
   display: flex;
   align-items: center;
-  gap: 3px;
+  flex-wrap: wrap;
+  gap: 6px;
   margin-top: 1px;
+}
+
+.je-form-icon-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .je-catch-info {
@@ -160,9 +167,99 @@
   opacity: 0.3;
 }
 
+.je-edit-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+  padding: 0;
+}
+
+.je-edit-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border);
+  background: var(--bg-hover);
+}
+
 /* Masquer la colonne jeu quand on est en vue "par jeu" */
 .journal-content.view-game .je-game {
   display: none;
+}
+
+/* ── Panneau d'édition ── */
+
+.je-edit-panel {
+  border-top: 1px solid var(--border);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg-surface);
+}
+
+.je-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.je-edit-row .drawer-input {
+  flex: 1;
+  min-width: 120px;
+}
+
+.je-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.je-save-btn {
+  /* btn-primary styles inherited from styles.css */
+}
+
+.je-cancel-btn {
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.je-cancel-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.je-del-btn {
+  margin-left: auto;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: none;
+  border: 1px solid var(--error, #e05252);
+  border-radius: var(--radius-sm);
+  color: var(--error, #e05252);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--transition);
+}
+
+.je-del-btn:hover {
+  opacity: 1;
 }
 
 /* ── États vides / loader ── */
@@ -192,6 +289,7 @@
 /* ── Responsive ── */
 
 @media (max-width: 540px) {
-  .je-game  { display: none; }
-  .je-date  { font-size: 0.72rem; }
+  .je-game      { display: none; }
+  .je-date      { font-size: 0.72rem; }
+  .je-edit-row  { flex-direction: column; align-items: stretch; }
 }
