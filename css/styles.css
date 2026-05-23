@@ -1053,9 +1053,14 @@ body {
 
 .illus-artworks {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+}
+
+.illus-artworks .modal-artwork {
+  width: 160px;
+  height: 160px;
 }
 
 .illus-artwork-item {
@@ -1101,7 +1106,7 @@ body {
   align-items: center;
   gap: 8px;
   flex: 1;
-  min-width: 180px;
+  min-width: 340px;
 }
 
 .illus-col-wrapper .illus-col {
