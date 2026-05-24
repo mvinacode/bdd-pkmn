@@ -48,7 +48,7 @@ function getOwnerUuid() {
 }
 
 const GAMES = [
-  { name: 'Légendes Pokémon : Z-A', slug: 'legendes-za', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779641869/legendes_pkmn_z_a_icon_bqvbys.png' },
+  { name: 'Légendes Pokémon : Z-A', slug: 'legendes-za', abbr: 'Z-A', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779641869/legendes_pkmn_z_a_icon_bqvbys.png' },
 ];
 
 function esc(str) {

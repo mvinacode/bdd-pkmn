@@ -135,7 +135,12 @@ function renderSession(session) {
           ${ballSrc ? `<img class="je-ball" src="${esc(ballSrc)}" alt="${esc(session.ball_name || '')}" width="26" height="26"${ballFb ? ` onerror="this.onerror=null;this.src='${esc(ballFb)}'"` : ''}>` : ''}
           <span class="je-date">${esc(formatDate(session.caught_at))}</span>
         </div>
-        <div class="je-game">${session.game ? esc(session.game) : '<span class="je-game--empty">—</span>'}</div>
+        <div class="je-game">${(() => {
+          if (!session.game) return '<span class="je-game--empty">—</span>';
+          const g = GAMES.find(g => g.name === session.game);
+          if (g?.iconUrl) return `<img class="je-game-icon" src="${esc(g.iconUrl)}" alt="${esc(g.name)}" width="22" height="22"><span class="je-game-abbr">${esc(g.abbr || g.name)}</span>`;
+          return `<span class="je-game-text">${esc(session.game)}</span>`;
+        })()}</div>
         <button class="je-edit-btn" title="Modifier">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
         </button>
