@@ -22,10 +22,10 @@ const BALLS = [
   { name: 'Faiblo Ball',  slug: 'nest-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632918/faiblo_ball_xe40yd.png' },
   { name: 'Filet Ball',   slug: 'net-ball',     customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779633038/filet_ball_fpci4m.png' },
   { name: 'Honor Ball',   slug: 'honor-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779633086/honor_ball_zakfok.png' },
+  { name: 'Luxe Ball',    slug: 'luxury-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779646088/luxe_ball_gim1kx.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
   { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Plongée', slug: 'dive-ball'    },
-  { name: 'Ball Luxe',    slug: 'luxury-ball'  },
   { name: 'Ball Soin',    slug: 'heal-ball'    },
   { name: 'Ball Rêve',    slug: 'dream-ball'   },
 
