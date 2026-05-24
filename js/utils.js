@@ -49,6 +49,7 @@ function getOwnerUuid() {
 
 const GAMES = [
   { name: 'Légendes Pokémon : Z-A', slug: 'legendes-za', abbr: 'Z-A',      iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779641869/legendes_pkmn_z_a_icon_bqvbys.png' },
+  { name: 'Pokémon Écarlate',         slug: 'ecarlate',    abbr: 'Écarlate', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644647/pokemon_ecarlate_icon_futxba.png' },
   { name: 'Pokémon Bouclier',        slug: 'bouclier',    abbr: 'Bouclier', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644365/pokemon_bouclier_icon_tzqgfp.png' },
 ];
 
