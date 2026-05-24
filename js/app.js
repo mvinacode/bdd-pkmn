@@ -692,6 +692,7 @@ async function openModal(number) {
   const megaVariants    = variants.filter(v => ['mega', 'shiny_mega', 'mega_x', 'shiny_mega_x'].includes(v.variant_type));
   const megaYVariants   = variants.filter(v => ['mega_y', 'shiny_mega_y'].includes(v.variant_type));
   const gigamaxVariants = variants.filter(v => ['gigamax', 'shiny_gigamax'].includes(v.variant_type));
+  const alolanVariants  = variants.filter(v => ['alolan', 'alolan_shiny'].includes(v.variant_type));
 
   const neutralBadge = `<span class="gender-badge male">${MALE_SVG}</span><span class="gender-badge female">${FEMALE_SVG}</span>`;
   const maleBadge    = `<span class="gender-badge male">${MALE_SVG}</span>`;
@@ -739,6 +740,15 @@ async function openModal(number) {
             <div class="variants-mega-col">
               <div class="variants-rows-wrapper">
                 <div class="variants-grid">${gigamaxVariants.map(variantCard).join('')}</div>
+              </div>
+            </div>
+          </div>` : ''}
+          ${alolanVariants.length ? `
+          <div class="variants-col-wrap">
+            <h4>Forme d'Alola</h4>
+            <div class="variants-mega-col">
+              <div class="variants-rows-wrapper">
+                <div class="variants-grid">${alolanVariants.map(variantCard).join('')}</div>
               </div>
             </div>
           </div>` : ''}
