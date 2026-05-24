@@ -15,6 +15,7 @@ const BALLS = [
   { name: 'Love Ball',    slug: 'love-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779631945/love_ball_lyb7p4.png' },
   { name: 'Lune Ball',    slug: 'moon-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632242/lune_ball_y1vigy.png' },
   { name: 'Masse Ball',   slug: 'heavy-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632373/masse_ball_w34nu6.png' },
+  { name: 'Niveau Ball',  slug: 'niveau-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632508/niveau_ball_egczxn.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
   { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Chrono',  slug: 'timer-ball'   },
