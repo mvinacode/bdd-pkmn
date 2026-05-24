@@ -56,6 +56,7 @@ const GAMES = [
   { name: 'Pokémon Bouclier',        slug: 'bouclier',    abbr: 'Bouclier', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644365/pokemon_bouclier_icon_tzqgfp.png' },
   { name: 'Pokémon Épée',            slug: 'epee',        abbr: 'Épée',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779646193/pokemon_epee_q42rre.png' },
   { name: "Pokémon Let's Go, Pikachu", slug: 'lets-go-pikachu', abbr: "Let's Go", iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644943/pokemon_let_s_go_pikachu_icon_la54se.png' },
+  { name: 'Pokémon GO',                slug: 'pokemon-go',      abbr: 'GO',       iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779651651/pokemon_go_icon_muwgte.png' },
   { name: 'Banque Pokémon',            slug: 'banque',          abbr: 'Banque',   iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644810/banque_pokemon_icon_r7odmb.png' },
 ];
 
