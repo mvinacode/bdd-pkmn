@@ -951,7 +951,7 @@ async function openModal(number) {
         applyImg(items[0].querySelector('.modal-artwork'), ownedNorm,  seenNorm);
         applyImg(items[1].querySelector('.modal-artwork'), ownedShiny, seenShinyF);
       } else {
-        applyImg(wrapper.querySelector('.modal-artwork'), ownedNorm, seenNorm);
+        applyImg(wrapper.querySelector('.modal-artwork'), ownedNorm || ownedShiny, seenNorm || seenShinyF);
       }
     });
   }
