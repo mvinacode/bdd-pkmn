@@ -45,6 +45,8 @@ function formLabelToIcons(label, isShiny) {
   if (label === 'Unisexe Shiny')     return _NEUTRAL_ICO + _SHINY_ICO;
   if (label === 'Baron')             return _BARON_ICO;
   if (label === 'Baron Shiny')       return _BARON_ICO   + _SHINY_ICO;
+  if (label === 'Alola')             return _NEUTRAL_ICO;
+  if (label === 'Alola Shiny')       return _NEUTRAL_ICO + _SHINY_ICO;
   if (label.startsWith('Méga'))      return _MEGA_ICO    + (label.includes('Shiny') ? _SHINY_ICO : '');
   if (label.startsWith('Gigamax'))   return _GIGAMAX_ICO + (label.includes('Shiny') ? _SHINY_ICO : '');
   return `<span style="font-size:0.72rem;color:var(--text-muted)">${esc(label)}</span>`;
@@ -59,6 +61,7 @@ function formLabelToVariantType(label) {
     'Mâle':    'male',            'Mâle Shiny':    'shiny_male',
     'Femelle': 'female',          'Femelle Shiny': 'shiny_female',
     'Baron':   'baron',           'Baron Shiny':   'shiny_baron',
+    'Alola':   'alolan',          'Alola Shiny':   'alolan_shiny',
     'Méga-Évolution':       'mega',       'Méga-Évolution Shiny':       'shiny_mega',
     'Méga-Évo. X':          'mega_x',     'Méga-Évo. X Shiny':          'shiny_mega_x',
     'Méga-Évo. Y':          'mega_y',     'Méga-Évo. Y Shiny':          'shiny_mega_y',
@@ -259,6 +262,11 @@ function buildFormEntries(variants, megas, iconMap) {
 
   entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: GMAX28,        sprite: gmaxV?.image_url      || null });
   entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX22 + SH20, sprite: gmaxShinyV?.image_url || null });
+
+  const alolanV      = variants.find(v => v.variant_type === 'alolan');
+  const alolanShinyV = variants.find(v => v.variant_type === 'alolan_shiny');
+  if (alolanV)      entries.push({ label: 'Alola',       variant_type: 'alolan',       iconHtml: `<img src="${esc(alolanV.image_url)}" width="28" height="28" alt="">`,                                                             sprite: alolanV.image_url });
+  if (alolanShinyV) entries.push({ label: 'Alola Shiny', variant_type: 'alolan_shiny', iconHtml: `<img src="${esc(alolanShinyV.image_url)}" width="22" height="22" alt=""><img src="${_SHINY_URL}" width="20" height="20" alt="">`, sprite: alolanShinyV.image_url });
 
   return entries;
 }

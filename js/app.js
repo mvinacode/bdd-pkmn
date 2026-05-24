@@ -581,6 +581,8 @@ async function openModal(number) {
       case 'shiny_gigamax': return gmax + shiny;
       case 'baron':         return baron;
       case 'shiny_baron':   return baron + shiny;
+      case 'alolan':        return genderless;
+      case 'alolan_shiny':  return genderless + shiny;
       default:              return genderless;
     }
   }
@@ -752,8 +754,11 @@ async function openModal(number) {
 
   const megas = megasByNumber[p.number] || [];
   const specialForms = [
-    ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true, formIcon: MEGA_ICON })),
-    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, formIcon: GIGAMAX_ICON })),
+    ...megas.map(m => {
+      const isRegional = m.condition_label?.startsWith('Forme');
+      return { name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: !isRegional, isRegional, formIcon: isRegional ? '' : MEGA_ICON };
+    }),
+    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, isRegional: false, formIcon: GIGAMAX_ICON })),
   ];
 
   function illustrationCol(name, artworkUrl, descriptionFr, extraClass = '', formTypes = '', shinyUrl = '', formIcon = '') {
@@ -813,7 +818,7 @@ async function openModal(number) {
         f.name,
         f.artwork_url || '',
         f.description_fr,
-        f.isMega ? 'is-mega' : 'is-gigamax',
+        f.isRegional ? 'is-regional' : f.isMega ? 'is-mega' : 'is-gigamax',
         f.types || '',
         f.shiny_artwork_url || '',
         f.formIcon || ''
@@ -934,8 +939,9 @@ async function openModal(number) {
 
     els.modalContent.querySelectorAll('.illus-col-wrapper').forEach(wrapper => {
       const col       = wrapper.querySelector('.illus-col');
-      const isMega    = col?.classList.contains('is-mega');
-      const isGigamax = col?.classList.contains('is-gigamax');
+      const isMega     = col?.classList.contains('is-mega');
+      const isGigamax  = col?.classList.contains('is-gigamax');
+      const isRegional = col?.classList.contains('is-regional');
       const items     = wrapper.querySelectorAll('.illus-artwork-item');
 
       let ownedNorm, seenNorm, ownedShiny, seenShinyF;
@@ -949,6 +955,11 @@ async function openModal(number) {
         seenNorm   = entries.some(([vt, d]) => vt.includes('gigamax') && !vt.includes('shiny') && d.status === 'seen');
         ownedShiny = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'owned');
         seenShinyF = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'seen');
+      } else if (isRegional) {
+        ownedNorm  = entries.some(([vt, d]) => vt === 'alolan'       && d.status === 'owned');
+        seenNorm   = entries.some(([vt, d]) => vt === 'alolan'       && d.status === 'seen');
+        ownedShiny = entries.some(([vt, d]) => vt === 'alolan_shiny' && d.status === 'owned');
+        seenShinyF = entries.some(([vt, d]) => vt === 'alolan_shiny' && d.status === 'seen');
       } else {
         ownedNorm  = captNormal; seenNorm   = seenNormal;
         ownedShiny = captShiny;  seenShinyF = seenShiny;
@@ -1251,6 +1262,11 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
   const gmaxShinyV = variants.find(v => v.variant_type === 'shiny_gigamax');
   entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`, sprite: gmaxV?.image_url      || null });
   entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX_SM + SHINY_SM2,                                           sprite: gmaxShinyV?.image_url || null });
+
+  const alolanV      = variants.find(v => v.variant_type === 'alolan');
+  const alolanShinyV = variants.find(v => v.variant_type === 'alolan_shiny');
+  if (alolanV)      entries.push({ label: 'Alola',       variant_type: 'alolan',       iconHtml: `<img src="${esc(alolanV.image_url)}" width="28" height="28" alt="">`,                                                             sprite: alolanV.image_url });
+  if (alolanShinyV) entries.push({ label: 'Alola Shiny', variant_type: 'alolan_shiny', iconHtml: `<img src="${esc(alolanShinyV.image_url)}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: alolanShinyV.image_url });
 
   // Pré-sélectionner "Unisexe" (normal) si le Pokémon n'a pas de variantes mâle/femelle en BDD
   const hasGenderVariants = !!(maleVariant || femaleVariant);
