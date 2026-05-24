@@ -13,6 +13,7 @@ const BALLS = [
   { name: 'Compét\'Ball', slug: 'sport-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779582026/compet_ball_u51bqm.png' },
   { name: 'Copain Ball',  slug: 'friend-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779583496/copain_ball_hghbhx.png' },
   { name: 'Love Ball',    slug: 'love-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779631945/love_ball_lyb7p4.png' },
+  { name: 'Lune Ball',    slug: 'moon-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632242/lune_ball_y1vigy.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
   { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Chrono',  slug: 'timer-ball'   },
@@ -24,7 +25,6 @@ const BALLS = [
   { name: 'Ball Soin',    slug: 'heal-ball'    },
   { name: 'Ball Rêve',    slug: 'dream-ball'   },
 
-  { name: 'Ball Lune',    slug: 'moon-ball'    },
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
 
   { name: 'Ball Lourde',  slug: 'heavy-ball'   },
