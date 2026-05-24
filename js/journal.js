@@ -50,6 +50,23 @@ function formLabelToIcons(label, isShiny) {
   return `<span style="font-size:0.72rem;color:var(--text-muted)">${esc(label)}</span>`;
 }
 
+// ── Mapping label → variant_type ──────────────────────────────
+
+function formLabelToVariantType(label) {
+  const MAP = {
+    'Normale': 'normal',          'Unisexe': 'normal',
+    'Shiny':   'shiny',           'Unisexe Shiny': 'shiny',
+    'Mâle':    'male',            'Mâle Shiny':    'shiny_male',
+    'Femelle': 'female',          'Femelle Shiny': 'shiny_female',
+    'Baron':   'baron',           'Baron Shiny':   'shiny_baron',
+    'Méga-Évolution':       'mega',       'Méga-Évolution Shiny':       'shiny_mega',
+    'Méga-Évo. X':          'mega_x',     'Méga-Évo. X Shiny':          'shiny_mega_x',
+    'Méga-Évo. Y':          'mega_y',     'Méga-Évo. Y Shiny':          'shiny_mega_y',
+    'Gigamax':              'gigamax',    'Gigamax Shiny':              'shiny_gigamax',
+  };
+  return MAP[label] || null;
+}
+
 // ── Groupement par session ─────────────────────────────────────
 
 function isSpecialForm(label) {
@@ -92,9 +109,12 @@ let currentView = 'chrono';
 let allCatches  = [];
 
 function renderSession(session) {
-  const ballEntry = BALLS.find(b => b.name === session.ball_name);
-  const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (session.ball_image_url || '');
-  const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  const ballEntry    = BALLS.find(b => b.name === session.ball_name);
+  const ballSrc      = ballEntry ? ballUrl(ballEntry.slug) : (session.ball_image_url || '');
+  const isShinySession = session.forms.some(f => f.is_shiny);
+  const spriteSrc    = session.sprite_url || spriteUrl(session.pokemon_number, isShinySession);
+  const spriteFb     = spriteUrl(session.pokemon_number, isShinySession);
+  const ballFb       = ballEntry ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${ballEntry.slug}.png` : '';
 
   const formIcons = session.forms
     .map(f => `<span class="je-form-icon-group">${formLabelToIcons(f.form_label, f.is_shiny)}</span>`)
@@ -103,7 +123,7 @@ function renderSession(session) {
   return `
     <div class="je" data-session-id="${esc(session.sessionId)}" data-name="${esc(session.pokemon_name_fr)}">
       <div class="je-main-row">
-        <img class="je-sprite" src="${esc(spriteSrc)}" alt="${esc(session.pokemon_name_fr)}" width="48" height="48">
+        <img class="je-sprite" src="${esc(spriteSrc)}" alt="${esc(session.pokemon_name_fr)}" width="48" height="48" onerror="this.onerror=null;this.src='${esc(spriteFb)}'">
         <div class="je-info">
           <div class="je-poke-line">
             <span class="je-number">#${esc(padNumber(session.pokemon_number))}</span>
@@ -112,7 +132,7 @@ function renderSession(session) {
           <div class="je-form-icons">${formIcons}</div>
         </div>
         <div class="je-catch-info">
-          ${ballSrc ? `<img class="je-ball" src="${esc(ballSrc)}" alt="${esc(session.ball_name || '')}" width="26" height="26">` : ''}
+          ${ballSrc ? `<img class="je-ball" src="${esc(ballSrc)}" alt="${esc(session.ball_name || '')}" width="26" height="26"${ballFb ? ` onerror="this.onerror=null;this.src='${esc(ballFb)}'"` : ''}>` : ''}
           <span class="je-date">${esc(formatDate(session.caught_at))}</span>
         </div>
         <div class="je-game">${session.game ? esc(session.game) : '<span class="je-game--empty">—</span>'}</div>
@@ -360,7 +380,17 @@ function buildEditModal() {
         );
         if (rec) {
           const { error: de } = await deleteCatch(rec.id);
-          if (!de) allCatches = allCatches.filter(c => c && c.id !== rec.id);
+          if (!de) {
+            allCatches = allCatches.filter(c => c && c.id !== rec.id);
+            // Nettoyer pokemon_seen si aucune autre capture ne conserve cette forme
+            const vt = formLabelToVariantType(form.form_label);
+            if (vt) {
+              const stillHas = allCatches.some(c =>
+                c && c.pokemon_number === rec.pokemon_number && c.form_label === form.form_label
+              );
+              if (!stillHas) await deleteSeenByVariantType(getOwnerUuid(), rec.pokemon_number, vt);
+            }
+          }
         }
       }
 
@@ -414,12 +444,15 @@ function buildEditModal() {
 
     allCatches = allCatches.filter(c => c && (c.session_id || String(c.id)) !== _editSessionId);
 
-    // Si c'était la dernière session pour ce Pokémon, nettoyer pokemon_seen
-    // (évite l'icône NB résiduelle sur la page principale)
+    // Nettoyer pokemon_seen forme par forme (évite les statuts résiduels sur l'index)
     if (pokemonNumber) {
-      const stillHasCatch = allCatches.some(c => c && c.pokemon_number === pokemonNumber);
-      if (!stillHasCatch) {
-        await deleteAllSeenForPokemon(getOwnerUuid(), pokemonNumber);
+      for (const c of sessionCatches) {
+        const vt = formLabelToVariantType(c.form_label);
+        if (!vt) continue;
+        const stillHas = allCatches.some(other =>
+          other && other.pokemon_number === pokemonNumber && other.form_label === c.form_label
+        );
+        if (!stillHas) await deleteSeenByVariantType(getOwnerUuid(), pokemonNumber, vt);
       }
     }
 
@@ -463,9 +496,11 @@ function openEditModal(session) {
   _formEntries     = [];
   _editSessionForms = [];
 
-  const spriteSrc = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
-  $('jm-sprite').src = spriteSrc;
-  $('jm-sprite').alt = session.pokemon_name_fr;
+  const spriteSrc  = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  const jmSprite   = $('jm-sprite');
+  jmSprite.src     = spriteSrc;
+  jmSprite.alt     = session.pokemon_name_fr;
+  jmSprite.onerror = () => { jmSprite.onerror = null; jmSprite.src = spriteUrl(session.pokemon_number, false); };
   $('jm-title').textContent = `${session.pokemon_name_fr}  #${padNumber(session.pokemon_number)}`;
 
   _editBall = BALLS.find(b => b.name === session.ball_name) || BALLS[0];

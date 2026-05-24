@@ -314,6 +314,19 @@ async function deleteSeenForm(id) {
 }
 
 /**
+ * Supprime une forme vue par son variant_type pour un utilisateur et un Pokémon.
+ */
+async function deleteSeenByVariantType(ownerUuid, pokemonNumber, variantType) {
+  const client = getSupabaseClient();
+  if (!client) return { error: { message: 'Supabase non configuré' } };
+  const { error } = await client.from('pokemon_seen').delete()
+    .eq('owner_uuid', ownerUuid)
+    .eq('pokemon_number', pokemonNumber)
+    .eq('variant_type', variantType);
+  return { error };
+}
+
+/**
  * Supprime toutes les formes vues d'un Pokémon pour un utilisateur.
  */
 async function deleteAllSeenForPokemon(ownerUuid, pokemonNumber) {
