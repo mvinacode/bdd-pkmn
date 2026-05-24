@@ -1402,12 +1402,6 @@ body {
 .evo-portrait.evo-regional {
   cursor: default;
   opacity: 0.9;
-  padding: 8px;
-}
-
-.evo-portrait.evo-regional .evo-img-wrap {
-  width: 72px;
-  height: 72px;
 }
 
 .evo-stage-branching {

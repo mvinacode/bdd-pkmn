@@ -460,9 +460,11 @@ function evoMegaPortrait(mega) {
 }
 
 function evoRegionalPortrait(regional) {
-  const imgSrc = regional.image_url || regional.artwork_url;
+  const imgSrc = regional.image_url
+    ? normalizeVariantUrl(regional.image_url)
+    : (regional.artwork_url || null);
   const imgHtml = imgSrc
-    ? `<img src="${esc(imgSrc)}" alt="${esc(regional.name)}" width="72" height="72" loading="lazy">`
+    ? `<img src="${esc(imgSrc)}" alt="${esc(regional.name)}" width="96" height="96" loading="lazy">`
     : `<div class="evo-mega-placeholder">✦</div>`;
   return `
     <button class="evo-portrait evo-regional" data-number="${regional.pokemon_number}" data-form-type="alolan" disabled>
@@ -716,12 +718,7 @@ async function openModal(number) {
   const femaleBadge  = `<span class="gender-badge female">${FEMALE_SVG}</span>`;
   const megaBadge    = `<span class="gender-badge mega">Méga-Évolution</span>`;
 
-  const sexeLabel = (() => {
-    const fl = catch_?.form_label?.toLowerCase() || '';
-    if (fl === 'mâle'   || fl === 'male')   return `${MALE_SVG} Mâle`;
-    if (fl === 'femelle'|| fl === 'female') return `${FEMALE_SVG} Femelle`;
-    return 'Sexe';
-  })();
+  const sexeLabel = 'Sexe';
 
   const variantsHtml = variants.length
     ? `<div class="variants-section">
