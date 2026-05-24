@@ -11,6 +11,7 @@ const BALLS = [
   { name: 'Safari Ball',  slug: 'safari-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779568476/safari_ball_dqzmhg.png' },
   { name: 'Appât Ball',   slug: 'lure-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779580833/appat_ball_abt6ht.png' },
   { name: 'Compét\'Ball', slug: 'sport-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779582026/compet_ball_u51bqm.png' },
+  { name: 'Copain Ball',  slug: 'friend-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779583496/copain_ball_hghbhx.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
   { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Chrono',  slug: 'timer-ball'   },
@@ -21,7 +22,7 @@ const BALLS = [
   { name: 'Ball Luxe',    slug: 'luxury-ball'  },
   { name: 'Ball Soin',    slug: 'heal-ball'    },
   { name: 'Ball Rêve',    slug: 'dream-ball'   },
-  { name: 'Ball Amis',    slug: 'friend-ball'  },
+
   { name: 'Ball Lune',    slug: 'moon-ball'    },
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
 
