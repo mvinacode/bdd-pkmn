@@ -1128,6 +1128,7 @@ initAuth().then(ok => { if (ok) init(); });
 
 let drawerPokemon    = null;
 let drawerBall       = null;
+let drawerGame       = null;
 let drawerShiny      = false;
 let drawerMode       = 'caught'; // 'caught' | 'seen'
 let drawerForm       = null;     // { variant_type, label, image_url } | null (capture)
@@ -1141,6 +1142,7 @@ function openCatchDrawer(mode = 'caught') {
 
   drawerPokemon = null;
   drawerBall    = null;
+  drawerGame    = null;
   drawerShiny   = false;
 
   const searchInp = $('poke-search');
@@ -1161,8 +1163,9 @@ function openCatchDrawer(mode = 'caught') {
   saveBtnEl.disabled = false;
   saveBtnEl.textContent = mode === 'seen' ? 'Marquer comme vu' : 'Sauvegarder';
 
-  if (!drawerInitDone) { initDrawerBallGrid(); drawerInitDone = true; }
+  if (!drawerInitDone) { initDrawerBallGrid(); initDrawerGameGrid(); drawerInitDone = true; }
   $('ball-grid').querySelectorAll('.ball-opt').forEach(b => b.classList.remove('selected'));
+  $('game-grid')?.querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
 
   drawerMode = mode;
   const modeLabel = $('drawer-mode-label');
@@ -1315,6 +1318,30 @@ function initDrawerBallGrid() {
   );
 }
 
+function initDrawerGameGrid() {
+  const grid = $('game-grid');
+  if (!grid) return;
+  grid.innerHTML = GAMES.map(g => `
+    <button class="game-opt" data-slug="${esc(g.slug)}" title="${esc(g.name)}">
+      ${g.iconUrl ? `<img src="${esc(g.iconUrl)}" alt="" width="28" height="28">` : ''}
+      <span>${esc(g.name)}</span>
+    </button>`).join('');
+  grid.querySelectorAll('.game-opt').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const alreadySelected = btn.classList.contains('selected');
+      grid.querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
+      if (!alreadySelected) {
+        btn.classList.add('selected');
+        drawerGame = GAMES.find(g => g.slug === btn.dataset.slug) || null;
+        const gameInp = $('catch-game');
+        if (gameInp) gameInp.value = '';
+      } else {
+        drawerGame = null;
+      }
+    })
+  );
+}
+
 function bindDrawerEvents() {
   const drawerEl = $('catch-drawer');
   if (!drawerEl) return;
@@ -1414,6 +1441,14 @@ function bindDrawerEvents() {
     });
   }
 
+  const gameInp = $('catch-game');
+  if (gameInp) {
+    gameInp.addEventListener('input', () => {
+      drawerGame = null;
+      $('game-grid')?.querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
+    });
+  }
+
   $('save-catch-btn').addEventListener('click', saveCatchFromMain);
 }
 
@@ -1429,7 +1464,7 @@ async function saveCatchFromMain() {
     saveBtn.textContent = 'Sauvegarde…';
 
     const date = $('catch-date').value || new Date().toISOString().slice(0, 10);
-    const game = $('catch-game')?.value.trim() || null;
+    const game = drawerGame?.name || $('catch-game')?.value.trim() || null;
     try {
       for (const form of formsToMark) {
         const isShiny = form.variant_type?.includes('shiny') || false;
@@ -1469,7 +1504,7 @@ async function saveCatchFromMain() {
   saveBtn.textContent = 'Sauvegarde…';
 
   const date  = $('catch-date').value || new Date().toISOString().slice(0, 10);
-  const game  = $('catch-game')?.value.trim()  || null;
+  const game  = drawerGame?.name || $('catch-game')?.value.trim() || null;
   const notes = $('catch-notes')?.value.trim() || null;
 
   let lastData  = null;
@@ -1589,11 +1624,35 @@ async function openDrawerWithPokemon(number) {
       }
     }
     if (catch_.caught_at) $('catch-date').value = catch_.caught_at;
-    if (catch_.game)      $('catch-game').value  = catch_.game;
-    if (catch_.notes)     $('catch-notes').value = catch_.notes;
+    if (catch_.game) {
+      const gameEntry = GAMES.find(g => g.name === catch_.game);
+      if (gameEntry) {
+        const gameBtn = $('game-grid')?.querySelector(`[data-slug="${gameEntry.slug}"]`);
+        if (gameBtn) {
+          $('game-grid').querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
+          gameBtn.classList.add('selected');
+          drawerGame = gameEntry;
+        }
+      } else {
+        $('catch-game').value = catch_.game;
+      }
+    }
+    if (catch_.notes) $('catch-notes').value = catch_.notes;
   } else if (savedVts.length > 0) {
     const firstForm = seenMap[number][savedVts[0]];
     if (firstForm?.caught_at) $('catch-date').value = firstForm.caught_at;
-    if (firstForm?.game)      $('catch-game').value  = firstForm.game;
+    if (firstForm?.game) {
+      const gameEntry = GAMES.find(g => g.name === firstForm.game);
+      if (gameEntry) {
+        const gameBtn = $('game-grid')?.querySelector(`[data-slug="${gameEntry.slug}"]`);
+        if (gameBtn) {
+          $('game-grid').querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
+          gameBtn.classList.add('selected');
+          drawerGame = gameEntry;
+        }
+      } else {
+        $('catch-game').value = firstForm.game;
+      }
+    }
   }
 }

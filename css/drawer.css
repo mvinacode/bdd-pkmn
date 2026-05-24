@@ -285,6 +285,33 @@
 
 #catch-drawer[data-mode="seen"] .drawer-field--capture-only { display: none; }
 
+/* ── Sélecteur de jeux ───────────────────────────────────── */
+
+.game-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.game-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: left;
+  width: 100%;
+}
+.game-opt img { border-radius: 4px; flex-shrink: 0; }
+.game-opt:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.game-opt.selected { border-color: var(--red); background: rgba(229,57,53,0.1); color: var(--text-primary); }
+
 /* ── Artworks N&B (Pokémon vu non capturé) ───────────────── */
 
 .modal-artwork--nb {
