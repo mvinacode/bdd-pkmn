@@ -9,6 +9,7 @@ const BALLS = [
   { name: 'Hyper Ball',   slug: 'ultra-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779557250/hyper_ball_gkxwfs.png' },
   { name: 'Master Ball',  slug: 'master-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779568469/master_ball_cj1rzg.png' },
   { name: 'Safari Ball',  slug: 'safari-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779568476/safari_ball_dqzmhg.png' },
+  { name: 'Appât Ball',   slug: 'lure-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779580833/appat_ball_abt6ht.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
   { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Chrono',  slug: 'timer-ball'   },
@@ -22,7 +23,7 @@ const BALLS = [
   { name: 'Ball Amis',    slug: 'friend-ball'  },
   { name: 'Ball Lune',    slug: 'moon-ball'    },
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
-  { name: 'Ball Lasso',   slug: 'lure-ball'    },
+
   { name: 'Ball Amour',   slug: 'love-ball'    },
   { name: 'Ball Lourde',  slug: 'heavy-ball'   },
   { name: 'Ball Rapido',  slug: 'fast-ball'    },
