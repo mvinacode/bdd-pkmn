@@ -91,7 +91,7 @@
 .poke-card[data-primary-type="rock"]     { --card-accent: #C5B78C; }
 .poke-card[data-primary-type="ghost"]    { --card-accent: #536FB4; }
 .poke-card[data-primary-type="dragon"]   { --card-accent: #006FC9; }
-.poke-card[data-primary-type="dark"]     { --card-accent: #595761; }
+.poke-card[data-primary-type="dark"]     { --card-accent: #50413f; }
 .poke-card[data-primary-type="steel"]    { --card-accent: #52869D; }
 .poke-card[data-primary-type="fairy"]    { --card-accent: #E46AB2; }
 
