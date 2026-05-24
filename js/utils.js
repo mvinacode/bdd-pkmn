@@ -16,6 +16,7 @@ const BALLS = [
   { name: 'Lune Ball',    slug: 'moon-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632242/lune_ball_y1vigy.png' },
   { name: 'Masse Ball',   slug: 'heavy-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632373/masse_ball_w34nu6.png' },
   { name: 'Niveau Ball',  slug: 'niveau-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632508/niveau_ball_egczxn.png' },
+  { name: 'Speed Ball',   slug: 'fast-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779632633/speed_ball_mmnqgx.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
   { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Chrono',  slug: 'timer-ball'   },
@@ -28,8 +29,6 @@ const BALLS = [
   { name: 'Ball Rêve',    slug: 'dream-ball'   },
 
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
-
-  { name: 'Ball Rapido',  slug: 'fast-ball'    },
 ];
 
 function ballUrl(slug) {
