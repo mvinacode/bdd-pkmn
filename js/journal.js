@@ -262,6 +262,7 @@ function buildFormEntries(variants, megas, iconMap) {
 
 let _editSessionId   = null;
 let _editBall        = null;
+let _editGame        = null;
 let _formEntries     = [];
 let _editSessionForms = [];
 
@@ -294,7 +295,8 @@ function buildEditModal() {
         </div>
         <div class="journal-modal-field">
           <label class="drawer-label">Jeu <span class="optional">(optionnel)</span></label>
-          <input type="text" class="drawer-input" id="jm-game" placeholder="ex : Pokémon Écarlate">
+          <div id="jm-game-grid" class="game-grid"></div>
+          <input type="text" class="drawer-input" id="jm-game" placeholder="Autre jeu…">
         </div>
       </div>
       <div class="journal-modal-footer">
@@ -321,6 +323,32 @@ function buildEditModal() {
     })
   );
 
+  // Grille de jeux
+  const gameGrid = $('jm-game-grid');
+  gameGrid.innerHTML = GAMES.map(g => `
+    <button class="game-opt" data-slug="${esc(g.slug)}" title="${esc(g.name)}">
+      ${g.iconUrl ? `<img src="${esc(g.iconUrl)}" alt="" width="28" height="28">` : ''}
+      <span>${esc(g.name)}</span>
+    </button>`).join('');
+  gameGrid.querySelectorAll('.game-opt').forEach(btn =>
+    btn.addEventListener('click', () => {
+      const alreadySelected = btn.classList.contains('selected');
+      gameGrid.querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
+      if (!alreadySelected) {
+        btn.classList.add('selected');
+        _editGame = GAMES.find(g => g.slug === btn.dataset.slug) || null;
+        const gameInp = $('jm-game');
+        if (gameInp) gameInp.value = '';
+      } else {
+        _editGame = null;
+      }
+    })
+  );
+  $('jm-game').addEventListener('input', () => {
+    _editGame = null;
+    gameGrid.querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
+  });
+
   const closeModal = () => { overlay.classList.remove('is-open'); _editSessionId = null; };
 
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
@@ -339,7 +367,7 @@ function buildEditModal() {
 
     const ballEntry = _editBall;
     const date      = $('jm-date').value || null;
-    const game      = $('jm-game').value.trim() || null;
+    const game      = _editGame?.name || $('jm-game').value.trim() || null;
 
     const btn = $('jm-save');
     btn.disabled    = true;
@@ -509,7 +537,21 @@ function openEditModal(session) {
   if (_editBall) ballGrid.querySelector(`[data-slug="${_editBall.slug}"]`)?.classList.add('selected');
 
   $('jm-date').value = session.caught_at || '';
-  $('jm-game').value = session.game || '';
+
+  _editGame = null;
+  $('jm-game-grid').querySelectorAll('.game-opt').forEach(b => b.classList.remove('selected'));
+  if (session.game) {
+    const gameEntry = GAMES.find(g => g.name === session.game);
+    if (gameEntry) {
+      const gameBtn = $('jm-game-grid').querySelector(`[data-slug="${gameEntry.slug}"]`);
+      if (gameBtn) { gameBtn.classList.add('selected'); _editGame = gameEntry; }
+      $('jm-game').value = '';
+    } else {
+      $('jm-game').value = session.game;
+    }
+  } else {
+    $('jm-game').value = '';
+  }
 
   $('journal-edit-overlay').classList.add('is-open');
   loadModalFormGrid(session);
