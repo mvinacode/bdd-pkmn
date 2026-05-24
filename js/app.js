@@ -50,6 +50,7 @@ const state = {
 };
 
 let catchByNumber = {};
+let shinyCatchByNumber = {};
 let seenSet  = new Set();
 let seenMap  = {};     // { [pokemon_number]: { [variant_type]: { is_shiny, sprite_url, form_label, variant_type, caught_at, game } } }
 let iconCache = {};    // { [pokemon_number]: { normal, shiny } }
@@ -131,8 +132,10 @@ async function loadCatchesMap() {
     fetchSeen(uuid).catch(() => ({ data: [] })),
   ]);
   catchByNumber = {};
+  shinyCatchByNumber = {};
   for (const c of (catchRes.data || [])) {
     if (!catchByNumber[c.pokemon_number]) catchByNumber[c.pokemon_number] = c;
+    if (c.is_shiny && !shinyCatchByNumber[c.pokemon_number]) shinyCatchByNumber[c.pokemon_number] = c;
   }
   seenMap = {};
   for (const s of (seenRes.data || [])) {
@@ -253,12 +256,13 @@ function renderCard(pokemon, icons = {}) {
   if (primaryType) card.dataset.primaryType = primaryType;
 
   const catchBadgeHtml = catch_ ? (() => {
-    const ballEntry = BALLS.find(b => b.name === catch_.ball_name);
-    const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (catch_.ball_image_url || '');
+    const displayCatch = (isShinyDisplay && shinyCatchByNumber[pokemon.number]) ? shinyCatchByNumber[pokemon.number] : catch_;
+    const ballEntry = BALLS.find(b => b.name === displayCatch.ball_name);
+    const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (displayCatch.ball_image_url || '');
     return `
     <div class="poke-catch-badge">
-      <img class="poke-catch-ball-img" src="${esc(ballSrc)}" alt="${esc(catch_.ball_name)}" title="${esc(catch_.ball_name)}" width="22" height="22" loading="lazy">
-      <span class="poke-catch-date-label">${esc(formatCatchDateShort(catch_.caught_at))}</span>
+      <img class="poke-catch-ball-img" src="${esc(ballSrc)}" alt="${esc(displayCatch.ball_name)}" title="${esc(displayCatch.ball_name)}" width="22" height="22" loading="lazy">
+      <span class="poke-catch-date-label">${esc(formatCatchDateShort(displayCatch.caught_at))}</span>
     </div>`;
   })() : '';
 
@@ -847,9 +851,11 @@ async function openModal(number) {
         const { error } = await deleteCatch(catchId);
         if (error) { alert('Erreur lors de la suppression.'); return; }
         delete catchByNumber[num];
+        delete shinyCatchByNumber[num];
         updateCapturedCounter();
       } else if (!stillOwned) {
         delete catchByNumber[num];
+        delete shinyCatchByNumber[num];
         updateCapturedCounter();
       }
       updateCardAfterCatch(num);
@@ -1514,6 +1520,7 @@ async function saveCatchFromMain() {
   }
 
   catchByNumber[drawerPokemon.number] = lastData;
+  if (lastData?.is_shiny) shinyCatchByNumber[drawerPokemon.number] = lastData;
   updateCapturedCounter();
   updateCardAfterCatch(drawerPokemon.number);
   closeCatchDrawer();
