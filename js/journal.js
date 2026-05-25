@@ -119,12 +119,47 @@ function groupBySession(catches) {
 
 let currentView = 'chrono';
 let allCatches  = [];
+let variantMap  = {}; // { [pokemon_number]: { [variant_type]: image_url } }
+
+// Chaînes de fallback par variant_type pour trouver le bon sprite
+function variantFallbacks(vt) {
+  const chains = {
+    'alolan_shiny_male':   ['alolan_shiny_male',   'alolan_shiny', 'alolan'],
+    'alolan_shiny_female': ['alolan_shiny_female',  'alolan_shiny', 'alolan'],
+    'alolan_shiny':        ['alolan_shiny',          'alolan'],
+    'alolan_male':         ['alolan_male',           'alolan'],
+    'alolan_female':       ['alolan_female',         'alolan'],
+    'alolan':              ['alolan'],
+    'shiny_male':          ['shiny_male',   'shiny'],
+    'shiny_female':        ['shiny_female', 'shiny'],
+    'shiny':               ['shiny'],
+    'male':                ['male',   'normal'],
+    'female':              ['female', 'normal'],
+    'normal':              ['normal'],
+  };
+  return chains[vt] || [vt];
+}
+
+// Calcule le meilleur sprite pour une session depuis pokemon_variants
+function getSessionSprite(session) {
+  const variants = variantMap[session.pokemon_number] || {};
+  // Choisir la forme représentative : non-shiny en priorité (sinon shiny)
+  const form = session.forms.find(f => !f.is_shiny) || session.forms[0];
+  if (!form) return null;
+  const vt = formLabelToVariantType(form.form_label);
+  if (vt) {
+    for (const fvt of variantFallbacks(vt)) {
+      if (variants[fvt]) return variants[fvt];
+    }
+  }
+  return null;
+}
 
 function renderSession(session) {
   const ballEntry    = BALLS.find(b => b.name === session.ball_name);
   const ballSrc      = ballEntry ? ballUrl(ballEntry.slug) : (session.ball_image_url || '');
   const isShinySession = session.forms.some(f => f.is_shiny);
-  const spriteSrc    = session.sprite_url || spriteUrl(session.pokemon_number, isShinySession);
+  const spriteSrc    = getSessionSprite(session) || session.sprite_url || spriteUrl(session.pokemon_number, isShinySession);
   const spriteFb     = spriteUrl(session.pokemon_number, isShinySession);
   const ballFb       = ballEntry ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${ballEntry.slug}.png` : '';
 
@@ -601,7 +636,7 @@ function openEditModal(session) {
   _formEntries     = [];
   _editSessionForms = [];
 
-  const spriteSrc  = session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
+  const spriteSrc  = getSessionSprite(session) || session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
   const jmSprite   = $('jm-sprite');
   jmSprite.src     = spriteSrc;
   jmSprite.alt     = session.pokemon_name_fr;
@@ -656,6 +691,8 @@ async function init() {
   try {
     const { data } = await fetchCatches(getOwnerUuid());
     allCatches = data || [];
+    const nums = [...new Set(allCatches.map(c => c.pokemon_number))];
+    variantMap = await fetchVariantMap(nums);
   } catch (e) {
     console.error('[journal]', e);
   } finally {

@@ -263,6 +263,25 @@ async function fetchGigamaxForChain(pokemonNumbers) {
 }
 
 /**
+ * Récupère tous les variants pour une liste de numéros — utilisé par le journal.
+ * Retourne { [pokemon_number]: { [variant_type]: image_url } }
+ */
+async function fetchVariantMap(pokemonNumbers) {
+  const client = getSupabaseClient();
+  if (!client || !pokemonNumbers.length) return {};
+  const { data } = await client
+    .from('pokemon_variants')
+    .select('pokemon_number, variant_type, image_url')
+    .in('pokemon_number', pokemonNumbers);
+  const map = {};
+  for (const r of data || []) {
+    if (!map[r.pokemon_number]) map[r.pokemon_number] = {};
+    map[r.pokemon_number][r.variant_type] = r.image_url;
+  }
+  return map;
+}
+
+/**
  * Récupère les variantes visuelles d'un Pokémon (mâle/femelle, shiny, custom…).
  */
 async function fetchVariants(pokemonNumber) {
