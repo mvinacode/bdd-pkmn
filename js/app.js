@@ -237,12 +237,15 @@ function normalizeVariantUrl(url) {
   return url.replace('/upload/', '/upload/e_trim:10/c_pad,w_128,h_128,b_rgb:ffffff00/');
 }
 
-function getAlolanShinySprite(pokemonNumber, variantType) {
+function getAlolanSprite(pokemonNumber, variantType) {
   const variants = variantMap[pokemonNumber] || {};
   const chains = {
-    'alolan_shiny_male':   ['alolan_shiny_male', 'alolan_shiny', 'alolan'],
-    'alolan_shiny_female': ['alolan_shiny_female', 'alolan_shiny', 'alolan'],
-    'alolan_shiny':        ['alolan_shiny', 'alolan'],
+    'alolan_shiny_male':   ['alolan_shiny_male',   'alolan_shiny', 'alolan'],
+    'alolan_shiny_female': ['alolan_shiny_female',  'alolan_shiny', 'alolan'],
+    'alolan_shiny':        ['alolan_shiny',          'alolan'],
+    'alolan_male':         ['alolan_male',            'alolan'],
+    'alolan_female':       ['alolan_female',          'alolan'],
+    'alolan':              ['alolan'],
   };
   for (const fvt of (chains[variantType] || [variantType])) {
     if (variants[fvt]) return variants[fvt];
@@ -273,22 +276,32 @@ function renderCard(pokemon, icons = {}) {
   const recentShinyCatch = shinyCatchByNumber[pokemon.number] || null;
   const isShinyDisplay = recentShinyCatch ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
 
-  // Sprite : déterminé depuis la capture shiny la plus récente (form_label → variant_type)
-  const ALOLA_SHINY_VT = {
+  // Sprite : form_label → variant_type pour toutes les formes alola (shiny et non-shiny)
+  const ALOLA_FORM_VT = {
     'Alola Mâle Shiny':    'alolan_shiny_male',
     'Alola Femelle Shiny': 'alolan_shiny_female',
     'Alola Shiny':         'alolan_shiny',
     'Alola Unisexe Shiny': 'alolan_shiny',
+    'Alola Mâle':          'alolan_male',
+    'Alola Femelle':       'alolan_female',
+    'Alola':               'alolan',
+    'Alola Unisexe':       'alolan',
   };
   let imgSrc;
-  if (isShinyDisplay && ALOLA_SHINY_VT[recentShinyCatch?.form_label]) {
-    // Forme alola shiny : chercher dans variantMap (pokemon_variants) avec fallback chain
-    const vt = ALOLA_SHINY_VT[recentShinyCatch.form_label];
-    imgSrc = getAlolanShinySprite(pokemon.number, vt) || spriteUrl(pokemon.number, true);
-  } else if (isShinyDisplay) {
-    imgSrc = icons.shiny ? normalizeVariantUrl(icons.shiny) : (recentShinyCatch?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true));
+  if (isShinyDisplay) {
+    const alolaVt = ALOLA_FORM_VT[recentShinyCatch?.form_label];
+    if (alolaVt) {
+      imgSrc = getAlolanSprite(pokemon.number, alolaVt) || spriteUrl(pokemon.number, true);
+    } else {
+      imgSrc = icons.shiny ? normalizeVariantUrl(icons.shiny) : (recentShinyCatch?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true));
+    }
   } else {
-    imgSrc = icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false));
+    const alolaVt = ALOLA_FORM_VT[catch_?.form_label];
+    if (alolaVt) {
+      imgSrc = getAlolanSprite(pokemon.number, alolaVt) || (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
+    } else {
+      imgSrc = icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false));
+    }
   }
 
   const card = document.createElement('article');
