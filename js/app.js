@@ -467,7 +467,7 @@ function evoRegionalPortrait(regional) {
     ? `<img src="${esc(imgSrc)}" alt="${esc(regional.name)}" width="96" height="96" loading="lazy">`
     : `<div class="evo-mega-placeholder">✦</div>`;
   return `
-    <button class="evo-portrait evo-regional" data-number="${regional.pokemon_number}" data-form-type="alolan" disabled>
+    <button class="evo-portrait evo-regional" data-number="${regional.pokemon_number}" data-form-type="${esc(regional.region)}" disabled>
       <div class="evo-img-wrap">${imgHtml}</div>
       <span class="evo-name">${esc(regional.name)}</span>
     </button>`;
@@ -478,16 +478,15 @@ function collectTreeNumbers(tree) {
   return [tree.node.number, ...tree.children.flatMap(c => collectTreeNumbers(c))];
 }
 
-function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumber = {}, gigamaxByNumber = {}) {
+function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumber = {}, gigamaxByNumber = {}, regionalsByNumber = {}) {
   if (!tree) return '';
 
   function renderNode(node, depth) {
     const isCurrent  = node.node.number === currentNumber;
     const iconUrl    = iconByNumber[node.node.number] || null;
     const portrait   = evoPortrait(node.node, isCurrent, iconUrl);
-    const allSpecialForms = megasByNumber[node.node.number] || [];
-    const regionals  = allSpecialForms.filter(m => m.condition_label?.startsWith('Forme'));
-    const megas      = node.children.length === 0 ? allSpecialForms.filter(m => !m.condition_label?.startsWith('Forme')) : [];
+    const regionals  = regionalsByNumber[node.node.number] || [];
+    const megas      = node.children.length === 0 ? (megasByNumber[node.node.number] || []) : [];
     const gigamaxes  = node.children.length === 0 ? (gigamaxByNumber[node.node.number] || []) : [];
     const allBranches = [...megas, ...gigamaxes];
     const regionalsHtml = regionals.length
@@ -554,16 +553,22 @@ async function openModal(number) {
   // On refait fetchEvolutionChain avec les vraies données du Pokémon
   const realEvoTree   = await fetchEvolutionChain(p).catch(() => null);
   const treeNumbers   = collectTreeNumbers(realEvoTree);
-  const [megaRows, iconRows, gigamaxChainRows, gigamaxIconRows] = await Promise.all([
+  const [megaRows, iconRows, gigamaxChainRows, gigamaxIconRows, regionalRows] = await Promise.all([
     fetchMegaEvolutions(treeNumbers).catch(() => []),
     fetchVariantIcons(treeNumbers).catch(() => []),
     fetchGigamaxForChain(treeNumbers).catch(() => []),
     fetchGigamaxVariantIcons(treeNumbers).catch(() => []),
+    fetchRegionalForms(treeNumbers).catch(() => []),
   ]);
   const megasByNumber = {};
   for (const m of megaRows) {
     if (!megasByNumber[m.pokemon_number]) megasByNumber[m.pokemon_number] = [];
     megasByNumber[m.pokemon_number].push(m);
+  }
+  const regionalsByNumber = {};
+  for (const r of regionalRows) {
+    if (!regionalsByNumber[r.pokemon_number]) regionalsByNumber[r.pokemon_number] = [];
+    regionalsByNumber[r.pokemon_number].push(r);
   }
   const gigamaxSpriteMap = Object.fromEntries(gigamaxIconRows.map(r => [r.pokemon_number, r.image_url]));
   const gigamaxByNumber = {};
@@ -668,7 +673,7 @@ async function openModal(number) {
     </div>` : seenStatusHtml;
   const imgSrc     = p.image_url || getImageUrl(p.number);
   const types      = (p.types || []).map(typeBadge).join('');
-  const evoHtml    = buildEvolutionHtml(realEvoTree, p.number, megasByNumber, iconByNumber, gigamaxByNumber);
+  const evoHtml    = buildEvolutionHtml(realEvoTree, p.number, megasByNumber, iconByNumber, gigamaxByNumber, regionalsByNumber);
 
   const MALE_SVG   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
   const FEMALE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
@@ -775,12 +780,11 @@ async function openModal(number) {
   const MEGA_ICON    = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128811/mega_evolution_t9nlsa.svg';
   const GIGAMAX_ICON = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128704/gigantamax_yescyy.png';
 
-  const megas = megasByNumber[p.number] || [];
+  const megas     = megasByNumber[p.number] || [];
+  const regionals = regionalsByNumber[p.number] || [];
   const specialForms = [
-    ...megas.map(m => {
-      const isRegional = m.condition_label?.startsWith('Forme');
-      return { name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: !isRegional, isRegional, formIcon: isRegional ? '' : MEGA_ICON };
-    }),
+    ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true, isRegional: false, formIcon: MEGA_ICON })),
+    ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true, formIcon: '' })),
     ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, isRegional: false, formIcon: GIGAMAX_ICON })),
   ];
 

@@ -182,6 +182,19 @@ async function fetchVariantIcons(pokemonNumbers) {
 }
 
 /**
+ * Récupère les formes régionales (Alola, Galar…) pour une liste de numéros.
+ */
+async function fetchRegionalForms(pokemonNumbers) {
+  const client = getSupabaseClient();
+  if (!client || !pokemonNumbers.length) return [];
+  const { data } = await client
+    .from('pokemon_regional_forms')
+    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url')
+    .in('pokemon_number', pokemonNumbers);
+  return data || [];
+}
+
+/**
  * Récupère les méga-évolutions pour une liste de numéros de Pokémon.
  */
 async function fetchMegaEvolutions(pokemonNumbers) {
