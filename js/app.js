@@ -269,19 +269,27 @@ function renderCard(pokemon, icons = {}) {
 
   const seenForms  = !catch_ && seenMap[pokemon.number] ? Object.values(seenMap[pokemon.number]) : [];
   const seenIsShiny = seenForms.length > 0 && seenForms.every(f => f.is_shiny);
-  // Priorité au shiny : si une forme owned est shiny, l'afficher en priorité
-  const ownedShinyForm = catch_ && seenMap[pokemon.number]
-    ? Object.values(seenMap[pokemon.number]).find(f => f.status === 'owned' && f.is_shiny)
-    : null;
-  const isShinyDisplay = ownedShinyForm ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
-  // Pour les formes alola shiny, icons.shiny (rattata normal shiny) est incorrect :
-  // chercher dans variantMap (pokemon_variants) avec fallback chain, puis sprite_url stocké
-  const isAlolanShiny = ownedShinyForm?.variant_type?.startsWith('alolan');
-  const imgSrc = isShinyDisplay
-    ? (isAlolanShiny
-        ? (getAlolanShinySprite(pokemon.number, ownedShinyForm.variant_type) || ownedShinyForm.sprite_url || spriteUrl(pokemon.number, true))
-        : (icons.shiny ? normalizeVariantUrl(icons.shiny) : (ownedShinyForm?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true))))
-    : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
+  // Source de vérité : capture shiny la plus récente (par date) — évite l'ordre aléatoire de Object.values(seenMap)
+  const recentShinyCatch = shinyCatchByNumber[pokemon.number] || null;
+  const isShinyDisplay = recentShinyCatch ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
+
+  // Sprite : déterminé depuis la capture shiny la plus récente (form_label → variant_type)
+  const ALOLA_SHINY_VT = {
+    'Alola Mâle Shiny':    'alolan_shiny_male',
+    'Alola Femelle Shiny': 'alolan_shiny_female',
+    'Alola Shiny':         'alolan_shiny',
+    'Alola Unisexe Shiny': 'alolan_shiny',
+  };
+  let imgSrc;
+  if (isShinyDisplay && ALOLA_SHINY_VT[recentShinyCatch?.form_label]) {
+    // Forme alola shiny : chercher dans variantMap (pokemon_variants) avec fallback chain
+    const vt = ALOLA_SHINY_VT[recentShinyCatch.form_label];
+    imgSrc = getAlolanShinySprite(pokemon.number, vt) || spriteUrl(pokemon.number, true);
+  } else if (isShinyDisplay) {
+    imgSrc = icons.shiny ? normalizeVariantUrl(icons.shiny) : (recentShinyCatch?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true));
+  } else {
+    imgSrc = icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false));
+  }
 
   const card = document.createElement('article');
   card.className = 'poke-card poke-card--' + cardState;
