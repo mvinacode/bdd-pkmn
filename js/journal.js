@@ -123,6 +123,8 @@ let variantMap  = {}; // { [pokemon_number]: { [variant_type]: image_url } }
 
 // Chaînes de fallback par variant_type pour trouver le bon sprite
 function variantFallbacks(vt) {
+  const base      = ['normal', 'male', 'female'];
+  const baseShiny = ['shiny', 'shiny_male', 'shiny_female', 'normal', 'male', 'female'];
   const chains = {
     'alolan_shiny_male':   ['alolan_shiny_male',   'alolan_shiny', 'alolan'],
     'alolan_shiny_female': ['alolan_shiny_female',  'alolan_shiny', 'alolan'],
@@ -136,6 +138,12 @@ function variantFallbacks(vt) {
     'male':                ['male',   'normal'],
     'female':              ['female', 'normal'],
     'normal':              ['normal'],
+    // Méga et Gigamax → sprite de base du Pokémon, pas le sprite spécial
+    'mega':          base,      'shiny_mega':    baseShiny,
+    'mega_x':        base,      'shiny_mega_x':  baseShiny,
+    'mega_y':        base,      'shiny_mega_y':  baseShiny,
+    'gigamax':       base,      'shiny_gigamax': baseShiny,
+    'baron':         base,      'shiny_baron':   baseShiny,
   };
   return chains[vt] || [vt];
 }
