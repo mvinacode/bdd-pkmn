@@ -254,8 +254,13 @@ function renderCard(pokemon, icons = {}) {
     ? Object.values(seenMap[pokemon.number]).find(f => f.status === 'owned' && f.is_shiny)
     : null;
   const isShinyDisplay = ownedShinyForm ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
+  // Pour les formes alola shiny, le sprite générique icons.shiny (rattata normal shiny) est incorrect :
+  // utiliser le sprite stocké dans seenMap qui pointe vers l'alolan_shiny
+  const isAlolanShiny = ownedShinyForm?.variant_type?.startsWith('alolan');
   const imgSrc = isShinyDisplay
-    ? (icons.shiny  ? normalizeVariantUrl(icons.shiny)  : (ownedShinyForm?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true)))
+    ? (isAlolanShiny
+        ? (ownedShinyForm.sprite_url || spriteUrl(pokemon.number, true))
+        : (icons.shiny ? normalizeVariantUrl(icons.shiny) : (ownedShinyForm?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true))))
     : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
 
   const card = document.createElement('article');
