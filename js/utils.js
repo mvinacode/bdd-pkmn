@@ -58,6 +58,7 @@ const GAMES = [
   { name: 'Pokémon Épée',            slug: 'epee',        abbr: 'Épée',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779646193/pokemon_epee_q42rre.png' },
   { name: "Pokémon Let's Go, Pikachu", slug: 'lets-go-pikachu', abbr: "Let's Go", iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644943/pokemon_let_s_go_pikachu_icon_la54se.png' },
   { name: 'Pokémon GO',                slug: 'pokemon-go',      abbr: 'GO',       iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779651651/pokemon_go_icon_muwgte.png' },
+  { name: 'Pokémon Saphir Alpha',       slug: 'saphir-alpha',    abbr: 'Saphir α', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779731368/pokemon_saphir_alpha_icon_bmztft.png' },
   { name: 'Pokémon Rubis Oméga',       slug: 'rubis-omega',     abbr: 'Rubis Ω', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779723156/pokemon_rubis_omega_icon_laspo7.png' },
   { name: 'Banque Pokémon',            slug: 'banque',          abbr: 'Banque',   iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644810/banque_pokemon_icon_r7odmb.png' },
   { name: 'Pokémon Y',                slug: 'pokemon-y',       abbr: 'Y',        iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779669718/pokemon_y_pgk823.png' },
