@@ -1466,6 +1466,28 @@ body {
   color: var(--text-primary);
 }
 
+.evo-condition.is-night {
+  position: relative;
+  background: rgba(22, 35, 55, 0.75);
+  border-color: rgba(70, 105, 148, 0.45);
+  color: #9eb8d0;
+}
+
+.evo-condition.is-night::after {
+  content: '🌙';
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.evo-chain-regional-grid .evo-arrow .evo-condition {
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 .evo-portrait.evo-mega .evo-name {
   max-width: 140px;
   white-space: nowrap;

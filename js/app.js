@@ -172,6 +172,14 @@ function getVariantStatus(pokemonNumber, variantType) {
     return seen['shiny_male']?.status || seen['shiny_female']?.status || '';
   if (variantType === 'shiny_male' || variantType === 'shiny_female')
     return seen['shiny']?.status || '';
+  if (variantType === 'alolan')
+    return seen['alolan_male']?.status || seen['alolan_female']?.status || '';
+  if (variantType === 'alolan_male' || variantType === 'alolan_female')
+    return seen['alolan']?.status || '';
+  if (variantType === 'alolan_shiny')
+    return seen['alolan_shiny_male']?.status || seen['alolan_shiny_female']?.status || '';
+  if (variantType === 'alolan_shiny_male' || variantType === 'alolan_shiny_female')
+    return seen['alolan_shiny']?.status || '';
   return '';
 }
 
@@ -270,7 +278,7 @@ function renderCard(pokemon, icons = {}) {
 
   const seenFormsMap = seenMap[pokemon.number] || {};
   const SPECIAL_FORMS = [
-    { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female'] },
+    { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female'] },
     { key: 'baron',   icon: BARON_ICON_URL,   variants: ['baron', 'shiny_baron'] },
     { key: 'mega',    icon: MEGA_ICON_URL,    variants: ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y'] },
     { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
@@ -420,7 +428,9 @@ function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, is
       <span class="evo-condition is-mega">${esc(condition)}</span>
     </div>`;
   } else if (condition) {
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}">${esc(condition)}</span>`;
+    const isNight = condition.toLowerCase().includes('nuit');
+    const conditionText = condition;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isNight ? ' is-night' : ''}">${esc(conditionText)}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
@@ -616,9 +626,13 @@ async function openModal(number) {
       case 'shiny_gigamax': return gmax + shiny;
       case 'baron':         return baron;
       case 'shiny_baron':   return baron + shiny;
-      case 'alolan':        return genderless;
-      case 'alolan_shiny':  return genderless + shiny;
-      default:              return genderless;
+      case 'alolan':              return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>`;
+      case 'alolan_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + shiny;
+      case 'alolan_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + male;
+      case 'alolan_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + male + shiny;
+      case 'alolan_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female;
+      case 'alolan_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female + shiny;
+      default:                    return genderless;
     }
   }
 
@@ -691,7 +705,7 @@ async function openModal(number) {
   function variantCard(v) {
     const status = getVariantStatus(p.number, v.variant_type);
     const meta   = VARIANT_STATUS_META[status];
-    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax'].includes(v.variant_type);
+    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax', 'alolan_shiny', 'alolan_shiny_male', 'alolan_shiny_female'].includes(v.variant_type);
     const sparkles = isShiny
       ? `<span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
          <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
@@ -726,7 +740,7 @@ async function openModal(number) {
   const megaVariants    = variants.filter(v => ['mega', 'shiny_mega', 'mega_x', 'shiny_mega_x'].includes(v.variant_type));
   const megaYVariants   = variants.filter(v => ['mega_y', 'shiny_mega_y'].includes(v.variant_type));
   const gigamaxVariants = variants.filter(v => ['gigamax', 'shiny_gigamax'].includes(v.variant_type));
-  const alolanVariants  = variants.filter(v => ['alolan', 'alolan_shiny'].includes(v.variant_type));
+  const alolanVariants  = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
 
   const neutralBadge = `<span class="gender-badge male">${MALE_SVG}</span><span class="gender-badge female">${FEMALE_SVG}</span>`;
   const maleBadge    = `<span class="gender-badge male">${MALE_SVG}</span>`;
@@ -993,10 +1007,10 @@ async function openModal(number) {
         ownedShiny = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'owned');
         seenShinyF = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'seen');
       } else if (isRegional) {
-        ownedNorm  = entries.some(([vt, d]) => vt === 'alolan'       && d.status === 'owned');
-        seenNorm   = entries.some(([vt, d]) => vt === 'alolan'       && d.status === 'seen');
-        ownedShiny = entries.some(([vt, d]) => vt === 'alolan_shiny' && d.status === 'owned');
-        seenShinyF = entries.some(([vt, d]) => vt === 'alolan_shiny' && d.status === 'seen');
+        ownedNorm  = entries.some(([vt, d]) => vt.startsWith('alolan') && !vt.includes('shiny') && d.status === 'owned');
+        seenNorm   = entries.some(([vt, d]) => vt.startsWith('alolan') && !vt.includes('shiny') && d.status === 'seen');
+        ownedShiny = entries.some(([vt, d]) => vt.startsWith('alolan') &&  vt.includes('shiny') && d.status === 'owned');
+        seenShinyF = entries.some(([vt, d]) => vt.startsWith('alolan') &&  vt.includes('shiny') && d.status === 'seen');
       } else {
         ownedNorm  = captNormal; seenNorm   = seenNormal;
         ownedShiny = captShiny;  seenShinyF = seenShiny;
@@ -1300,18 +1314,13 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
   entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`, sprite: gmaxV?.image_url      || null });
   entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX_SM + SHINY_SM2,                                           sprite: gmaxShinyV?.image_url || null });
 
-  const alolanV      = variants.find(v => v.variant_type === 'alolan');
-  const alolanShinyV = variants.find(v => v.variant_type === 'alolan_shiny');
-  if (alolanV)      entries.push({ label: 'Alola',       variant_type: 'alolan',       iconHtml: `<img src="${esc(alolanV.image_url)}" width="28" height="28" alt="">`,                                                             sprite: alolanV.image_url });
-  if (alolanShinyV) entries.push({ label: 'Alola Shiny', variant_type: 'alolan_shiny', iconHtml: `<img src="${esc(alolanShinyV.image_url)}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: alolanShinyV.image_url });
-
   // Pré-sélectionner "Unisexe" (normal) si le Pokémon n'a pas de variantes mâle/femelle en BDD
   const hasGenderVariants = !!(maleVariant || femaleVariant);
   const defaultIdx = hasGenderVariants ? 0 : 4; // 0=Mâle, 4=Unisexe
 
   const usePreselect = preselectedVts.length > 0;
   grid.innerHTML = entries.map((e, i) => {
-    const sel = usePreselect ? preselectedVts.includes(e.variant_type) : i === defaultIdx;
+    const sel = usePreselect && preselectedVts.includes(e.variant_type);
     return `<button class="form-opt${sel ? ' selected' : ''}" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
       <div class="form-opt-icon">${e.iconHtml}</div>
       <span>${esc(e.label)}</span>
@@ -1322,8 +1331,7 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
     drawerForms = entries.filter(e => preselectedVts.includes(e.variant_type));
     if (drawerMode === 'caught' && drawerForms.length > 0) selectDrawerForm(drawerForms[0]);
   } else {
-    drawerForms = [entries[defaultIdx]];
-    if (drawerMode === 'caught') selectDrawerForm(entries[defaultIdx]);
+    drawerForms = [];
   }
 
   grid.querySelectorAll('.form-opt').forEach(btn =>
@@ -1343,14 +1351,76 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
   field.hidden = false;
 }
 
+function renderDrawerFormsAlolan(variants, alolanSprite) {
+  const field = $('form-selector-field');
+  const grid  = $('form-grid');
+  if (!field || !grid) return;
+
+  const MALE_ICON    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const FEMALE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const UNISEXE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const MALE_SM      = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const FEMALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const UNISEXE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const SHINY_SM     = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+
+  const alolanMaleV      = variants.find(v => v.variant_type === 'alolan_male');
+  const alolanFemaleV    = variants.find(v => v.variant_type === 'alolan_female');
+  const alolanShinyMaleV = variants.find(v => v.variant_type === 'alolan_shiny_male');
+  const alolanShinyFemV  = variants.find(v => v.variant_type === 'alolan_shiny_female');
+  const alolanV          = variants.find(v => v.variant_type === 'alolan');
+  const alolanShinyV     = variants.find(v => v.variant_type === 'alolan_shiny');
+
+  const base = alolanSprite || null;
+  const entries = [
+    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: MALE_ICON,             sprite: alolanMaleV?.image_url      || base },
+    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: alolanShinyMaleV?.image_url || base },
+    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: FEMALE_ICON,           sprite: alolanFemaleV?.image_url    || base },
+    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: alolanShinyFemV?.image_url  || base },
+    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: UNISEXE_ICON,          sprite: alolanV?.image_url          || base },
+    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: alolanShinyV?.image_url     || base },
+  ];
+
+  const hasGenderVariants = !!(alolanMaleV || alolanFemaleV);
+  const defaultIdx = hasGenderVariants ? 0 : 4;
+
+  grid.innerHTML = entries.map((e, i) => `
+    <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
+      <div class="form-opt-icon">${e.iconHtml}</div>
+      <span>${esc(e.displayLabel || e.label)}</span>
+    </button>`).join('');
+
+  drawerForms = [];
+
+  grid.querySelectorAll('.form-opt').forEach(btn =>
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('selected');
+      const entry = entries[parseInt(btn.dataset.idx)];
+      if (btn.classList.contains('selected')) {
+        if (!drawerForms.find(f => f.variant_type === entry.variant_type)) drawerForms.push(entry);
+        if (drawerMode === 'caught') selectDrawerForm(entry);
+      } else {
+        drawerForms = drawerForms.filter(f => f.variant_type !== entry.variant_type);
+      }
+    })
+  );
+
+  field.hidden = false;
+}
+
 function selectDrawerForm(v) {
   drawerForm  = v;
   drawerShiny = v.variant_type?.includes('shiny') || false;
   const img = $('drawer-poke-img');
   if (img && drawerPokemon) {
-    const src = drawerShiny
-      ? (drawerPokemon.iconShiny  ? normalizeVariantUrl(drawerPokemon.iconShiny)  : spriteUrl(drawerPokemon.number, true))
-      : (drawerPokemon.iconNormal ? normalizeVariantUrl(drawerPokemon.iconNormal) : spriteUrl(drawerPokemon.number, false));
+    let src;
+    if (drawerPokemon.isAlolan && drawerPokemon.alolanSprite) {
+      src = normalizeVariantUrl(drawerPokemon.alolanSprite);
+    } else if (drawerShiny) {
+      src = drawerPokemon.iconShiny  ? normalizeVariantUrl(drawerPokemon.iconShiny)  : spriteUrl(drawerPokemon.number, true);
+    } else {
+      src = drawerPokemon.iconNormal ? normalizeVariantUrl(drawerPokemon.iconNormal) : spriteUrl(drawerPokemon.number, false);
+    }
     img.src = src;
   }
 }
@@ -1436,7 +1506,10 @@ function bindDrawerEvents() {
         if (!data?.length) { dropdown.hidden = true; return; }
 
         const nums = data.map(p => p.number);
-        const allIcons = await fetchCardIcons(nums).catch(() => []);
+        const [allIcons, alolanRows] = await Promise.all([
+          fetchCardIcons(nums).catch(() => []),
+          fetchAlolanVariantsForNumbers(nums).catch(() => []),
+        ]);
         const iconMap = {};
         for (const r of allIcons) {
           if (!iconMap[r.pokemon_number]) iconMap[r.pokemon_number] = { normal: null, shiny: null };
@@ -1445,47 +1518,76 @@ function bindDrawerEvents() {
           else if ((r.variant_type === 'shiny' || r.variant_type === 'shiny_male') && !iconMap[r.pokemon_number].shiny)
             iconMap[r.pokemon_number].shiny = r.image_url;
         }
+        const alolanSpriteMap = {};
+        for (const r of alolanRows) alolanSpriteMap[r.pokemon_number] = r.image_url;
 
-        dropdown.innerHTML = data.map(p => {
-          const ico = iconMap[p.number];
-          const src = ico?.normal ? normalizeVariantUrl(ico.normal) : spriteUrl(p.number, false);
-          return `<button class="poke-result" data-number="${p.number}" data-name="${esc(p.name_fr)}">
+        // Construire la liste : Pokémon normal + entrée Alola si variante en BDD
+        const items = [];
+        for (const p of data) {
+          items.push({ p, isAlola: false });
+          if (alolanSpriteMap[p.number]) items.push({ p, isAlola: true });
+        }
+
+        dropdown.innerHTML = items.map(({ p, isAlola }) => {
+          const ico         = iconMap[p.number];
+          const alolaSprite = alolanSpriteMap[p.number] || null;
+          const src = isAlola
+            ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(p.number, false))
+            : (ico?.normal ? normalizeVariantUrl(ico.normal)  : spriteUrl(p.number, false));
+          const displayName = isAlola ? `${p.name_fr} · Alola` : p.name_fr;
+          return `<button class="poke-result"
+            data-number="${p.number}"
+            data-name="${esc(p.name_fr)}"
+            data-is-alola="${isAlola ? '1' : '0'}"
+            data-alola-sprite="${esc(alolaSprite || '')}">
             <img src="${esc(src)}" width="28" height="28" alt="" style="image-rendering:pixelated">
-            <span>#${esc(padNumber(p.number))} ${esc(p.name_fr)}</span>
+            <span>#${esc(padNumber(p.number))} ${esc(displayName)}</span>
           </button>`;
         }).join('');
         dropdown.hidden = false;
 
         dropdown.querySelectorAll('.poke-result').forEach(btn =>
           btn.addEventListener('click', async () => {
-            const num  = parseInt(btn.dataset.number);
-            const name = btn.dataset.name;
-            const ico  = iconMap[num] || {};
-            drawerPokemon = { number: num, name_fr: name, iconNormal: ico.normal || null, iconShiny: ico.shiny || null };
-            searchInp.value = name;
-            dropdown.hidden = true;
+            const num         = parseInt(btn.dataset.number);
+            const name        = btn.dataset.name;
+            const isAlola     = btn.dataset.isAlola === '1';
+            const alolaSprite = btn.dataset.alolaSprite || null;
+            const ico         = iconMap[num] || {};
 
-            const src = drawerShiny
-              ? (drawerPokemon.iconShiny  ? normalizeVariantUrl(drawerPokemon.iconShiny)  : spriteUrl(num, true))
-              : (drawerPokemon.iconNormal ? normalizeVariantUrl(drawerPokemon.iconNormal) : spriteUrl(num, false));
+            drawerPokemon = {
+              number: num, name_fr: name,
+              iconNormal: ico.normal || null, iconShiny: ico.shiny || null,
+              isAlolan: isAlola, alolanSprite: alolaSprite,
+            };
+
+            const displayName = isAlola ? `${name} · Alola` : name;
+            const src = isAlola
+              ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(num, false))
+              : (ico.normal  ? normalizeVariantUrl(ico.normal)  : spriteUrl(num, false));
+
+            searchInp.value = displayName;
+            dropdown.hidden = true;
 
             const sel = $('selected-pokemon');
             sel.innerHTML = `
               <img id="drawer-poke-img" src="${esc(src)}" width="52" height="52"
-                   alt="${esc(name)}" style="image-rendering:pixelated">
+                   alt="${esc(displayName)}" style="image-rendering:pixelated">
               <div>
                 <div style="font-size:0.65rem;color:var(--text-muted)">#${esc(padNumber(num))}</div>
-                <div style="font-weight:700">${esc(name)}</div>
+                <div style="font-weight:700">${esc(displayName)}</div>
               </div>`;
             sel.hidden = false;
 
-            // Charger les formes disponibles
             drawerForm = null;
             const [variantData, megaData] = await Promise.all([
               fetchVariants(num).catch(() => []),
               fetchMegaEvolutions([num]).catch(() => []),
             ]);
-            renderDrawerForms(variantData, ico, megaData);
+            if (isAlola) {
+              renderDrawerFormsAlolan(variantData, alolaSprite);
+            } else {
+              renderDrawerForms(variantData, ico, megaData);
+            }
           })
         );
       }, 280);

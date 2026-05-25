@@ -182,6 +182,20 @@ async function fetchVariantIcons(pokemonNumbers) {
 }
 
 /**
+ * Récupère les variantes Alola (type 'alolan') pour une liste de numéros — utilisé dans la recherche drawer.
+ */
+async function fetchAlolanVariantsForNumbers(pokemonNumbers) {
+  const client = getSupabaseClient();
+  if (!client || !pokemonNumbers.length) return [];
+  const { data } = await client
+    .from('pokemon_variants')
+    .select('pokemon_number, variant_type, image_url')
+    .eq('variant_type', 'alolan')
+    .in('pokemon_number', pokemonNumbers);
+  return data || [];
+}
+
+/**
  * Récupère les formes régionales (Alola, Galar…) pour une liste de numéros.
  */
 async function fetchRegionalForms(pokemonNumbers) {

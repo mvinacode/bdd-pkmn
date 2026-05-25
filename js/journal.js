@@ -45,8 +45,14 @@ function formLabelToIcons(label, isShiny) {
   if (label === 'Unisexe Shiny')     return _NEUTRAL_ICO + _SHINY_ICO;
   if (label === 'Baron')             return _BARON_ICO;
   if (label === 'Baron Shiny')       return _BARON_ICO   + _SHINY_ICO;
-  if (label === 'Alola')             return _NEUTRAL_ICO;
-  if (label === 'Alola Shiny')       return _NEUTRAL_ICO + _SHINY_ICO;
+  if (label === 'Alola Mâle')          return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _MALE_ICO;
+  if (label === 'Alola Mâle Shiny')   return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _MALE_ICO + _SHINY_ICO;
+  if (label === 'Alola Femelle')      return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _FEMALE_ICO;
+  if (label === 'Alola Femelle Shiny')return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _FEMALE_ICO + _SHINY_ICO;
+  if (label === 'Alola Unisexe')      return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>`;
+  if (label === 'Alola Unisexe Shiny')return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + _SHINY_ICO;
+  if (label === 'Alola')              return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>`;
+  if (label === 'Alola Shiny')        return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + _SHINY_ICO;
   if (label.startsWith('Méga'))      return _MEGA_ICO    + (label.includes('Shiny') ? _SHINY_ICO : '');
   if (label.startsWith('Gigamax'))   return _GIGAMAX_ICO + (label.includes('Shiny') ? _SHINY_ICO : '');
   return `<span style="font-size:0.72rem;color:var(--text-muted)">${esc(label)}</span>`;
@@ -61,7 +67,10 @@ function formLabelToVariantType(label) {
     'Mâle':    'male',            'Mâle Shiny':    'shiny_male',
     'Femelle': 'female',          'Femelle Shiny': 'shiny_female',
     'Baron':   'baron',           'Baron Shiny':   'shiny_baron',
-    'Alola':   'alolan',          'Alola Shiny':   'alolan_shiny',
+    'Alola':              'alolan',       'Alola Shiny':        'alolan_shiny',
+    'Alola Unisexe':      'alolan',       'Alola Unisexe Shiny': 'alolan_shiny',
+    'Alola Mâle':         'alolan_male',  'Alola Mâle Shiny':   'alolan_shiny_male',
+    'Alola Femelle':      'alolan_female','Alola Femelle Shiny': 'alolan_shiny_female',
     'Méga-Évolution':       'mega',       'Méga-Évolution Shiny':       'shiny_mega',
     'Méga-Évo. X':          'mega_x',     'Méga-Évo. X Shiny':          'shiny_mega_x',
     'Méga-Évo. Y':          'mega_y',     'Méga-Évo. Y Shiny':          'shiny_mega_y',
@@ -263,12 +272,34 @@ function buildFormEntries(variants, megas, iconMap) {
   entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: GMAX28,        sprite: gmaxV?.image_url      || null });
   entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX22 + SH20, sprite: gmaxShinyV?.image_url || null });
 
-  const alolanV      = variants.find(v => v.variant_type === 'alolan');
-  const alolanShinyV = variants.find(v => v.variant_type === 'alolan_shiny');
-  if (alolanV)      entries.push({ label: 'Alola',       variant_type: 'alolan',       iconHtml: `<img src="${esc(alolanV.image_url)}" width="28" height="28" alt="">`,                                                             sprite: alolanV.image_url });
-  if (alolanShinyV) entries.push({ label: 'Alola Shiny', variant_type: 'alolan_shiny', iconHtml: `<img src="${esc(alolanShinyV.image_url)}" width="22" height="22" alt=""><img src="${_SHINY_URL}" width="20" height="20" alt="">`, sprite: alolanShinyV.image_url });
-
   return entries;
+}
+
+function buildFormEntriesAlolan(variants, iconMap) {
+  const M26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const F26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const U26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const M20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const F20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const U20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const SH20 = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
+
+  const alolanV          = variants.find(v => v.variant_type === 'alolan');
+  const alolanShinyV     = variants.find(v => v.variant_type === 'alolan_shiny');
+  const alolanMaleV      = variants.find(v => v.variant_type === 'alolan_male');
+  const alolanFemaleV    = variants.find(v => v.variant_type === 'alolan_female');
+  const alolanShinyMaleV = variants.find(v => v.variant_type === 'alolan_shiny_male');
+  const alolanShinyFemV  = variants.find(v => v.variant_type === 'alolan_shiny_female');
+
+  const base = alolanV?.image_url || iconMap.normal || null;
+  return [
+    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: M26,        sprite: alolanMaleV?.image_url      || base },
+    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: M20 + SH20, sprite: alolanShinyMaleV?.image_url || base },
+    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: F26,        sprite: alolanFemaleV?.image_url    || base },
+    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: F20 + SH20, sprite: alolanShinyFemV?.image_url  || base },
+    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: U26,        sprite: base },
+    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: U20 + SH20, sprite: alolanShinyV?.image_url     || base },
+  ];
 }
 
 // ── Modal d'édition ────────────────────────────────────────────
@@ -410,12 +441,21 @@ function buildEditModal() {
     // 2. Synchroniser les formes (diff ajout / suppression)
     if (_formEntries.length > 0) {
       const selectedEntries = selectedBtns.map(b => _formEntries[parseInt(b.dataset.idx)]);
-      const origLabels      = new Set(_editSessionForms.map(f => f.form_label));
-      const selLabels       = new Set(selectedEntries.map(e => e.label));
+      // 'Alola' (ancien format DB) et 'Alola Unisexe' sont équivalents
+      const normLabel = l => {
+        if (l === 'Alola') return 'Alola Unisexe';
+        if (l === 'Alola Shiny') return 'Alola Unisexe Shiny';
+        return l;
+      };
+      const origLabels = new Set(_editSessionForms.map(f => normLabel(f.form_label)));
+      const selLabels  = new Set(selectedEntries.map(e => e.label));
+
+      // Mémoriser une référence avant les suppressions
+      const base = allCatches.find(c => c && (c.session_id || String(c.id)) === _editSessionId);
 
       // Supprimer les formes désélectionnées
       for (const form of _editSessionForms) {
-        if (selLabels.has(form.form_label)) continue;
+        if (selLabels.has(normLabel(form.form_label))) continue;
         const rec = allCatches.find(c =>
           c && (c.session_id || String(c.id)) === _editSessionId && c.form_label === form.form_label
         );
@@ -436,7 +476,6 @@ function buildEditModal() {
       }
 
       // Insérer les nouvelles formes sélectionnées
-      const base = allCatches.find(c => c && (c.session_id || String(c.id)) === _editSessionId);
       if (base) {
         for (const entry of selectedEntries) {
           if (origLabels.has(entry.label)) continue;
@@ -455,7 +494,23 @@ function buildEditModal() {
             form_label:      entry.label,
             session_id:      _editSessionId,
           });
-          if (!ie && newRec) allCatches.push(newRec);
+          if (!ie && newRec) {
+            allCatches.push(newRec);
+            const newVt = formLabelToVariantType(entry.label);
+            if (newVt) {
+              await upsertSeen({
+                owner_uuid:     getOwnerUuid(),
+                pokemon_number: newRec.pokemon_number,
+                variant_type:   newVt,
+                status:         'owned',
+                form_label:     newRec.form_label,
+                is_shiny:       newRec.is_shiny,
+                sprite_url:     newRec.sprite_url,
+                caught_at:      newRec.caught_at,
+                game:           newRec.game,
+              });
+            }
+          }
         }
       }
     }
@@ -516,15 +571,23 @@ async function loadModalFormGrid(session) {
     shiny:  spriteUrl(session.pokemon_number, true),
   };
 
-  _formEntries      = buildFormEntries(variantData, megaData, iconMap);
+  const isAlolanSession = session.forms.some(f => formLabelToVariantType(f.form_label)?.startsWith('alolan'));
+  _formEntries      = isAlolanSession
+    ? buildFormEntriesAlolan(variantData, iconMap)
+    : buildFormEntries(variantData, megaData, iconMap);
   _editSessionForms = [...session.forms];
 
-  const selectedLabels = new Set(session.forms.map(f => f.form_label));
+  const normalizeLabel = l => {
+    if (l === 'Alola') return 'Alola Unisexe';
+    if (l === 'Alola Shiny') return 'Alola Unisexe Shiny';
+    return l;
+  };
+  const selectedLabels = new Set(session.forms.map(f => normalizeLabel(f.form_label)));
 
   formGrid.innerHTML = _formEntries.map((e, i) => `
     <button class="form-opt${selectedLabels.has(e.label) ? ' selected' : ''}" data-idx="${i}" title="${esc(e.label)}">
       <div class="form-opt-icon">${e.iconHtml}</div>
-      <span>${esc(e.label)}</span>
+      <span>${esc(e.displayLabel || e.label)}</span>
     </button>`).join('');
 
   formGrid.querySelectorAll('.form-opt').forEach(btn =>

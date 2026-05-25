@@ -27,8 +27,8 @@ const BALLS = [
   { name: 'Mémoire Ball', slug: 'memoire-ball', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779650888/memoire_ball_c7k3q5.png' },
   { name: 'Parc Ball',    slug: 'parc-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779666243/parc_ball_ypcqqg.png' },
   { name: 'Rapide Ball',  slug: 'quick-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779669583/rapide_ball_m2brxb.png' },
+  { name: 'Soin Ball',   slug: 'heal-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779722922/soin_ball_szdgxf.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
-  { name: 'Ball Soin',    slug: 'heal-ball'    },
   { name: 'Ball Rêve',    slug: 'dream-ball'   },
 
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
@@ -58,6 +58,7 @@ const GAMES = [
   { name: 'Pokémon Épée',            slug: 'epee',        abbr: 'Épée',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779646193/pokemon_epee_q42rre.png' },
   { name: "Pokémon Let's Go, Pikachu", slug: 'lets-go-pikachu', abbr: "Let's Go", iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644943/pokemon_let_s_go_pikachu_icon_la54se.png' },
   { name: 'Pokémon GO',                slug: 'pokemon-go',      abbr: 'GO',       iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779651651/pokemon_go_icon_muwgte.png' },
+  { name: 'Pokémon Rubis Oméga',       slug: 'rubis-omega',     abbr: 'Rubis Ω', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779723156/pokemon_rubis_omega_icon_laspo7.png' },
   { name: 'Banque Pokémon',            slug: 'banque',          abbr: 'Banque',   iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644810/banque_pokemon_icon_r7odmb.png' },
   { name: 'Pokémon Y',                slug: 'pokemon-y',       abbr: 'Y',        iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779669718/pokemon_y_pgk823.png' },
   { name: 'Pokémon X',                slug: 'pokemon-x',       abbr: 'X',        iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779666515/pokemon_x_uopvkn.png' },
