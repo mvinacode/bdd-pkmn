@@ -56,6 +56,7 @@ let shinyCatchByNumber = {};
 let seenSet  = new Set();
 let seenMap  = {};     // { [pokemon_number]: { [variant_type]: { is_shiny, sprite_url, form_label, variant_type, caught_at, game } } }
 let iconCache = {};    // { [pokemon_number]: { normal, shiny } }
+let variantMap = {};   // { [pokemon_number]: { [variant_type]: image_url } } — source de vérité pour sprites
 
 async function addToSeen(number, data) {
   // Mise à jour optimiste du cache (UI instantanée)
@@ -145,6 +146,12 @@ async function loadCatchesMap() {
     seenMap[s.pokemon_number][s.variant_type] = s;
   }
   seenSet = new Set(Object.keys(seenMap).map(Number));
+  // Charger les sprites officiels depuis pokemon_variants pour éviter de faire confiance aux sprite_url stockés
+  const allNums = [...new Set([
+    ...Object.keys(catchByNumber).map(Number),
+    ...Object.keys(seenMap).map(Number),
+  ])];
+  variantMap = allNums.length ? await fetchVariantMap(allNums) : {};
   updateCapturedCounter();
 }
 
@@ -230,6 +237,19 @@ function normalizeVariantUrl(url) {
   return url.replace('/upload/', '/upload/e_trim:10/c_pad,w_128,h_128,b_rgb:ffffff00/');
 }
 
+function getAlolanShinySprite(pokemonNumber, variantType) {
+  const variants = variantMap[pokemonNumber] || {};
+  const chains = {
+    'alolan_shiny_male':   ['alolan_shiny_male', 'alolan_shiny', 'alolan'],
+    'alolan_shiny_female': ['alolan_shiny_female', 'alolan_shiny', 'alolan'],
+    'alolan_shiny':        ['alolan_shiny', 'alolan'],
+  };
+  for (const fvt of (chains[variantType] || [variantType])) {
+    if (variants[fvt]) return variants[fvt];
+  }
+  return null;
+}
+
 function getImageUrl(number) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png`;
 }
@@ -254,12 +274,12 @@ function renderCard(pokemon, icons = {}) {
     ? Object.values(seenMap[pokemon.number]).find(f => f.status === 'owned' && f.is_shiny)
     : null;
   const isShinyDisplay = ownedShinyForm ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
-  // Pour les formes alola shiny, le sprite générique icons.shiny (rattata normal shiny) est incorrect :
-  // utiliser le sprite stocké dans seenMap qui pointe vers l'alolan_shiny
+  // Pour les formes alola shiny, icons.shiny (rattata normal shiny) est incorrect :
+  // chercher dans variantMap (pokemon_variants) avec fallback chain, puis sprite_url stocké
   const isAlolanShiny = ownedShinyForm?.variant_type?.startsWith('alolan');
   const imgSrc = isShinyDisplay
     ? (isAlolanShiny
-        ? (ownedShinyForm.sprite_url || spriteUrl(pokemon.number, true))
+        ? (getAlolanShinySprite(pokemon.number, ownedShinyForm.variant_type) || ownedShinyForm.sprite_url || spriteUrl(pokemon.number, true))
         : (icons.shiny ? normalizeVariantUrl(icons.shiny) : (ownedShinyForm?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true))))
     : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
 
@@ -1715,6 +1735,9 @@ async function saveCatchFromMain() {
 
   catchByNumber[drawerPokemon.number] = lastData;
   if (lastData?.is_shiny) shinyCatchByNumber[drawerPokemon.number] = lastData;
+  if (!variantMap[drawerPokemon.number]) {
+    fetchVariantMap([drawerPokemon.number]).then(m => { Object.assign(variantMap, m); });
+  }
   updateCapturedCounter();
   updateCardAfterCatch(drawerPokemon.number);
   closeCatchDrawer();
