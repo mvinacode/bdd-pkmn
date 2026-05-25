@@ -1371,18 +1371,16 @@ function renderDrawerFormsAlolan(variants, alolanSprite) {
   const alolanV          = variants.find(v => v.variant_type === 'alolan');
   const alolanShinyV     = variants.find(v => v.variant_type === 'alolan_shiny');
 
-  const base = alolanSprite || null;
+  const base      = alolanV?.image_url      || alolanSprite || null;
+  const baseShiny = alolanShinyV?.image_url || base;
   const entries = [
-    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: MALE_ICON,             sprite: alolanMaleV?.image_url      || base },
-    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: alolanShinyMaleV?.image_url || base },
-    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: FEMALE_ICON,           sprite: alolanFemaleV?.image_url    || base },
-    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: alolanShinyFemV?.image_url  || base },
-    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: UNISEXE_ICON,          sprite: alolanV?.image_url          || base },
-    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: alolanShinyV?.image_url     || base },
+    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: MALE_ICON,             sprite: alolanMaleV?.image_url      || base      },
+    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: alolanShinyMaleV?.image_url || baseShiny },
+    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: FEMALE_ICON,           sprite: alolanFemaleV?.image_url    || base      },
+    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: alolanShinyFemV?.image_url  || baseShiny },
+    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: UNISEXE_ICON,          sprite: base      },
+    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
   ];
-
-  const hasGenderVariants = !!(alolanMaleV || alolanFemaleV);
-  const defaultIdx = hasGenderVariants ? 0 : 4;
 
   grid.innerHTML = entries.map((e, i) => `
     <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">

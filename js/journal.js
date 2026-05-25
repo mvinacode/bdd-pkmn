@@ -291,14 +291,15 @@ function buildFormEntriesAlolan(variants, iconMap) {
   const alolanShinyMaleV = variants.find(v => v.variant_type === 'alolan_shiny_male');
   const alolanShinyFemV  = variants.find(v => v.variant_type === 'alolan_shiny_female');
 
-  const base = alolanV?.image_url || iconMap.normal || null;
+  const base      = alolanV?.image_url      || iconMap.normal || null;
+  const baseShiny = alolanShinyV?.image_url || base;
   return [
-    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: M26,        sprite: alolanMaleV?.image_url      || base },
-    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: M20 + SH20, sprite: alolanShinyMaleV?.image_url || base },
-    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: F26,        sprite: alolanFemaleV?.image_url    || base },
-    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: F20 + SH20, sprite: alolanShinyFemV?.image_url  || base },
-    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: U26,        sprite: base },
-    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: U20 + SH20, sprite: alolanShinyV?.image_url     || base },
+    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: M26,        sprite: alolanMaleV?.image_url      || base      },
+    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: M20 + SH20, sprite: alolanShinyMaleV?.image_url || baseShiny },
+    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: F26,        sprite: alolanFemaleV?.image_url    || base      },
+    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: F20 + SH20, sprite: alolanShinyFemV?.image_url  || baseShiny },
+    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: U26,        sprite: base      },
+    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: U20 + SH20, sprite: baseShiny },
   ];
 }
 
