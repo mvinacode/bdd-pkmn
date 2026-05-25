@@ -25,9 +25,9 @@ const BALLS = [
   { name: 'Luxe Ball',    slug: 'luxury-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779646088/luxe_ball_gim1kx.png' },
   { name: 'Scuba Ball',   slug: 'dive-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779647360/scuba_ball_sasxeh.png' },
   { name: 'Mémoire Ball', slug: 'memoire-ball', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779650888/memoire_ball_c7k3q5.png' },
-  { name: 'Parc Ball',   slug: 'parc-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779666243/parc_ball_ypcqqg.png' },
+  { name: 'Parc Ball',    slug: 'parc-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779666243/parc_ball_ypcqqg.png' },
+  { name: 'Rapide Ball',  slug: 'quick-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779669583/rapide_ball_m2brxb.png' },
   { name: 'Ball Sombre',  slug: 'dusk-ball'    },
-  { name: 'Ball Rapide',  slug: 'quick-ball'   },
   { name: 'Ball Soin',    slug: 'heal-ball'    },
   { name: 'Ball Rêve',    slug: 'dream-ball'   },
 
