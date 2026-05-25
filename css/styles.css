@@ -1392,6 +1392,13 @@ body {
   align-items: center;
 }
 
+.evo-chain-regional-grid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  row-gap: 12px;
+}
+
 .evo-regionals {
   display: flex;
   gap: 8px;
@@ -1404,11 +1411,6 @@ body {
   opacity: 0.9;
 }
 
-.evo-regional-condition {
-  font-size: 0.72rem;
-  margin-top: 2px;
-  opacity: 0.8;
-}
 
 .evo-stage-branching {
   align-self: stretch;

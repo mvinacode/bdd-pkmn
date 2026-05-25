@@ -470,7 +470,6 @@ function evoRegionalPortrait(regional) {
     <button class="evo-portrait evo-regional" data-number="${regional.pokemon_number}" data-form-type="${esc(regional.region)}" disabled>
       <div class="evo-img-wrap">${imgHtml}</div>
       <span class="evo-name">${esc(regional.name)}</span>
-      ${regional.evolution_condition ? `<span class="evo-condition evo-regional-condition">${esc(regional.evolution_condition)}</span>` : ''}
     </button>`;
 }
 
@@ -482,17 +481,14 @@ function collectTreeNumbers(tree) {
 function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumber = {}, gigamaxByNumber = {}, regionalsByNumber = {}) {
   if (!tree) return '';
 
-  function renderNode(node, depth) {
+  function renderNode(node, depth, excludeRegionals = false) {
     const isCurrent  = node.node.number === currentNumber;
     const iconUrl    = iconByNumber[node.node.number] || null;
     const portrait   = evoPortrait(node.node, isCurrent, iconUrl);
-    const regionals  = regionalsByNumber[node.node.number] || [];
+    const regionals  = excludeRegionals ? [] : (regionalsByNumber[node.node.number] || []);
     const megas      = node.children.length === 0 ? (megasByNumber[node.node.number] || []) : [];
     const gigamaxes  = node.children.length === 0 ? (gigamaxByNumber[node.node.number] || []) : [];
     const allBranches = [...megas, ...gigamaxes];
-    const regionalsHtml = regionals.length
-      ? `<div class="evo-regionals">${regionals.map(evoRegionalPortrait).join('')}</div>`
-      : '';
 
     let megaHtml = '';
     if (allBranches.length === 1) {
@@ -511,15 +507,28 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
 
     if (node.children.length === 0) {
       const stageClass = allBranches.length > 1 ? 'evo-stage evo-stage-branching' : 'evo-stage';
+      const regionalsHtml = regionals.length ? `<div class="evo-regionals">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
       return `<div class="${stageClass}">${portrait}${regionalsHtml}</div>${megaHtml}`;
     }
 
     if (node.children.length === 1) {
       const condition = node.children[0].node.evolution_condition || '';
-      return `<div class="evo-stage">${portrait}${regionalsHtml}</div>${evoArrow(condition)}${renderNode(node.children[0], depth + 1)}`;
+      if (regionals.length > 0) {
+        // Grille alignée : une ligne par forme (principale + régionales)
+        const nextNode     = node.children[0];
+        const nextRegionals = regionalsByNumber[nextNode.node.number] || [];
+        const regionalRows  = regionals.map(r => {
+          const matchingNext = nextRegionals.find(nr => nr.region === r.region);
+          const arrowCond    = r.evolution_condition || condition;
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}`;
+        }).join('');
+        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition)}${renderNode(nextNode, depth + 1, true)}${regionalRows}</div>`;
+      }
+      return `<div class="evo-stage">${portrait}</div>${evoArrow(condition)}${renderNode(node.children[0], depth + 1)}`;
     }
 
     // Branches multiples (Évoli, etc.)
+    const regionalsHtml = regionals.length ? `<div class="evo-regionals">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
     const branches = node.children.map(c => {
       const condition = c.node.evolution_condition || '';
       return `<div class="evo-branch-item">${evoArrow(condition)}${renderNode(c, depth + 1)}</div>`;
