@@ -429,6 +429,15 @@ async function loadPokemon(append = false) {
     els.headerCount.textContent = count;
     els.loader.hidden = state.allLoaded;
 
+    // Si le loader est encore visible après le rendu, l'IntersectionObserver ne re-fire pas
+    // (pas de changement d'état) → on re-vérifie manuellement
+    if (!state.allLoaded) {
+      requestAnimationFrame(() => {
+        const rect = els.loader.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 200 && !state.loading) loadPokemon(true);
+      });
+    }
+
     // Icônes en arrière-plan → met à jour les cartes + sauvegarde le cache
     fetchCardIcons(numbers).then(iconRows => {
       const iconMap = {};
