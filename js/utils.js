@@ -28,7 +28,7 @@ const BALLS = [
   { name: 'Parc Ball',    slug: 'parc-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779666243/parc_ball_ypcqqg.png' },
   { name: 'Rapide Ball',  slug: 'quick-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779669583/rapide_ball_m2brxb.png' },
   { name: 'Soin Ball',   slug: 'heal-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779722922/soin_ball_szdgxf.png' },
-  { name: 'Ball Sombre',  slug: 'dusk-ball'    },
+  { name: 'Sombre Ball',  slug: 'dusk-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779731066/sombre_ball_wm6o1p.png' },
   { name: 'Ball Rêve',    slug: 'dream-ball'   },
 
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
