@@ -470,6 +470,7 @@ function evoRegionalPortrait(regional) {
     <button class="evo-portrait evo-regional" data-number="${regional.pokemon_number}" data-form-type="${esc(regional.region)}" disabled>
       <div class="evo-img-wrap">${imgHtml}</div>
       <span class="evo-name">${esc(regional.name)}</span>
+      ${regional.evolution_condition ? `<span class="evo-condition evo-regional-condition">${esc(regional.evolution_condition)}</span>` : ''}
     </button>`;
 }
 
