@@ -146,13 +146,22 @@ async function loadCatchesMap() {
     seenMap[s.pokemon_number][s.variant_type] = s;
   }
   seenSet = new Set(Object.keys(seenMap).map(Number));
-  // Charger les sprites officiels depuis pokemon_variants pour éviter de faire confiance aux sprite_url stockés
+  updateCapturedCounter();
+
+  // Charger variantMap en arrière-plan pour ne pas bloquer l'affichage des cartes
   const allNums = [...new Set([
     ...Object.keys(catchByNumber).map(Number),
     ...Object.keys(seenMap).map(Number),
   ])];
-  variantMap = allNums.length ? await fetchVariantMap(allNums) : {};
-  updateCapturedCounter();
+  if (allNums.length) {
+    fetchVariantMap(allNums).then(map => {
+      variantMap = map;
+      // Mettre à jour uniquement les cartes qui ont une forme Alola
+      allNums
+        .filter(n => ALOLA_FORM_VT[catchByNumber[n]?.form_label] || ALOLA_FORM_VT[shinyCatchByNumber[n]?.form_label])
+        .forEach(n => updateCardAfterCatch(n));
+    }).catch(() => {});
+  }
 }
 
 function updateCardAfterCatch(pokemonNumber) {
@@ -237,6 +246,17 @@ function normalizeVariantUrl(url) {
   return url.replace('/upload/', '/upload/e_trim:10/c_pad,w_128,h_128,b_rgb:ffffff00/');
 }
 
+const ALOLA_FORM_VT = {
+  'Alola Mâle Shiny':    'alolan_shiny_male',
+  'Alola Femelle Shiny': 'alolan_shiny_female',
+  'Alola Shiny':         'alolan_shiny',
+  'Alola Unisexe Shiny': 'alolan_shiny',
+  'Alola Mâle':          'alolan_male',
+  'Alola Femelle':       'alolan_female',
+  'Alola':               'alolan',
+  'Alola Unisexe':       'alolan',
+};
+
 function getAlolanSprite(pokemonNumber, variantType) {
   const variants = variantMap[pokemonNumber] || {};
   const chains = {
@@ -276,17 +296,6 @@ function renderCard(pokemon, icons = {}) {
   const recentShinyCatch = shinyCatchByNumber[pokemon.number] || null;
   const isShinyDisplay = recentShinyCatch ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
 
-  // Sprite : form_label → variant_type pour toutes les formes alola (shiny et non-shiny)
-  const ALOLA_FORM_VT = {
-    'Alola Mâle Shiny':    'alolan_shiny_male',
-    'Alola Femelle Shiny': 'alolan_shiny_female',
-    'Alola Shiny':         'alolan_shiny',
-    'Alola Unisexe Shiny': 'alolan_shiny',
-    'Alola Mâle':          'alolan_male',
-    'Alola Femelle':       'alolan_female',
-    'Alola':               'alolan',
-    'Alola Unisexe':       'alolan',
-  };
   let imgSrc;
   if (isShinyDisplay) {
     const alolaVt = ALOLA_FORM_VT[recentShinyCatch?.form_label];
