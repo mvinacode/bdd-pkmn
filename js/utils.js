@@ -31,6 +31,7 @@ const BALLS = [
   { name: 'Sombre Ball',  slug: 'dusk-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779731066/sombre_ball_wm6o1p.png' },
   { name: 'Rêve Ball',    slug: 'dream-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779759940/reve_ball_opjnxa.png' },
   { name: 'Ultra Ball',   slug: 'ultra-ball-custom', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829455/ultra_ball_ciwfom.png' },
+  { name: 'Étrange Ball', slug: 'etrange-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779836157/etrange_wx0z4h.png' },
   { name: 'Plume Ball',   slug: 'plume-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829453/plume_ball_efk2is.png' },
 ];
 
