@@ -55,6 +55,8 @@ function formLabelToIcons(label, isShiny) {
   if (label === 'Alola Shiny')        return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + _SHINY_ICO;
   if (label.startsWith('Méga'))      return _MEGA_ICO    + (label.includes('Shiny') ? _SHINY_ICO : '');
   if (label.startsWith('Gigamax'))   return _GIGAMAX_ICO + (label.includes('Shiny') ? _SHINY_ICO : '');
+  if (label === 'Pichu Troizépi')       return _FEMALE_ICO + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
+  if (label === 'Pichu Troizépi Shiny') return _FEMALE_ICO + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>` + _SHINY_ICO;
   return `<span style="font-size:0.72rem;color:var(--text-muted)">${esc(label)}</span>`;
 }
 
@@ -75,6 +77,7 @@ function formLabelToVariantType(label) {
     'Méga-Évo. X':          'mega_x',     'Méga-Évo. X Shiny':          'shiny_mega_x',
     'Méga-Évo. Y':          'mega_y',     'Méga-Évo. Y Shiny':          'shiny_mega_y',
     'Gigamax':              'gigamax',    'Gigamax Shiny':              'shiny_gigamax',
+    'Pichu Troizépi':       'troizepy',   'Pichu Troizépi Shiny':       'troizepy_shiny',
   };
   return MAP[label] || null;
 }
@@ -117,9 +120,10 @@ function groupBySession(catches) {
 
 // ── Rendu ─────────────────────────────────────────────────────
 
-let currentView = 'chrono';
-let allCatches  = [];
-let variantMap  = {}; // { [pokemon_number]: { [variant_type]: image_url } }
+let currentView    = 'chrono';
+let allCatches     = [];
+let variantMap     = {}; // { [pokemon_number]: { [variant_type]: image_url } }
+let specialFormsMap = {}; // { [pokemon_number]: { [form_key]: { image_url, image_url_shiny, ... } } }
 
 // Chaînes de fallback par variant_type pour trouver le bon sprite
 function variantFallbacks(vt) {
@@ -144,11 +148,14 @@ function variantFallbacks(vt) {
     'mega_y':        base,      'shiny_mega_y':  baseShiny,
     'gigamax':       base,      'shiny_gigamax': baseShiny,
     'baron':         base,      'shiny_baron':   baseShiny,
+    // Formes spéciales — leurs propres sprites (gérés via specialFormsMap)
+    'troizepy':       ['troizepy'],
+    'troizepy_shiny': ['troizepy_shiny', 'troizepy'],
   };
   return chains[vt] || [vt];
 }
 
-// Calcule le meilleur sprite pour une session depuis pokemon_variants
+// Calcule le meilleur sprite pour une session depuis pokemon_variants + specialFormsMap
 function getSessionSprite(session) {
   const variants = variantMap[session.pokemon_number] || {};
   // Choisir la forme représentative : non-shiny en priorité (sinon shiny)
@@ -156,9 +163,15 @@ function getSessionSprite(session) {
   if (!form) return null;
   const vt = formLabelToVariantType(form.form_label);
   if (vt) {
+    // Cherche dans pokemon_variants d'abord
     for (const fvt of variantFallbacks(vt)) {
       if (variants[fvt]) return variants[fvt];
     }
+    // Fallback : cherche dans specialFormsMap (formes spéciales)
+    const isShiny = vt.endsWith('_shiny');
+    const formKey = isShiny ? vt.slice(0, -6) : vt;
+    const sfForm  = specialFormsMap[session.pokemon_number]?.[formKey];
+    if (sfForm) return isShiny ? (sfForm.image_url_shiny || sfForm.image_url) : sfForm.image_url;
   }
   return null;
 }
@@ -343,6 +356,17 @@ function buildFormEntriesAlolan(variants, iconMap) {
     { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: F20 + SH20, sprite: alolanShinyFemV?.image_url  || baseShiny },
     { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: U26,        sprite: base      },
     { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: U20 + SH20, sprite: baseShiny },
+  ];
+}
+
+function buildFormEntriesSpecial(specialForm) {
+  const F26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const F20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const SH20 = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
+  const label = specialForm.form_label_fr;
+  return [
+    { label: label,             displayLabel: 'Femelle',        variant_type: specialForm.form_key,            iconHtml: F26,        sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny',  displayLabel: 'Femelle Shiny',  variant_type: specialForm.form_key + '_shiny', iconHtml: F20 + SH20, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
   ];
 }
 
@@ -615,9 +639,21 @@ async function loadModalFormGrid(session) {
     shiny:  spriteUrl(session.pokemon_number, true),
   };
 
-  const isAlolanSession = session.forms.some(f => formLabelToVariantType(f.form_label)?.startsWith('alolan'));
-  _formEntries      = isAlolanSession
+  const isAlolanSession  = session.forms.some(f => formLabelToVariantType(f.form_label)?.startsWith('alolan'));
+  const specialFormKey   = (() => {
+    for (const f of session.forms) {
+      const vt = formLabelToVariantType(f.form_label);
+      if (!vt || vt.startsWith('alolan')) continue;
+      const key = vt.endsWith('_shiny') ? vt.slice(0, -6) : vt;
+      if (specialFormsMap[session.pokemon_number]?.[key]) return key;
+    }
+    return null;
+  })();
+  const sfEntry = specialFormKey ? specialFormsMap[session.pokemon_number]?.[specialFormKey] : null;
+  _formEntries = isAlolanSession
     ? buildFormEntriesAlolan(variantData, iconMap)
+    : sfEntry
+    ? buildFormEntriesSpecial(sfEntry)
     : buildFormEntries(variantData, megaData, iconMap);
   _editSessionForms = [...session.forms];
 
@@ -700,7 +736,10 @@ async function init() {
     const { data } = await fetchCatches(getOwnerUuid());
     allCatches = data || [];
     const nums = [...new Set(allCatches.map(c => c.pokemon_number))];
-    variantMap = await fetchVariantMap(nums);
+    [variantMap, specialFormsMap] = await Promise.all([
+      fetchVariantMap(nums),
+      fetchSpecialFormsForNumbers(nums),
+    ]);
   } catch (e) {
     console.error('[journal]', e);
   } finally {

@@ -56,7 +56,8 @@ let shinyCatchByNumber = {};
 let seenSet  = new Set();
 let seenMap  = {};     // { [pokemon_number]: { [variant_type]: { is_shiny, sprite_url, form_label, variant_type, caught_at, game } } }
 let iconCache = {};    // { [pokemon_number]: { normal, shiny } }
-let variantMap = {};   // { [pokemon_number]: { [variant_type]: image_url } } — source de vérité pour sprites
+let variantMap = {};       // { [pokemon_number]: { [variant_type]: image_url } } — source de vérité pour sprites
+let specialFormsMap = {}; // { [pokemon_number]: { [form_key]: { form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny } } }
 
 async function addToSeen(number, data) {
   // Mise à jour optimiste du cache (UI instantanée)
@@ -148,17 +149,25 @@ async function loadCatchesMap() {
   seenSet = new Set(Object.keys(seenMap).map(Number));
   updateCapturedCounter();
 
-  // Charger variantMap en arrière-plan pour ne pas bloquer l'affichage des cartes
+  // Charger variantMap + specialFormsMap en arrière-plan pour ne pas bloquer l'affichage
   const allNums = [...new Set([
     ...Object.keys(catchByNumber).map(Number),
     ...Object.keys(seenMap).map(Number),
   ])];
   if (allNums.length) {
-    fetchVariantMap(allNums).then(map => {
-      variantMap = map;
-      // Mettre à jour uniquement les cartes qui ont une forme Alola
+    Promise.all([
+      fetchVariantMap(allNums),
+      fetchSpecialFormsForNumbers(allNums),
+    ]).then(([vMap, sfMap]) => {
+      variantMap = vMap;
+      specialFormsMap = sfMap;
       allNums
-        .filter(n => ALOLA_FORM_VT[catchByNumber[n]?.form_label] || ALOLA_FORM_VT[shinyCatchByNumber[n]?.form_label])
+        .filter(n =>
+          ALOLA_FORM_VT[catchByNumber[n]?.form_label] ||
+          ALOLA_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
+          SPECIAL_FORM_VT[catchByNumber[n]?.form_label] ||
+          SPECIAL_FORM_VT[shinyCatchByNumber[n]?.form_label]
+        )
         .forEach(n => updateCardAfterCatch(n));
     }).catch(() => {});
   }
@@ -246,6 +255,12 @@ function normalizeVariantUrl(url) {
   return url.replace('/upload/', '/upload/e_trim:10/c_pad,w_128,h_128,b_rgb:ffffff00/');
 }
 
+// form_label (dans catches) → variant_type pour les formes spéciales (pokemon_special_forms)
+const SPECIAL_FORM_VT = {
+  'Pichu Troizépi Shiny': 'troizepy_shiny',
+  'Pichu Troizépi':       'troizepy',
+};
+
 const ALOLA_FORM_VT = {
   'Alola Mâle Shiny':    'alolan_shiny_male',
   'Alola Femelle Shiny': 'alolan_shiny_female',
@@ -256,6 +271,14 @@ const ALOLA_FORM_VT = {
   'Alola':               'alolan',
   'Alola Unisexe':       'alolan',
 };
+
+function getSpecialFormSprite(pokemonNumber, variantType) {
+  const isShiny = variantType.endsWith('_shiny');
+  const formKey = isShiny ? variantType.slice(0, -6) : variantType;
+  const form = specialFormsMap[pokemonNumber]?.[formKey];
+  if (!form) return null;
+  return isShiny ? (form.image_url_shiny || form.image_url) : form.image_url;
+}
 
 function getAlolanSprite(pokemonNumber, variantType) {
   const variants = variantMap[pokemonNumber] || {};
@@ -298,16 +321,22 @@ function renderCard(pokemon, icons = {}) {
 
   let imgSrc;
   if (isShinyDisplay) {
-    const alolaVt = ALOLA_FORM_VT[recentShinyCatch?.form_label];
+    const alolaVt   = ALOLA_FORM_VT[recentShinyCatch?.form_label];
+    const specialVt = SPECIAL_FORM_VT[recentShinyCatch?.form_label];
     if (alolaVt) {
       imgSrc = getAlolanSprite(pokemon.number, alolaVt) || spriteUrl(pokemon.number, true);
+    } else if (specialVt) {
+      imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || spriteUrl(pokemon.number, true);
     } else {
       imgSrc = icons.shiny ? normalizeVariantUrl(icons.shiny) : (recentShinyCatch?.sprite_url || catch_?.sprite_url || seenForms[0]?.sprite_url || spriteUrl(pokemon.number, true));
     }
   } else {
-    const alolaVt = ALOLA_FORM_VT[catch_?.form_label];
+    const alolaVt   = ALOLA_FORM_VT[catch_?.form_label];
+    const specialVt = SPECIAL_FORM_VT[catch_?.form_label];
     if (alolaVt) {
       imgSrc = getAlolanSprite(pokemon.number, alolaVt) || (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
+    } else if (specialVt) {
+      imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || catch_?.sprite_url || spriteUrl(pokemon.number, false);
     } else {
       imgSrc = icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false));
     }
@@ -624,12 +653,13 @@ async function openModal(number) {
   els.modalContent.innerHTML = '<div class="modal-loading"><div class="pokeball-loader"><div class="pb-top"></div><div class="pb-middle"><div class="pb-btn"></div></div><div class="pb-bottom"></div></div></div>';
 
   try {
-  const [{ data: p }, evoTree, forms, variants, gigamax] = await Promise.all([
+  const [{ data: p }, evoTree, forms, variants, gigamax, specialFormsList] = await Promise.all([
     fetchPokemonByNumber(number),
     fetchEvolutionChain({ number, evolves_from_number: null }).catch(() => null),
     fetchForms(number),
     fetchVariants(number),
     fetchGigamax(number),
+    fetchSpecialFormsByNumber(number).catch(() => []),
   ]);
 
   if (!p) { closeModal(); return; }
@@ -696,7 +726,14 @@ async function openModal(number) {
       case 'alolan_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + male + shiny;
       case 'alolan_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female;
       case 'alolan_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female + shiny;
-      default:                    return genderless;
+      case 'troizepy':       return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
+      case 'troizepy_shiny': return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>` + shiny;
+      default: {
+        // Formes spéciales génériques — cherche dans specialFormsMap
+        const sfEntry = Object.values(specialFormsMap).flatMap(m => Object.values(m)).find(f => f.form_key === vt || (f.form_key + '_shiny') === vt);
+        const sfLabel = sfEntry ? sfEntry.form_label_fr + (vt.endsWith('_shiny') ? ' Shiny' : '') : vt;
+        return `<span style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">${esc(sfLabel)}</span>`;
+      }
     }
   }
 
@@ -871,12 +908,13 @@ async function openModal(number) {
   const megas     = megasByNumber[p.number] || [];
   const regionals = regionalsByNumber[p.number] || [];
   const specialForms = [
-    ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true, isRegional: false, formIcon: MEGA_ICON })),
-    ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true, formIcon: '' })),
-    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, isRegional: false, formIcon: GIGAMAX_ICON })),
+    ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true, isRegional: false, isSpecialForm: false, formKey: null, formIcon: MEGA_ICON })),
+    ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true, isSpecialForm: false, formKey: null, formIcon: '' })),
+    ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: false, formKey: null, formIcon: GIGAMAX_ICON })),
+    ...specialFormsList.map(sf => ({ name: sf.form_label_fr, artwork_url: sf.artwork_url || '', shiny_artwork_url: sf.artwork_url_shiny || '', description_fr: null, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: true, formKey: sf.form_key, formIcon: '' })),
   ];
 
-  function illustrationCol(name, artworkUrl, descriptionFr, extraClass = '', formTypes = '', shinyUrl = '', formIcon = '') {
+  function illustrationCol(name, artworkUrl, descriptionFr, extraClass = '', formTypes = '', shinyUrl = '', formIcon = '', extraAttrs = '') {
     const typeList = formTypes ? formTypes.split(',').map(t => t.trim()).filter(Boolean) : [];
     const typeBadges = typeList.map(t => typeBadge(t)).join('');
     const artworkHtml = shinyUrl
@@ -895,7 +933,7 @@ async function openModal(number) {
     return `
       <div class="illus-col-wrapper">
         ${typeBadges ? `<div class="illus-col-types">${typeBadges}</div>` : '<div class="illus-col-types"></div>'}
-        <div class="illus-col${extraClass ? ' ' + extraClass : ''}">
+        <div class="illus-col${extraClass ? ' ' + extraClass : ''}"${extraAttrs ? ' ' + extraAttrs : ''}>
           ${artworkHtml}
           ${descriptionFr ? `<p class="modal-description">"${esc(descriptionFr)}"</p>` : ''}
           ${formIcon ? `<img src="${esc(formIcon)}" alt="" class="illus-form-icon" loading="lazy">` : ''}
@@ -933,10 +971,11 @@ async function openModal(number) {
         f.name,
         f.artwork_url || '',
         f.description_fr,
-        f.isRegional ? 'is-regional' : f.isMega ? 'is-mega' : 'is-gigamax',
+        f.isRegional ? 'is-regional' : f.isMega ? 'is-mega' : f.isSpecialForm ? 'is-special-form' : 'is-gigamax',
         f.types || '',
         f.shiny_artwork_url || '',
-        f.formIcon || ''
+        f.formIcon || '',
+        f.isSpecialForm && f.formKey ? `data-sf-key="${esc(f.formKey)}"` : ''
       )).join('')}
     </div>
 
@@ -1075,6 +1114,16 @@ async function openModal(number) {
         seenNorm   = entries.some(([vt, d]) => vt.startsWith('alolan') && !vt.includes('shiny') && d.status === 'seen');
         ownedShiny = entries.some(([vt, d]) => vt.startsWith('alolan') &&  vt.includes('shiny') && d.status === 'owned');
         seenShinyF = entries.some(([vt, d]) => vt.startsWith('alolan') &&  vt.includes('shiny') && d.status === 'seen');
+      } else if (col?.classList.contains('is-special-form')) {
+        const sfKey = col.dataset.sfKey;
+        if (sfKey) {
+          ownedNorm  = entries.some(([vt, d]) => vt === sfKey           && d.status === 'owned');
+          seenNorm   = entries.some(([vt, d]) => vt === sfKey           && d.status === 'seen');
+          ownedShiny = entries.some(([vt, d]) => vt === sfKey + '_shiny' && d.status === 'owned');
+          seenShinyF = entries.some(([vt, d]) => vt === sfKey + '_shiny' && d.status === 'seen');
+        } else {
+          ownedNorm = captNormal; seenNorm = seenNormal; ownedShiny = captShiny; seenShinyF = seenShiny;
+        }
       } else {
         ownedNorm  = captNormal; seenNorm   = seenNormal;
         ownedShiny = captShiny;  seenShinyF = seenShiny;
@@ -1470,6 +1519,48 @@ function renderDrawerFormsAlolan(variants, alolanSprite) {
   field.hidden = false;
 }
 
+function renderDrawerFormsSpecial(specialForm) {
+  const field = $('form-selector-field');
+  const grid  = $('form-grid');
+  if (!field || !grid) return;
+
+  const FEMALE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const FEMALE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const SHINY_SM    = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+
+  const label   = specialForm.form_label_fr;
+  const vt      = specialForm.form_key;
+  const vtShiny = specialForm.form_key + '_shiny';
+
+  const entries = [
+    { label: label,             displayLabel: 'Femelle',       variant_type: vt,      iconHtml: FEMALE_ICON,          sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny',  displayLabel: 'Femelle Shiny', variant_type: vtShiny, iconHtml: FEMALE_SM + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+  ];
+
+  grid.innerHTML = entries.map((e, i) => `
+    <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
+      <div class="form-opt-icon">${e.iconHtml}</div>
+      <span>${esc(e.displayLabel)}</span>
+    </button>`).join('');
+
+  drawerForms = [];
+
+  grid.querySelectorAll('.form-opt').forEach(btn =>
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('selected');
+      const entry = entries[parseInt(btn.dataset.idx)];
+      if (btn.classList.contains('selected')) {
+        if (!drawerForms.find(f => f.variant_type === entry.variant_type)) drawerForms.push(entry);
+        if (drawerMode === 'caught') selectDrawerForm(entry);
+      } else {
+        drawerForms = drawerForms.filter(f => f.variant_type !== entry.variant_type);
+      }
+    })
+  );
+
+  field.hidden = false;
+}
+
 function selectDrawerForm(v) {
   drawerForm  = v;
   drawerShiny = v.variant_type?.includes('shiny') || false;
@@ -1478,6 +1569,8 @@ function selectDrawerForm(v) {
     let src;
     if (drawerPokemon.isAlolan && drawerPokemon.alolanSprite) {
       src = normalizeVariantUrl(drawerPokemon.alolanSprite);
+    } else if (drawerPokemon.isSpecial && v.sprite) {
+      src = normalizeVariantUrl(v.sprite);
     } else if (drawerShiny) {
       src = drawerPokemon.iconShiny  ? normalizeVariantUrl(drawerPokemon.iconShiny)  : spriteUrl(drawerPokemon.number, true);
     } else {
@@ -1568,9 +1661,10 @@ function bindDrawerEvents() {
         if (!data?.length) { dropdown.hidden = true; return; }
 
         const nums = data.map(p => p.number);
-        const [allIcons, alolanRows] = await Promise.all([
+        const [allIcons, alolanRows, specialFormsData] = await Promise.all([
           fetchCardIcons(nums).catch(() => []),
           fetchAlolanVariantsForNumbers(nums).catch(() => []),
+          fetchSpecialFormsForNumbers(nums).catch(() => ({})),
         ]);
         const iconMap = {};
         for (const r of allIcons) {
@@ -1583,25 +1677,36 @@ function bindDrawerEvents() {
         const alolanSpriteMap = {};
         for (const r of alolanRows) alolanSpriteMap[r.pokemon_number] = r.image_url;
 
-        // Construire la liste : Pokémon normal + entrée Alola si variante en BDD
+        // Construire la liste : Pokémon normal + entrée Alola + entrées formes spéciales
         const items = [];
         for (const p of data) {
-          items.push({ p, isAlola: false });
-          if (alolanSpriteMap[p.number]) items.push({ p, isAlola: true });
+          items.push({ p, isAlola: false, specialForm: null });
+          if (alolanSpriteMap[p.number]) items.push({ p, isAlola: true, specialForm: null });
+          for (const form of Object.values(specialFormsData[p.number] || {})) {
+            items.push({ p, isAlola: false, specialForm: form });
+          }
         }
 
-        dropdown.innerHTML = items.map(({ p, isAlola }) => {
+        dropdown.innerHTML = items.map(({ p, isAlola, specialForm }) => {
           const ico         = iconMap[p.number];
           const alolaSprite = alolanSpriteMap[p.number] || null;
           const src = isAlola
             ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(p.number, false))
+            : specialForm
+            ? (specialForm.image_url ? normalizeVariantUrl(specialForm.image_url) : spriteUrl(p.number, false))
             : (ico?.normal ? normalizeVariantUrl(ico.normal)  : spriteUrl(p.number, false));
-          const displayName = isAlola ? `${p.name_fr} · Alola` : p.name_fr;
+          const displayName = isAlola
+            ? `${p.name_fr} · Alola`
+            : specialForm
+            ? `${p.name_fr} · ${specialForm.form_label_fr}`
+            : p.name_fr;
           return `<button class="poke-result"
             data-number="${p.number}"
             data-name="${esc(p.name_fr)}"
             data-is-alola="${isAlola ? '1' : '0'}"
-            data-alola-sprite="${esc(alolaSprite || '')}">
+            data-alola-sprite="${esc(alolaSprite || '')}"
+            data-special-form-key="${esc(specialForm?.form_key || '')}"
+            data-special-form-label="${esc(specialForm?.form_label_fr || '')}">
             <img src="${esc(src)}" width="28" height="28" alt="" style="image-rendering:pixelated">
             <span>#${esc(padNumber(p.number))} ${esc(displayName)}</span>
           </button>`;
@@ -1610,22 +1715,32 @@ function bindDrawerEvents() {
 
         dropdown.querySelectorAll('.poke-result').forEach(btn =>
           btn.addEventListener('click', async () => {
-            const num         = parseInt(btn.dataset.number);
-            const name        = btn.dataset.name;
-            const isAlola     = btn.dataset.isAlola === '1';
-            const alolaSprite = btn.dataset.alolaSprite || null;
-            const ico         = iconMap[num] || {};
+            const num            = parseInt(btn.dataset.number);
+            const name           = btn.dataset.name;
+            const isAlola        = btn.dataset.isAlola === '1';
+            const alolaSprite    = btn.dataset.alolaSprite || null;
+            const specialFormKey = btn.dataset.specialFormKey || null;
+            const specialFormLbl = btn.dataset.specialFormLabel || null;
+            const ico            = iconMap[num] || {};
 
             drawerPokemon = {
               number: num, name_fr: name,
               iconNormal: ico.normal || null, iconShiny: ico.shiny || null,
               isAlolan: isAlola, alolanSprite: alolaSprite,
+              isSpecial: !!specialFormKey, specialFormKey, specialFormLabel: specialFormLbl,
             };
 
-            const displayName = isAlola ? `${name} · Alola` : name;
+            const displayName = isAlola
+              ? `${name} · Alola`
+              : specialFormKey
+              ? `${name} · ${specialFormLbl}`
+              : name;
+            const sfData = specialFormKey ? specialFormsData[num]?.[specialFormKey] : null;
             const src = isAlola
               ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(num, false))
-              : (ico.normal  ? normalizeVariantUrl(ico.normal)  : spriteUrl(num, false));
+              : sfData?.image_url
+              ? normalizeVariantUrl(sfData.image_url)
+              : (ico.normal ? normalizeVariantUrl(ico.normal) : spriteUrl(num, false));
 
             searchInp.value = displayName;
             dropdown.hidden = true;
@@ -1641,13 +1756,19 @@ function bindDrawerEvents() {
             sel.hidden = false;
 
             drawerForm = null;
-            const [variantData, megaData] = await Promise.all([
-              fetchVariants(num).catch(() => []),
-              fetchMegaEvolutions([num]).catch(() => []),
-            ]);
             if (isAlola) {
+              const variantData = await fetchVariants(num).catch(() => []);
               renderDrawerFormsAlolan(variantData, alolaSprite);
+            } else if (specialFormKey && sfData) {
+              // Mettre à jour le cache local
+              if (!specialFormsMap[num]) specialFormsMap[num] = {};
+              specialFormsMap[num][specialFormKey] = sfData;
+              renderDrawerFormsSpecial(sfData);
             } else {
+              const [variantData, megaData] = await Promise.all([
+                fetchVariants(num).catch(() => []),
+                fetchMegaEvolutions([num]).catch(() => []),
+              ]);
               renderDrawerForms(variantData, ico, megaData);
             }
           })
@@ -1776,6 +1897,9 @@ async function saveCatchFromMain() {
   if (lastData?.is_shiny) shinyCatchByNumber[drawerPokemon.number] = lastData;
   if (!variantMap[drawerPokemon.number]) {
     fetchVariantMap([drawerPokemon.number]).then(m => { Object.assign(variantMap, m); });
+  }
+  if (drawerPokemon.isSpecial && drawerPokemon.specialFormKey && !specialFormsMap[drawerPokemon.number]?.[drawerPokemon.specialFormKey]) {
+    fetchSpecialFormsForNumbers([drawerPokemon.number]).then(m => { Object.assign(specialFormsMap, m); });
   }
   updateCapturedCounter();
   updateCardAfterCatch(drawerPokemon.number);

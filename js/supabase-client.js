@@ -425,6 +425,38 @@ async function deleteCatchesBySession(sessionId) {
 }
 
 /**
+ * Récupère les formes spéciales (pokemon_special_forms) pour une liste de numéros.
+ * Retourne { [pokemon_number]: { [form_key]: { form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny } } }
+ */
+async function fetchSpecialFormsForNumbers(pokemonNumbers) {
+  const client = getSupabaseClient();
+  if (!client || !pokemonNumbers.length) return {};
+  const { data } = await client
+    .from('pokemon_special_forms')
+    .select('pokemon_number, form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny')
+    .in('pokemon_number', pokemonNumbers);
+  const map = {};
+  for (const r of data || []) {
+    if (!map[r.pokemon_number]) map[r.pokemon_number] = {};
+    map[r.pokemon_number][r.form_key] = r;
+  }
+  return map;
+}
+
+/**
+ * Récupère les formes spéciales d'un seul Pokémon.
+ */
+async function fetchSpecialFormsByNumber(pokemonNumber) {
+  const client = getSupabaseClient();
+  if (!client) return [];
+  const { data } = await client
+    .from('pokemon_special_forms')
+    .select('form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny')
+    .eq('pokemon_number', pokemonNumber);
+  return data || [];
+}
+
+/**
  * Récupère la liste des types distincts présents en base.
  */
 async function fetchTypes() {
