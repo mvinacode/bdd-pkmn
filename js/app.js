@@ -656,7 +656,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
         }).join('');
 
         const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
-        return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div><div class="evo-branches evo-branches-special">${gigaBranches}${mainBranch}${regionalBranches}</div>`;
+        return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div><div class="evo-branches-pikachu">${gigaBranches}${mainBranch}${regionalBranches}</div>`;
       }
       if (regionals.length > 0) {
         // Grille alignée : une ligne par forme (principale + régionales)
