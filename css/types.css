@@ -84,7 +84,7 @@
 .poke-card[data-primary-type="ice"]      { --card-accent: #3fd1f7; }
 .poke-card[data-primary-type="fighting"] { --card-accent: #CE406A; }
 .poke-card[data-primary-type="poison"]   { --card-accent: #AB6AC8; }
-.poke-card[data-primary-type="ground"]   { --card-accent: #D97845; }
+.poke-card[data-primary-type="ground"]   { --card-accent: #915121; }
 .poke-card[data-primary-type="flying"]   { --card-accent: #81b9ef; }
 .poke-card[data-primary-type="psychic"]  { --card-accent: #ef4179; }
 .poke-card[data-primary-type="bug"]      { --card-accent: #8fa119; }
