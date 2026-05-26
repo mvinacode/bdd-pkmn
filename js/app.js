@@ -807,7 +807,7 @@ async function openModal(number) {
   function variantCard(v) {
     const status = getVariantStatus(p.number, v.variant_type);
     const meta   = VARIANT_STATUS_META[status];
-    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax', 'alolan_shiny', 'alolan_shiny_male', 'alolan_shiny_female'].includes(v.variant_type);
+    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax', 'alolan_shiny', 'alolan_shiny_male', 'alolan_shiny_female', 'troizepy_shiny'].includes(v.variant_type);
     const sparkles = isShiny
       ? `<span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
          <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
@@ -842,7 +842,8 @@ async function openModal(number) {
   const megaVariants    = variants.filter(v => ['mega', 'shiny_mega', 'mega_x', 'shiny_mega_x'].includes(v.variant_type));
   const megaYVariants   = variants.filter(v => ['mega_y', 'shiny_mega_y'].includes(v.variant_type));
   const gigamaxVariants = variants.filter(v => ['gigamax', 'shiny_gigamax'].includes(v.variant_type));
-  const alolanVariants  = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
+  const alolanVariants   = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
+  const troizepyVariants = variants.filter(v => ['troizepy', 'troizepy_shiny'].includes(v.variant_type));
 
   const neutralBadge = `<span class="gender-badge male">${MALE_SVG}</span><span class="gender-badge female">${FEMALE_SVG}</span>`;
   const maleBadge    = `<span class="gender-badge male">${MALE_SVG}</span>`;
@@ -892,6 +893,15 @@ async function openModal(number) {
             <div class="variants-mega-col">
               <div class="variants-rows-wrapper">
                 <div class="variants-grid">${alolanVariants.map(variantCard).join('')}</div>
+              </div>
+            </div>
+          </div>` : ''}
+          ${troizepyVariants.length ? `
+          <div class="variants-col-wrap">
+            <h4>Pichu Troizépi</h4>
+            <div class="variants-mega-col">
+              <div class="variants-rows-wrapper">
+                ${variantRow(femaleBadge, troizepyVariants)}
               </div>
             </div>
           </div>` : ''}
