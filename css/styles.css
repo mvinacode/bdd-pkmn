@@ -1792,14 +1792,8 @@ body {
   background: linear-gradient(135deg, #e31b47, #632129, #fe589b, #e31b47);
 }
 
-.evo-condition-item.is-stone {
-  border: 1px solid transparent;
-  background:
-    transparent padding-box,
-    linear-gradient(135deg, #55a260, #e1d850, #55a260) border-box;
-}
 .evo-condition-item.is-stone::before {
-  content: none;
+  background: linear-gradient(135deg, #55a260, #e1d850, #55a260);
 }
 .evo-condition-item.is-stone .evo-condition {
   color: #FBD100;
