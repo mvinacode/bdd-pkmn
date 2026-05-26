@@ -1882,6 +1882,12 @@ body {
   display: contents;
 }
 
+/* Chaîne horizontale évolution + ses mégas (ex : Raichu + Méga-Raichu X/Y) */
+.evo-inline-chain {
+  display: flex;
+  align-items: center;
+}
+
 /* Couleur de fond selon le type dans la chaîne */
 .evo-type-fire     { background: rgba(255,151,65,0.12); }
 .evo-type-water    { background: rgba(54,146,220,0.12); }

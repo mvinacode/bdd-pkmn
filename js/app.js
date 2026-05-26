@@ -592,21 +592,22 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
     const iconUrl    = iconByNumber[node.node.number] || null;
     const portrait   = evoPortrait(node.node, isCurrent, iconUrl);
     const regionals  = excludeRegionals ? [] : (regionalsByNumber[node.node.number] || []);
-    const megas      = node.children.length === 0 ? (megasByNumber[node.node.number] || []) : [];
-    const gigamaxes  = node.children.length === 0 ? (gigamaxByNumber[node.node.number] || []) : [];
-    const allBranches = [...megas, ...gigamaxes];
+    const megas         = node.children.length === 0 ? (megasByNumber[node.node.number] || []) : [];
+    const gigamaxesLeaf = node.children.length === 0 ? (gigamaxByNumber[node.node.number] || []) : [];
+    const gigamaxesBranch = node.children.length === 1 ? (gigamaxByNumber[node.node.number] || []) : [];
+    const allBranches = [...megas, ...gigamaxesLeaf];
 
     let megaHtml = '';
     if (allBranches.length === 1) {
       if (megas.length === 1) {
         megaHtml = `${evoArrow(megas[0].condition_label, megas[0].item_image_url || null, true)}${evoMegaPortrait(megas[0])}`;
       } else {
-        megaHtml = `${evoArrow(gigamaxes[0].condition_label || gigamaxes[0].name, gigamaxes[0].item_image_url || null, true, true)}${evoGigamaxPortrait(gigamaxes[0])}`;
+        megaHtml = `${evoArrow(gigamaxesLeaf[0].condition_label || gigamaxesLeaf[0].name, gigamaxesLeaf[0].item_image_url || null, true, true)}${evoGigamaxPortrait(gigamaxesLeaf[0])}`;
       }
     } else if (allBranches.length > 1) {
       const branches = [
         ...megas.map(m => `<div class="evo-branch-item">${evoArrow(m.condition_label, m.item_image_url || null, true)}${evoMegaPortrait(m)}</div>`),
-        ...gigamaxes.map(g => `<div class="evo-branch-item">${evoArrow(g.condition_label || g.name, g.item_image_url || null, true, true)}${evoGigamaxPortrait(g)}</div>`),
+        ...gigamaxesLeaf.map(g => `<div class="evo-branch-item">${evoArrow(g.condition_label || g.name, g.item_image_url || null, true, true)}${evoGigamaxPortrait(g)}</div>`),
       ].join('');
       megaHtml = `<div class="evo-branches evo-branches-special">${branches}</div>`;
     }
@@ -619,6 +620,40 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
 
     if (node.children.length === 1) {
       const condition = node.children[0].node.evolution_condition || '';
+      if (gigamaxesBranch.length > 0 && regionals.length === 0) {
+        const nextNode      = node.children[0];
+        const nextRegionals = regionalsByNumber[nextNode.node.number] || [];
+        const nextMegas     = megasByNumber[nextNode.node.number] || [];
+        const nextIconUrl   = iconByNumber[nextNode.node.number] || null;
+        const nextPortrait  = evoPortrait(nextNode.node, nextNode.node.number === currentNumber, nextIconUrl);
+
+        // Gigamax
+        const gigaBranches = gigamaxesBranch.map(g =>
+          `<div class="evo-branch-item">${evoArrow(g.condition_label || g.name, g.item_image_url || null, true, true)}${evoGigamaxPortrait(g)}</div>`
+        ).join('');
+
+        // Évolution principale + ses mégas en chaîne horizontale
+        let raiChainWrapper;
+        if (nextMegas.length === 0) {
+          raiChainWrapper = `<div class="evo-stage">${nextPortrait}</div>`;
+        } else if (nextMegas.length === 1) {
+          raiChainWrapper = `<div class="evo-inline-chain"><div class="evo-stage">${nextPortrait}</div>${evoArrow(nextMegas[0].condition_label, nextMegas[0].item_image_url || null, true)}${evoMegaPortrait(nextMegas[0])}</div>`;
+        } else {
+          const mBranches = nextMegas.map(m =>
+            `<div class="evo-branch-item">${evoArrow(m.condition_label, m.item_image_url || null, true)}${evoMegaPortrait(m)}</div>`
+          ).join('');
+          raiChainWrapper = `<div class="evo-inline-chain"><div class="evo-stage">${nextPortrait}</div><div class="evo-branches evo-branches-special">${mBranches}</div></div>`;
+        }
+        const mainBranch = `<div class="evo-branch-item">${evoArrow(condition)}${raiChainWrapper}</div>`;
+
+        // Formes régionales en branches séparées avec leur propre condition
+        const regionalBranches = nextRegionals.map(r => {
+          const arrowCond = r.evolution_condition || condition;
+          return `<div class="evo-branch-item">${evoArrow(arrowCond)}<div class="evo-stage">${evoRegionalPortrait(r)}</div></div>`;
+        }).join('');
+
+        return `<div class="evo-stage">${portrait}</div><div class="evo-branches evo-branches-special">${gigaBranches}${mainBranch}${regionalBranches}</div>`;
+      }
       if (regionals.length > 0) {
         // Grille alignée : une ligne par forme (principale + régionales)
         const nextNode     = node.children[0];
