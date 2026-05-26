@@ -29,7 +29,7 @@ const BALLS = [
   { name: 'Rapide Ball',  slug: 'quick-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779669583/rapide_ball_m2brxb.png' },
   { name: 'Soin Ball',   slug: 'heal-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779722922/soin_ball_szdgxf.png' },
   { name: 'Sombre Ball',  slug: 'dusk-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779731066/sombre_ball_wm6o1p.png' },
-  { name: 'Ball Rêve',    slug: 'dream-ball'   },
+  { name: 'Rêve Ball',    slug: 'dream-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779759940/reve_ball_opjnxa.png' },
 
   { name: 'Ball Faiblo',  slug: 'level-ball'   },
 ];
