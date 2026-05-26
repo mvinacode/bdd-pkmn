@@ -1774,6 +1774,20 @@ body {
   background: linear-gradient(135deg, #e31b47, #632129, #fe589b, #e31b47);
 }
 
+.evo-condition-item.is-stone::before {
+  background: linear-gradient(135deg, #FBD100, #d48e00, #FBD100);
+}
+
+/* Portrait racine (Pokémon source d'une chaîne avec branches multiples) */
+.evo-portrait--root .evo-img-wrap {
+  width: 148px;
+  height: 148px;
+}
+.evo-portrait--root .evo-img-wrap img {
+  width: 148px;
+  height: 148px;
+}
+
 /* ── États pill méga/gigamax ──────────────────────────────────── */
 
 /* Non vu : bordure plain, pas de dégradé */

@@ -116,7 +116,7 @@ async function fetchEvolutionChain(pokemon) {
   const client = getSupabaseClient();
   if (!client) return null;
 
-  const FIELDS = 'number, name_fr, image_url, evolves_from_number, evolution_condition, pokemon_types(type_name, slot)';
+  const FIELDS = 'number, name_fr, image_url, evolves_from_number, evolution_condition, evolution_item_image_url, pokemon_types(type_name, slot)';
 
   // Remonte jusqu'à la racine
   let root = pokemon;
@@ -203,7 +203,7 @@ async function fetchRegionalForms(pokemonNumbers) {
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
     .from('pokemon_regional_forms')
-    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition')
+    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url')
     .in('pokemon_number', pokemonNumbers);
   return data || [];
 }

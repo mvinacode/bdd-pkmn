@@ -502,10 +502,10 @@ function resetAndReload() {
 
 // ── Évolution : rendu arbre ───────────────────────────────────
 
-function evoPortrait(node, isCurrent, iconUrl = null) {
+function evoPortrait(node, isCurrent, iconUrl = null, extraClass = '') {
   const img = iconUrl ? normalizeVariantUrl(iconUrl) : getImageUrl(node.number);
   return `
-    <button class="evo-portrait${isCurrent ? ' evo-current' : ''}" data-number="${node.number}" aria-label="Voir ${esc(node.name_fr)}" ${isCurrent ? 'disabled' : ''}>
+    <button class="evo-portrait${isCurrent ? ' evo-current' : ''}${extraClass ? ' ' + extraClass : ''}" data-number="${node.number}" aria-label="Voir ${esc(node.name_fr)}" ${isCurrent ? 'disabled' : ''}>
       <div class="evo-img-wrap">
         <img src="${esc(img)}" alt="${esc(node.name_fr)}" width="96" height="96" loading="lazy">
       </div>
@@ -517,9 +517,11 @@ function evoPortrait(node, isCurrent, iconUrl = null) {
 function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, isGigamax = false) {
   let conditionHtml = '';
   if (itemImageUrl) {
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}">
+    const isStone = !bidirectional && !isGigamax;
+    const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
-      <span class="evo-condition is-mega">${esc(condition)}</span>
+      <span class="evo-condition ${textClass}">${esc(condition)}</span>
     </div>`;
   } else if (condition) {
     const isNight = condition.toLowerCase().includes('nuit');
@@ -644,15 +646,16 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
           ).join('');
           raiChainWrapper = `<div class="evo-inline-chain"><div class="evo-stage">${nextPortrait}</div><div class="evo-branches evo-branches-special">${mBranches}</div></div>`;
         }
-        const mainBranch = `<div class="evo-branch-item">${evoArrow(condition)}${raiChainWrapper}</div>`;
+        const mainBranch = `<div class="evo-branch-item">${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${raiChainWrapper}</div>`;
 
         // Formes régionales en branches séparées avec leur propre condition
         const regionalBranches = nextRegionals.map(r => {
           const arrowCond = r.evolution_condition || condition;
-          return `<div class="evo-branch-item">${evoArrow(arrowCond)}<div class="evo-stage">${evoRegionalPortrait(r)}</div></div>`;
+          return `<div class="evo-branch-item">${evoArrow(arrowCond, r.evolution_item_image_url || null)}<div class="evo-stage">${evoRegionalPortrait(r)}</div></div>`;
         }).join('');
 
-        return `<div class="evo-stage">${portrait}</div><div class="evo-branches evo-branches-special">${gigaBranches}${mainBranch}${regionalBranches}</div>`;
+        const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
+        return `<div class="evo-stage">${rootPortrait}</div><div class="evo-branches evo-branches-special">${gigaBranches}${mainBranch}${regionalBranches}</div>`;
       }
       if (regionals.length > 0) {
         // Grille alignée : une ligne par forme (principale + régionales)
@@ -665,14 +668,14 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
         }).join('');
         return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition)}${renderNode(nextNode, depth + 1, true)}${regionalRows}</div>`;
       }
-      return `<div class="evo-stage">${portrait}</div>${evoArrow(condition)}${renderNode(node.children[0], depth + 1)}`;
+      return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1)}`;
     }
 
     // Branches multiples (Évoli, etc.)
     const regionalsHtml = regionals.length ? `<div class="evo-regionals">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
     const branches = node.children.map(c => {
       const condition = c.node.evolution_condition || '';
-      return `<div class="evo-branch-item">${evoArrow(condition)}${renderNode(c, depth + 1)}</div>`;
+      return `<div class="evo-branch-item">${evoArrow(condition, c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1)}</div>`;
     }).join('');
     return `<div class="evo-stage">${portrait}${regionalsHtml}</div><div class="evo-branches">${branches}</div>`;
   }
