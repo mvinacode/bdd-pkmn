@@ -59,6 +59,7 @@ const GAMES = [
   { name: 'Pokémon Épée',            slug: 'epee',        abbr: 'Épée',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779646193/pokemon_epee_q42rre.png' },
   { name: "Pokémon Let's Go, Pikachu", slug: 'lets-go-pikachu', abbr: "Let's Go", iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644943/pokemon_let_s_go_pikachu_icon_la54se.png' },
   { name: 'Pokémon GO',                slug: 'pokemon-go',      abbr: 'GO',       iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779651651/pokemon_go_icon_muwgte.png' },
+  { name: 'Pokémon Lune',               slug: 'lune',            abbr: 'Lune',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779836279/pokemon_lune_wr0kkn.png' },
   { name: 'Pokémon Soleil',             slug: 'soleil',          abbr: 'Soleil',   iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779760088/pokemon_soleil_r6o19h.png' },
   { name: 'Pokémon Saphir Alpha',       slug: 'saphir-alpha',    abbr: 'Saphir α', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779731368/pokemon_saphir_alpha_icon_bmztft.png' },
   { name: 'Pokémon Rubis Oméga',       slug: 'rubis-omega',     abbr: 'Rubis Ω', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779723156/pokemon_rubis_omega_icon_laspo7.png' },
