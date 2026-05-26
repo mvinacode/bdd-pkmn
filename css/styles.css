@@ -1795,7 +1795,7 @@ body {
 .evo-condition-item.is-stone {
   border: 1px solid transparent;
   background:
-    linear-gradient(rgba(251,209,0,0.1), rgba(251,209,0,0.1)) padding-box,
+    transparent padding-box,
     linear-gradient(135deg, #55a260, #e1d850, #55a260) border-box;
 }
 .evo-condition-item.is-stone::before {
