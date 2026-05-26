@@ -141,7 +141,12 @@ async function loadCatchesMap() {
   shinyCatchByNumber = {};
   for (const c of (catchRes.data || [])) {
     if (!catchByNumber[c.pokemon_number]) catchByNumber[c.pokemon_number] = c;
-    if (c.is_shiny && !shinyCatchByNumber[c.pokemon_number]) shinyCatchByNumber[c.pokemon_number] = c;
+    if (c.is_shiny) {
+      const prev = shinyCatchByNumber[c.pokemon_number];
+      if (!prev || new Date(c.created_at) > new Date(prev.created_at)) {
+        shinyCatchByNumber[c.pokemon_number] = c;
+      }
+    }
   }
   seenMap = {};
   for (const s of (seenRes.data || [])) {
@@ -326,7 +331,8 @@ function renderCard(pokemon, icons = {}) {
     const alolaVt   = ALOLA_FORM_VT[recentShinyCatch?.form_label];
     const specialVt = SPECIAL_FORM_VT[recentShinyCatch?.form_label];
     if (alolaVt) {
-      imgSrc = getAlolanSprite(pokemon.number, alolaVt) || spriteUrl(pokemon.number, true);
+      const alolaUrl = getAlolanSprite(pokemon.number, alolaVt);
+      imgSrc = alolaUrl ? normalizeVariantUrl(alolaUrl) : spriteUrl(pokemon.number, true);
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || spriteUrl(pokemon.number, true);
     } else {
@@ -336,7 +342,8 @@ function renderCard(pokemon, icons = {}) {
     const alolaVt   = ALOLA_FORM_VT[catch_?.form_label];
     const specialVt = SPECIAL_FORM_VT[catch_?.form_label];
     if (alolaVt) {
-      imgSrc = getAlolanSprite(pokemon.number, alolaVt) || (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
+      const alolaUrl = getAlolanSprite(pokemon.number, alolaVt);
+      imgSrc = alolaUrl ? normalizeVariantUrl(alolaUrl) : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || catch_?.sprite_url || spriteUrl(pokemon.number, false);
     } else {
