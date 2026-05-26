@@ -23,6 +23,7 @@ const TYPE_IMAGES = {
   dark:     'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779662872/tenebres_c99vof.png',
   bug:      'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779580557/insecte_rccof2.png',
   electric: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779759222/electrick_zuuwdo.png',
+  psychic:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779823368/psy_sxgmlp.png',
 };
 
 const CAPTURED_KEY         = 'pokedex_captured'; // legacy, conservé pour compatibilité
@@ -514,7 +515,6 @@ function evoPortrait(node, isCurrent, iconUrl = null) {
 }
 
 function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, isGigamax = false) {
-  const isItem = condition && !condition.startsWith('Niv.');
   let conditionHtml = '';
   if (itemImageUrl) {
     conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}">
@@ -523,8 +523,10 @@ function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, is
     </div>`;
   } else if (condition) {
     const isNight = condition.toLowerCase().includes('nuit');
+    const isHappiness = condition.toLowerCase().includes('bonheur');
+    const isItem = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness;
     const conditionText = condition;
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isNight ? ' is-night' : ''}">${esc(conditionText)}</span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}">${esc(conditionText)}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
@@ -852,60 +854,111 @@ async function openModal(number) {
 
   const sexeLabel = 'Sexe';
 
-  const variantsHtml = variants.length
+  // Cartes de variante pour les formes de pokemon_special_forms
+  function sfVariantCard(sf, isShiny) {
+    const vt     = isShiny ? sf.form_key + '_shiny' : sf.form_key;
+    const label  = isShiny ? 'Shiny' : sf.form_label_fr;
+    const imgSrc = isShiny
+      ? (sf.image_url_shiny ? normalizeVariantUrl(sf.image_url_shiny) : spriteUrl(p.number, true))
+      : (sf.image_url       ? normalizeVariantUrl(sf.image_url)       : spriteUrl(p.number, false));
+    const status = getVariantStatus(p.number, vt);
+    const meta   = VARIANT_STATUS_META[status];
+    const sparkles = isShiny ? `
+      <span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
+      <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
+      <span class="sparkle" style="top:50%;right:-9px;--sparkle-delay:1.1s;--sparkle-size:0.8rem;--sparkle-dur:2.5s">✦</span>
+      <span class="sparkle" style="bottom:18px;left:-9px;--sparkle-delay:0.8s;--sparkle-size:0.7rem;--sparkle-dur:2s">✦</span>
+      <span class="sparkle" style="bottom:-7px;left:38px;--sparkle-delay:1.5s;--sparkle-size:0.85rem;--sparkle-dur:2.3s">✦</span>` : '';
+    return `
+      <div class="variant-card${isShiny ? ' variant-card--shiny' : ''}" data-type="${esc(vt)}" data-status="${status}">
+        ${sparkles}
+        <div class="variant-img-wrap">
+          <img src="${esc(imgSrc)}" alt="${esc(label)}" loading="lazy">
+        </div>
+        <span class="variant-label">${esc(label)}</span>
+        <button class="variant-status ${meta.cls}" data-pkmn="${p.number}" data-variant="${esc(vt)}">
+          ${esc(meta.label)}
+        </button>
+      </div>`;
+  }
+
+  // Groupement des formes spéciales pour la section Formes
+  const SF_GROUP_ORDER = ['Pikachu Cosplayeur', 'Pikachu Casquette', 'Pikachu Partenaire', 'Spéciales'];
+  const sfByGroup = {};
+  for (const sf of specialFormsList) {
+    const grp = sf.form_group || 'Formes spéciales';
+    if (!sfByGroup[grp]) sfByGroup[grp] = [];
+    sfByGroup[grp].push(sf);
+  }
+  const sfSortedGroups = [
+    ...SF_GROUP_ORDER.filter(g => sfByGroup[g]),
+    ...Object.keys(sfByGroup).filter(g => SF_GROUP_ORDER.indexOf(g) === -1).sort((a, b) => a.localeCompare(b, 'fr')),
+  ];
+
+  // Contenu des onglets Formes
+  const baseFormsContent = [
+    variantRow(neutralBadge, neutralVariants),
+    variantRow(maleBadge,    maleVariants),
+    variantRow(femaleBadge,  femaleVariants),
+  ].join('');
+
+  const megaFormsContent = megaVariants.length ? (() => {
+    const isXType   = megaVariants.some(v => v.variant_type === 'mega_x' || v.variant_type === 'shiny_mega_x');
+    const hasY      = megaYVariants.length > 0;
+    const showBadge = isXType || hasY;
+    const rowX = showBadge
+      ? variantRow(`<span class="gender-badge mega-x">X</span>`, megaVariants)
+      : `<div class="variants-grid">${megaVariants.map(variantCard).join('')}</div>`;
+    const rowY = hasY ? variantRow(`<span class="gender-badge mega-y">Y</span>`, megaYVariants) : '';
+    return rowX + rowY;
+  })() : '';
+
+  const formTabList = [
+    {
+      id: 'base', label: 'Base',
+      html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`,
+      show: !!(neutralVariants.length || maleVariants.length || femaleVariants.length),
+    },
+    ...sfSortedGroups.map(grp => ({
+      id: grp, label: grp,
+      html: `<div class="variants-grid variants-grid--2col">${sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]).join('')}</div>`,
+      show: true,
+    })),
+    {
+      id: 'mega', label: 'Méga-Évolution',
+      html: `<div class="variants-rows-wrapper">${megaFormsContent}</div>`,
+      show: !!megaVariants.length,
+    },
+    {
+      id: 'alola', label: "Forme d'Alola",
+      html: `<div class="variants-rows-wrapper"><div class="variants-grid">${alolanVariants.map(variantCard).join('')}</div></div>`,
+      show: !!alolanVariants.length,
+    },
+    {
+      id: 'troizepy', label: 'Pichu Troizépi',
+      html: `<div class="variants-rows-wrapper">${variantRow(femaleBadge, troizepyVariants)}</div>`,
+      show: !!troizepyVariants.length,
+    },
+    {
+      id: 'gigamax', label: 'Gigamax',
+      html: `<div class="variants-rows-wrapper"><div class="variants-grid">${gigamaxVariants.map(variantCard).join('')}</div></div>`,
+      show: !!gigamaxVariants.length,
+    },
+  ].filter(t => t.show);
+
+  const useFormsTabs = formTabList.length > 1;
+
+  const variantsInnerHtml = useFormsTabs
+    ? `<div class="illus-tabs forms-tabs-nav">
+         ${formTabList.map((t, i) => `<button class="illus-tab-btn${i === 0 ? ' active' : ''}" data-forms-tab="${esc(t.id)}" aria-selected="${i === 0}">${esc(t.label)}</button>`).join('')}
+       </div>
+       ${formTabList.map((t, i) => `<div class="forms-tab-panel${i === 0 ? ' active' : ''}" data-forms-panel="${esc(t.id)}">${t.html}</div>`).join('')}`
+    : (formTabList[0]?.html || '');
+
+  const variantsHtml = variants.length || specialFormsList.length
     ? `<div class="variants-section">
         <h4>Formes</h4>
-        <div class="variants-content">
-          <div class="variants-col-wrap">
-            <h4 class="sexe-heading">${sexeLabel}</h4>
-            <div class="variants-main">
-              <div class="variants-rows-wrapper">
-                ${variantRow(neutralBadge, neutralVariants)}
-                ${variantRow(maleBadge,    maleVariants)}
-                ${variantRow(femaleBadge,  femaleVariants)}
-              </div>
-            </div>
-          </div>
-          ${megaVariants.length ? (() => {
-            const isXType = megaVariants.some(v => v.variant_type === 'mega_x' || v.variant_type === 'shiny_mega_x');
-            const hasY    = megaYVariants.length > 0;
-            const showBadge = isXType || hasY;
-            const rowX = showBadge
-              ? variantRow(`<span class="gender-badge mega-x">X</span>`, megaVariants)
-              : `<div class="variants-grid">${megaVariants.map(variantCard).join('')}</div>`;
-            const rowY = hasY
-              ? variantRow(`<span class="gender-badge mega-y">Y</span>`, megaYVariants)
-              : '';
-            return `<div class="variants-col-wrap"><h4>Méga-Évolution</h4><div class="variants-mega-col"><div class="variants-rows-wrapper">${rowX}${rowY}</div></div></div>`;
-          })() : ''}
-          ${gigamaxVariants.length ? `
-          <div class="variants-col-wrap">
-            <h4 class="gigamax-title">Gigamax</h4>
-            <div class="variants-mega-col">
-              <div class="variants-rows-wrapper">
-                <div class="variants-grid">${gigamaxVariants.map(variantCard).join('')}</div>
-              </div>
-            </div>
-          </div>` : ''}
-          ${alolanVariants.length ? `
-          <div class="variants-col-wrap">
-            <h4>Forme d'Alola</h4>
-            <div class="variants-mega-col">
-              <div class="variants-rows-wrapper">
-                <div class="variants-grid">${alolanVariants.map(variantCard).join('')}</div>
-              </div>
-            </div>
-          </div>` : ''}
-          ${troizepyVariants.length ? `
-          <div class="variants-col-wrap">
-            <h4>Pichu Troizépi</h4>
-            <div class="variants-mega-col">
-              <div class="variants-rows-wrapper">
-                ${variantRow(femaleBadge, troizepyVariants)}
-              </div>
-            </div>
-          </div>` : ''}
-        </div>
+        ${variantsInnerHtml}
        </div>`
     : '';
 
@@ -921,25 +974,27 @@ async function openModal(number) {
   const specialForms = [
     ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true, isRegional: false, isSpecialForm: false, formKey: null, formIcon: MEGA_ICON })),
     ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true, isSpecialForm: false, formKey: null, formIcon: '' })),
+    ...specialFormsList.map(sf => ({ name: sf.form_label_fr, artwork_url: sf.artwork_url || '', shiny_artwork_url: sf.artwork_url_shiny || '', description_fr: sf.description_fr || null, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: true, formKey: sf.form_key, formIcon: '', formGroup: sf.form_group || null })),
     ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: false, formKey: null, formIcon: GIGAMAX_ICON })),
-    ...specialFormsList.map(sf => ({ name: sf.form_label_fr, artwork_url: sf.artwork_url || '', shiny_artwork_url: sf.artwork_url_shiny || '', description_fr: null, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: true, formKey: sf.form_key, formIcon: '' })),
   ];
 
   function illustrationCol(name, artworkUrl, descriptionFr, extraClass = '', formTypes = '', shinyUrl = '', formIcon = '', extraAttrs = '') {
     const typeList = formTypes ? formTypes.split(',').map(t => t.trim()).filter(Boolean) : [];
     const typeBadges = typeList.map(t => typeBadge(t)).join('');
-    const artworkHtml = shinyUrl
+    const artImg  = artworkUrl ? `<img class="modal-artwork" src="${esc(artworkUrl)}" alt="${esc(name)}" width="200" height="200" loading="lazy">` : `<div class="modal-artwork modal-artwork--pending"></div>`;
+    const shinImg = shinyUrl  ? `<img class="modal-artwork" src="${esc(shinyUrl)}"  alt="Shiny"       width="200" height="200" loading="lazy">` : `<div class="modal-artwork modal-artwork--pending"></div>`;
+    const artworkHtml = shinyUrl || (!artworkUrl && !shinyUrl)
       ? `<div class="illus-artworks">
            <div class="illus-artwork-item">
-             <img class="modal-artwork" src="${esc(artworkUrl)}" alt="${esc(name)}" width="200" height="200" loading="lazy">
+             ${artImg}
              <span class="illus-artwork-label">${esc(name)}</span>
            </div>
            <div class="illus-artwork-item">
-             <img class="modal-artwork" src="${esc(shinyUrl)}" alt="Shiny" width="200" height="200" loading="lazy">
+             ${shinImg}
              <span class="illus-artwork-label" style="color:var(--yellow)">Shiny</span>
            </div>
          </div>`
-      : `<img class="modal-artwork" src="${esc(artworkUrl)}" alt="${esc(name)}" width="200" height="200" loading="lazy">
+      : `${artImg}
          <span class="illus-col-name${extraClass.includes('is-mega') ? ' mega-label' : ''}">${esc(name)}</span>`;
     return `
       <div class="illus-col-wrapper">
@@ -951,6 +1006,56 @@ async function openModal(number) {
         </div>
       </div>`;
   }
+
+  // ── Groupement des formes en onglets ─────────────────────────
+  function getFormCategory(f) {
+    if (f.isMega)        return 'Méga-Évolution';
+    if (f.isRegional)    return 'Formes régionales';
+    if (f.isSpecialForm) return f.formGroup || 'Formes spéciales';
+    return 'Gigamax';
+  }
+  const formsByCategory = {};
+  for (const f of specialForms) {
+    const cat = getFormCategory(f);
+    if (!formsByCategory[cat]) formsByCategory[cat] = [];
+    formsByCategory[cat].push(f);
+  }
+  const CATEGORY_ORDER = ['Pikachu Cosplayeur', 'Pikachu Casquette', 'Pikachu Partenaire', 'Spéciales', 'Méga-Évolution', 'Formes régionales', 'Gigamax'];
+  const illusCategories = [
+    ...CATEGORY_ORDER.filter(c => formsByCategory[c]),
+    ...Object.keys(formsByCategory).filter(c => CATEGORY_ORDER.indexOf(c) === -1).sort((a, b) => a.localeCompare(b, 'fr')),
+  ];
+  const useTabs = illusCategories.length > 1 || specialForms.length >= 4;
+
+  function renderFormIllusCol(f) {
+    return illustrationCol(
+      f.name, f.artwork_url || '', f.description_fr,
+      f.isRegional ? 'is-regional' : f.isMega ? 'is-mega' : f.isSpecialForm ? 'is-special-form' : 'is-gigamax',
+      f.types || '', f.shiny_artwork_url || '', f.formIcon || '',
+      f.isSpecialForm && f.formKey ? `data-sf-key="${esc(f.formKey)}"` : ''
+    );
+  }
+
+  const baseIllusHtml = illustrationCol(p.name_fr, imgSrc, p.description_fr, '', (p.types || []).join(','), p.shiny_artwork_url || '');
+
+  const illustrationsHtml = useTabs ? `
+    <div class="illus-tabs">
+      <div class="illus-tab-btns" role="tablist">
+        <button class="illus-tab-btn active" data-tab="base" role="tab" aria-selected="true">Base</button>
+        ${illusCategories.map(cat => `<button class="illus-tab-btn" data-tab="${esc(cat)}" role="tab" aria-selected="false">${esc(cat)}</button>`).join('')}
+      </div>
+      <div class="illus-tab-panel active" data-panel="base">
+        <div class="illus-row">${baseIllusHtml}</div>
+      </div>
+      ${illusCategories.map(cat => `
+        <div class="illus-tab-panel" data-panel="${esc(cat)}">
+          <div class="illus-row">${formsByCategory[cat].map(renderFormIllusCol).join('')}</div>
+        </div>`).join('')}
+    </div>` : `
+    <div class="illus-row">
+      ${baseIllusHtml}
+      ${specialForms.map(renderFormIllusCol).join('')}
+    </div>`;
 
   // Injecte le banner dans le modal lui-même (hors modal-content) pour éviter le clipping overflow
   const existingBanner = els.modal.querySelector('.collect-banner');
@@ -976,23 +1081,39 @@ async function openModal(number) {
       </div>
     </div>
 
-    <div class="illus-row">
-      ${illustrationCol(p.name_fr, imgSrc, p.description_fr, '', (p.types || []).join(','), p.shiny_artwork_url || '')}
-      ${specialForms.map(f => illustrationCol(
-        f.name,
-        f.artwork_url || '',
-        f.description_fr,
-        f.isRegional ? 'is-regional' : f.isMega ? 'is-mega' : f.isSpecialForm ? 'is-special-form' : 'is-gigamax',
-        f.types || '',
-        f.shiny_artwork_url || '',
-        f.formIcon || '',
-        f.isSpecialForm && f.formKey ? `data-sf-key="${esc(f.formKey)}"` : ''
-      )).join('')}
-    </div>
+    ${illustrationsHtml}
 
     ${evoHtml}
     ${variantsHtml}
   `;
+
+  // Onglets illustrations
+  els.modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      els.modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(b => {
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', String(b === btn));
+      });
+      els.modalContent.querySelectorAll('.illus-tab-panel').forEach(panel =>
+        panel.classList.toggle('active', panel.dataset.panel === tab)
+      );
+    });
+  });
+
+  // Onglets formes
+  els.modalContent.querySelectorAll('.forms-tabs-nav .illus-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.formsTab;
+      els.modalContent.querySelectorAll('.forms-tabs-nav .illus-tab-btn').forEach(b => {
+        b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-selected', String(b === btn));
+      });
+      els.modalContent.querySelectorAll('.forms-tab-panel').forEach(panel =>
+        panel.classList.toggle('active', panel.dataset.formsPanel === tab)
+      );
+    });
+  });
 
   // Image fallback (illustration principale)
   const modalImg = els.modalContent.querySelector('.illus-col:first-child .modal-artwork');
@@ -1535,17 +1656,30 @@ function renderDrawerFormsSpecial(specialForm) {
   const grid  = $('form-grid');
   if (!field || !grid) return;
 
+  const MALE_ICON   = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const MALE_SM     = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
   const FEMALE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
   const FEMALE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
   const SHINY_SM    = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+
+  const isMale     = specialForm.form_group === 'Pikachu Casquette';
+  const isGendered = specialForm.form_group === 'Pikachu Partenaire';
+  const ICON    = isMale ? MALE_ICON   : FEMALE_ICON;
+  const ICON_SM = isMale ? MALE_SM     : FEMALE_SM;
+  const genderLabel = isMale ? 'Mâle' : 'Femelle';
 
   const label   = specialForm.form_label_fr;
   const vt      = specialForm.form_key;
   const vtShiny = specialForm.form_key + '_shiny';
 
-  const entries = [
-    { label: label,             displayLabel: 'Femelle',       variant_type: vt,      iconHtml: FEMALE_ICON,          sprite: specialForm.image_url                               || null },
-    { label: label + ' Shiny',  displayLabel: 'Femelle Shiny', variant_type: vtShiny, iconHtml: FEMALE_SM + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+  const entries = isGendered ? [
+    { label: label,            displayLabel: 'Mâle',         variant_type: vt,                      iconHtml: MALE_ICON,            sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny', displayLabel: 'Mâle Shiny',   variant_type: vtShiny,                 iconHtml: MALE_SM   + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+    { label: label,            displayLabel: 'Femelle',       variant_type: vt      + '_female',     iconHtml: FEMALE_ICON,          sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny', displayLabel: 'Femelle Shiny', variant_type: vtShiny + '_female',     iconHtml: FEMALE_SM + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+  ] : [
+    { label: label,            displayLabel: genderLabel,            variant_type: vt,      iconHtml: ICON,               sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny', displayLabel: genderLabel + ' Shiny', variant_type: vtShiny, iconHtml: ICON_SM + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
   ];
 
   grid.innerHTML = entries.map((e, i) => `

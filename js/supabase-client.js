@@ -433,8 +433,9 @@ async function fetchSpecialFormsForNumbers(pokemonNumbers) {
   if (!client || !pokemonNumbers.length) return {};
   const { data } = await client
     .from('pokemon_special_forms')
-    .select('pokemon_number, form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny')
-    .in('pokemon_number', pokemonNumbers);
+    .select('pokemon_number, form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny, form_group, sort_order, description_fr')
+    .in('pokemon_number', pokemonNumbers)
+    .order('sort_order', { ascending: true });
   const map = {};
   for (const r of data || []) {
     if (!map[r.pokemon_number]) map[r.pokemon_number] = {};
@@ -451,8 +452,9 @@ async function fetchSpecialFormsByNumber(pokemonNumber) {
   if (!client) return [];
   const { data } = await client
     .from('pokemon_special_forms')
-    .select('form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny')
-    .eq('pokemon_number', pokemonNumber);
+    .select('form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny, form_group, sort_order, description_fr')
+    .eq('pokemon_number', pokemonNumber)
+    .order('sort_order', { ascending: true });
   return data || [];
 }
 
