@@ -81,7 +81,7 @@
 .poke-card[data-primary-type="water"]    { --card-accent: #2980ef; }
 .poke-card[data-primary-type="electric"] { --card-accent: #fac000; }
 .poke-card[data-primary-type="grass"]    { --card-accent: #3da224; }
-.poke-card[data-primary-type="ice"]      { --card-accent: #4CD1C0; }
+.poke-card[data-primary-type="ice"]      { --card-accent: #3fd1f7; }
 .poke-card[data-primary-type="fighting"] { --card-accent: #CE406A; }
 .poke-card[data-primary-type="poison"]   { --card-accent: #AB6AC8; }
 .poke-card[data-primary-type="ground"]   { --card-accent: #D97845; }
@@ -92,7 +92,7 @@
 .poke-card[data-primary-type="ghost"]    { --card-accent: #536FB4; }
 .poke-card[data-primary-type="dragon"]   { --card-accent: #006FC9; }
 .poke-card[data-primary-type="dark"]     { --card-accent: #50413f; }
-.poke-card[data-primary-type="steel"]    { --card-accent: #52869D; }
+.poke-card[data-primary-type="steel"]    { --card-accent: #60a0b8; }
 .poke-card[data-primary-type="fairy"]    { --card-accent: #E46AB2; }
 
 .poke-card[data-primary-type] {
