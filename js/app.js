@@ -647,20 +647,16 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
           ).join('');
           raiChainWrapper = `<div class="evo-inline-chain"><div class="evo-stage">${nextPortrait}</div><div class="evo-branches evo-branches-special">${mBranches}</div></div>`;
         }
-        // Raichu Alola empilé juste sous Raichu dans la même colonne
-        let mainRightColumn;
-        if (nextRegionals.length === 0) {
-          mainRightColumn = raiChainWrapper;
-        } else {
-          const regionalPortraits = nextRegionals.map(r =>
-            `<div class="evo-stage">${evoRegionalPortrait(r)}</div>`
-          ).join('');
-          mainRightColumn = `<div class="evo-inline-stack">${raiChainWrapper}${regionalPortraits}</div>`;
-        }
-        const mainBranch = `<div class="evo-branch-item">${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${mainRightColumn}</div>`;
+        const mainBranch = `<div class="evo-branch-item">${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${raiChainWrapper}</div>`;
+
+        // Chaque forme régionale a sa propre pill de condition (ex : Pierre Foudre à Alola)
+        const regionalBranches = nextRegionals.map(r => {
+          const arrowCond = r.evolution_condition || condition;
+          return `<div class="evo-branch-item">${evoArrow(arrowCond, r.evolution_item_image_url || null)}<div class="evo-stage">${evoRegionalPortrait(r)}</div></div>`;
+        }).join('');
 
         const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
-        return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div><div class="evo-branches evo-branches-special">${gigaBranches}${mainBranch}</div>`;
+        return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div><div class="evo-branches evo-branches-special">${gigaBranches}${mainBranch}${regionalBranches}</div>`;
       }
       if (regionals.length > 0) {
         // Grille alignée : une ligne par forme (principale + régionales)
