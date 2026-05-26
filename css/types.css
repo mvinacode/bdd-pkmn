@@ -79,7 +79,7 @@
 .poke-card[data-primary-type="normal"]   { --card-accent: #a0a2a0; }
 .poke-card[data-primary-type="fire"]     { --card-accent: #e62829; }
 .poke-card[data-primary-type="water"]    { --card-accent: #2980ef; }
-.poke-card[data-primary-type="electric"] { --card-accent: #FBD100; }
+.poke-card[data-primary-type="electric"] { --card-accent: #fac000; }
 .poke-card[data-primary-type="grass"]    { --card-accent: #3da224; }
 .poke-card[data-primary-type="ice"]      { --card-accent: #4CD1C0; }
 .poke-card[data-primary-type="fighting"] { --card-accent: #CE406A; }
