@@ -1793,10 +1793,13 @@ body {
 }
 
 .evo-condition-item.is-stone {
-  background: rgba(251,209,0,0.1);
+  border: 1px solid transparent;
+  background:
+    rgba(251,209,0,0.1) padding-box,
+    linear-gradient(135deg, #55a260, #e1d850, #55a260) border-box;
 }
 .evo-condition-item.is-stone::before {
-  background: linear-gradient(135deg, #55a260, #e1d850, #55a260);
+  content: none;
 }
 .evo-condition-item.is-stone .evo-condition {
   color: #FBD100;
@@ -2247,13 +2250,20 @@ body {
 
 .variant-card[data-type="shiny"],
 .variant-card[data-type="shiny_male"],
-.variant-card[data-type="shiny_female"] {
+.variant-card[data-type="shiny_female"],
+.variant-card[data-type="alolan_shiny"],
+.variant-card[data-type="alolan_shiny_male"],
+.variant-card[data-type="alolan_shiny_female"] {
   border-color: rgba(253,216,53,0.25);
 }
 .variant-card[data-type="shiny"] .variant-label,
 .variant-card[data-type="shiny_male"] .variant-label,
-.variant-card[data-type="shiny_female"] .variant-label {
+.variant-card[data-type="shiny_female"] .variant-label,
+.variant-card[data-type="alolan_shiny"] .variant-label,
+.variant-card[data-type="alolan_shiny_male"] .variant-label,
+.variant-card[data-type="alolan_shiny_female"] .variant-label {
   color: var(--yellow);
+  font-weight: 700;
 }
 .variant-card[data-type="female"] {
   border-color: rgba(228,106,178,0.25);
