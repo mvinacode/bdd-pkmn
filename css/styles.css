@@ -1518,9 +1518,19 @@ body {
 }
 
 .evo-condition.is-stone {
+  position: relative;
   color: #FBD100;
-  border-color: rgba(251,209,0,0.5);
-  background: rgba(251,209,0,0.09);
+  border-color: rgba(251,209,0,0.65);
+  background: rgba(251,209,0,0.13);
+  text-shadow: 0 0 8px rgba(251,209,0,0.45);
+}
+.evo-condition.is-stone::after {
+  content: '⚡';
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  font-size: 0.85rem;
+  line-height: 1;
 }
 
 .evo-condition.is-mega {
@@ -1780,12 +1790,15 @@ body {
   background: linear-gradient(135deg, #e31b47, #632129, #fe589b, #e31b47);
 }
 
+.evo-condition-item.is-stone {
+  background: rgba(251,209,0,0.1);
+}
 .evo-condition-item.is-stone::before {
   background: linear-gradient(135deg, #FBD100, #d48e00, #FBD100);
 }
-
 .evo-condition-item.is-stone .evo-condition {
   color: #FBD100;
+  text-shadow: 0 0 8px rgba(251,209,0,0.45);
 }
 
 /* Portrait racine (Pokémon source d'une chaîne avec branches multiples) */
