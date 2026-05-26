@@ -1520,8 +1520,10 @@ body {
 .evo-condition.is-stone {
   position: relative;
   color: #FBD100;
-  border-color: rgba(251,209,0,0.65);
-  background: rgba(251,209,0,0.13);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(251,209,0,0.13), rgba(251,209,0,0.13)) padding-box,
+    linear-gradient(135deg, #55a260, #e1d850, #55a260) border-box;
   text-shadow: 0 0 8px rgba(251,209,0,0.45);
 }
 .evo-condition.is-stone::after {
@@ -1794,7 +1796,7 @@ body {
   background: rgba(251,209,0,0.1);
 }
 .evo-condition-item.is-stone::before {
-  background: linear-gradient(135deg, #FBD100, #d48e00, #FBD100);
+  background: linear-gradient(135deg, #55a260, #e1d850, #55a260);
 }
 .evo-condition-item.is-stone .evo-condition {
   color: #FBD100;
