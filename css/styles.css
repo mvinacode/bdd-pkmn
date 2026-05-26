@@ -1517,6 +1517,12 @@ body {
   background: rgba(253,216,53,0.07);
 }
 
+.evo-condition.is-stone {
+  color: #FBD100;
+  border-color: rgba(251,209,0,0.5);
+  background: rgba(251,209,0,0.09);
+}
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -1778,6 +1784,10 @@ body {
   background: linear-gradient(135deg, #FBD100, #d48e00, #FBD100);
 }
 
+.evo-condition-item.is-stone .evo-condition {
+  color: #FBD100;
+}
+
 /* Portrait racine (Pokémon source d'une chaîne avec branches multiples) */
 .evo-portrait--root .evo-img-wrap {
   width: 148px;
@@ -1786,6 +1796,15 @@ body {
 .evo-portrait--root .evo-img-wrap img {
   width: 148px;
   height: 148px;
+}
+
+/* Pikachu-style : root pill s'étire verticalement en face de toutes les branches */
+.evo-stage--root-stretch {
+  align-self: stretch;
+}
+.evo-stage--root-stretch .evo-portrait--root {
+  height: 100%;
+  justify-content: center;
 }
 
 /* ── États pill méga/gigamax ──────────────────────────────────── */
@@ -1900,6 +1919,14 @@ body {
 .evo-inline-chain {
   display: flex;
   align-items: center;
+}
+
+/* Raichu normal + Raichu Alola empilés verticalement dans la même colonne */
+.evo-inline-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
 }
 
 /* Couleur de fond selon le type dans la chaîne */
