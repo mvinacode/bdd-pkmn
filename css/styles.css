@@ -1825,6 +1825,11 @@ body {
 .evo-condition-item.evo-condition--unseen::before {
   background: rgba(255,255,255,0.18);
 }
+/* La pierre garde toujours son dégradé, quelle que soit la classe de statut */
+.evo-condition-item.is-stone.evo-condition--unseen::before,
+.evo-condition-item.is-stone.evo-condition--seen::before {
+  background: linear-gradient(135deg, #55a260, #e1d850, #55a260);
+}
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
 /* (le dégradé vient des règles existantes, rien à surcharger) */
