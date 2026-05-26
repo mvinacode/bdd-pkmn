@@ -1798,11 +1798,11 @@ body {
   height: 148px;
 }
 
-/* Pikachu-style : root pill s'étire verticalement en face de toutes les branches */
+/* Pill source s'étire verticalement en face de toutes les branches (Pikachu, Raichu…) */
 .evo-stage--root-stretch {
   align-self: stretch;
 }
-.evo-stage--root-stretch .evo-portrait--root {
+.evo-stage--root-stretch .evo-portrait {
   height: 100%;
   justify-content: center;
 }

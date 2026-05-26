@@ -645,7 +645,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
           const mBranches = nextMegas.map(m =>
             `<div class="evo-branch-item">${evoArrow(m.condition_label, m.item_image_url || null, true)}${evoMegaPortrait(m)}</div>`
           ).join('');
-          raiChainWrapper = `<div class="evo-inline-chain"><div class="evo-stage">${nextPortrait}</div><div class="evo-branches evo-branches-special">${mBranches}</div></div>`;
+          raiChainWrapper = `<div class="evo-inline-chain"><div class="evo-stage evo-stage--root-stretch">${nextPortrait}</div><div class="evo-branches evo-branches-special">${mBranches}</div></div>`;
         }
         const mainBranch = `<div class="evo-branch-item">${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${raiChainWrapper}</div>`;
 
