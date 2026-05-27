@@ -15,6 +15,19 @@ const CONFIG = {
   LANG: 'fr',
 };
 
+// ── Préférences par utilisateur ──────────────────────────────
+// genderFormsMode :
+//   'all' → toutes les formes genrées présentes en jeu doivent être obtenues
+//   'any' → au moins une forme genrée suffit (mâle OU femelle, normal OU shiny)
+//   'none'→ les formes genrées ne sont pas prises en compte
+//
+// Remplace les UUIDs ci-dessous par les vrais IDs visibles dans
+// Supabase Dashboard → Authentication → Users → colonne "UID"
+const USER_PREFS = {
+  '2005f2e9-6df1-48b7-9420-2a5457d43e45': { genderFormsMode: 'all'  }, // Biche
+  'efd681cf-9264-492d-bd59-a624d6f9668e': { genderFormsMode: 'any'  }, // Sœur
+};
+
 /**
  * Construit l'URL d'une image Pokémon depuis Cloudinary.
  * Format Cloudinary : /image/upload/{transformations}/pokemon/{number}.png

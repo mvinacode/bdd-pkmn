@@ -397,11 +397,14 @@ function renderCard(pokemon, icons = {}) {
 
   // Seules les formes "collectables" (alolan + mega/gigamax) sont vérifiées dans variantMap.
   // Les variants visuels (male/female/etc.) sont ignorés pour éviter les faux négatifs.
+  const genderMode = window._genderFormsMode || 'none';
+  const GENDER_VTS = ['male', 'female', 'shiny_male', 'shiny_female'];
   const TRACKED_VT = new Set([
     'alolan','alolan_male','alolan_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female',
     'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
     'gigamax','shiny_gigamax',
     'troizepy','troizepy_shiny',
+    ...(genderMode === 'all' ? GENDER_VTS : []),
   ]);
   const allVariantsOwned = !pokemonVMap
     ? true
@@ -409,9 +412,15 @@ function renderCard(pokemon, icons = {}) {
         .filter(vt => vt in pokemonVMap)
         .every(vt => seenFormsMap[vt]?.status === 'owned' || catchCoveredVts.has(vt));
 
+  // Mode 'any' : au moins un variant genré doit être obtenu si des variantes existent en jeu
+  const genderVtsInGame = GENDER_VTS.filter(vt => pokemonVMap && vt in pokemonVMap);
+  const genderOk = genderMode !== 'any' || genderVtsInGame.length === 0
+    || genderVtsInGame.some(vt => seenFormsMap[vt]?.status === 'owned');
+
   const isAllForms = !isComplete
     && allSeenOwned
     && allVariantsOwned
+    && genderOk
     && nonBaronForms.some(f => !!f.status)
     && nonBaronForms.every(f => !f.status || f.status === 'owned')
     && (!hasMegaInGame || formStatuses.find(f => f.key === 'mega')?.status === 'owned');
@@ -2294,3 +2303,4 @@ async function openDrawerWithPokemon(number) {
     }
   }
 }
+
