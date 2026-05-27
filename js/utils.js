@@ -39,6 +39,7 @@ const BALLS = [
   { name: 'Mégamasse Ball',        slug: 'megamasse-ball',      customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779891449/megamasse_ball_wb6cza.png' },
   { name: 'Gigamasse Ball',        slug: 'gigamasse-ball',      customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779893098/gigamasse_ball_xmnm6z.png' },
   { name: 'Plume Ball',            slug: 'plume-ball',          customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829453/plume_ball_efk2is.png' },
+  { name: 'Envol Ball',            slug: 'envol-ball',          customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779896976/envol_ball_wmovf5.png' },
 ];
 
 function ballUrl(slug) {
