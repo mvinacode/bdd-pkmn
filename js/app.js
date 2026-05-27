@@ -396,7 +396,17 @@ function renderCard(pokemon, icons = {}) {
     </div>`;
   })() : '';
 
+  const completionSparkles = isComplete ? `
+    <span class="sparkle" style="top:3px;left:14px;color:#ff5050;--sparkle-delay:0s;--sparkle-size:0.85rem;--sparkle-dur:2.1s">✦</span>
+    <span class="sparkle" style="top:2px;right:12px;color:#ffcc00;--sparkle-delay:0.7s;--sparkle-size:0.65rem;--sparkle-dur:1.8s">✦</span>
+    <span class="sparkle" style="top:38%;right:2px;color:#44dd66;--sparkle-delay:1.4s;--sparkle-size:0.75rem;--sparkle-dur:2.4s">✦</span>
+    <span class="sparkle" style="bottom:20px;left:4px;color:#4488ff;--sparkle-delay:0.4s;--sparkle-size:0.7rem;--sparkle-dur:2s">✦</span>
+    <span class="sparkle" style="bottom:6px;right:14px;color:#cc44ff;--sparkle-delay:1.1s;--sparkle-size:0.8rem;--sparkle-dur:2.3s">✦</span>
+    <span class="sparkle" style="top:28%;left:6px;color:#ff8800;--sparkle-delay:1.8s;--sparkle-size:0.6rem;--sparkle-dur:1.9s">✦</span>
+  ` : '';
+
   card.innerHTML = `
+    ${completionSparkles}
     ${catchBadgeHtml}
     <div class="poke-number">#${esc(padNumber(pokemon.number))}</div>
     <div class="poke-image-wrapper">
