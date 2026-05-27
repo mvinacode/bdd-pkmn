@@ -34,6 +34,7 @@ const BALLS = [
   { name: 'Étrange Ball',       slug: 'etrange-ball',       customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779836157/etrange_wx0z4h.png' },
   { name: 'Poké Ball (Ancienne)',  slug: 'poke-ball-ancienne',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779839863/poke_ball_ancienne_ewtcwy.png' },
   { name: 'Super Ball (Ancienne)', slug: 'super-ball-ancienne', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779887300/super_ball_ancienne_l0tjfi.png' },
+  { name: 'Hyper Ball (Ancienne)', slug: 'hyper-ball-ancienne', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779889427/hyper_ball_ancienne_tvfu1i.png' },
   { name: 'Plume Ball',            slug: 'plume-ball',          customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829453/plume_ball_efk2is.png' },
 ];
 
