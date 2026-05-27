@@ -168,17 +168,18 @@ async function fetchVariantIcons(pokemonNumbers) {
   const { data } = await client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .in('variant_type', ['normal', 'male'])
+    .in('variant_type', ['normal', 'male', 'female'])
     .in('pokemon_number', pokemonNumbers);
   if (!data) return [];
-  // Préférer 'normal' sur 'male' si les deux existent
+  // Préférer normal > male > female
+  const PRIO = { normal: 0, male: 1, female: 2 };
   const map = {};
   for (const row of data) {
-    if (!map[row.pokemon_number] || row.variant_type === 'normal') {
-      map[row.pokemon_number] = row.image_url;
+    if (!map[row.pokemon_number] || PRIO[row.variant_type] < PRIO[map[row.pokemon_number].variant_type]) {
+      map[row.pokemon_number] = row;
     }
   }
-  return Object.entries(map).map(([pokemon_number, image_url]) => ({ pokemon_number: parseInt(pokemon_number), image_url }));
+  return Object.entries(map).map(([pokemon_number, row]) => ({ pokemon_number: parseInt(pokemon_number), image_url: row.image_url }));
 }
 
 /**
