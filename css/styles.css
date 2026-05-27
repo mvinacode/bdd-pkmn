@@ -1558,6 +1558,26 @@ body {
 }
 .evo-condition.is-stone-ice::after { content: none; }
 
+.evo-condition.is-stone-moon {
+  color: #e7ede8;
+  background: rgba(255,255,255,0.06);
+  text-shadow: 0 0 8px rgba(116,143,125,0.4);
+}
+.evo-condition.is-stone-moon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #8dad95, #748f7d, #8dad95);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-stone-moon::after { content: none; }
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -1865,6 +1885,19 @@ body {
 .evo-condition-item.is-stone-ice.evo-condition--unseen::before,
 .evo-condition-item.is-stone-ice.evo-condition--seen::before {
   background: linear-gradient(135deg, #8ed1dd, #3a99b4, #8ed1dd);
+}
+
+/* Pierre Lune */
+.evo-condition-item.is-stone-moon::before {
+  background: linear-gradient(135deg, #8dad95, #748f7d, #8dad95);
+}
+.evo-condition-item.is-stone-moon .evo-condition {
+  color: #e7ede8;
+  text-shadow: 0 0 8px rgba(116,143,125,0.4);
+}
+.evo-condition-item.is-stone-moon.evo-condition--unseen::before,
+.evo-condition-item.is-stone-moon.evo-condition--seen::before {
+  background: linear-gradient(135deg, #8dad95, #748f7d, #8dad95);
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
