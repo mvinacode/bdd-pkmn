@@ -58,6 +58,7 @@ function getOwnerUuid() {
 const GAMES = [
   { name: 'Légendes Pokémon : Z-A', slug: 'legendes-za', abbr: 'Z-A',      iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779641869/legendes_pkmn_z_a_icon_bqvbys.png' },
   { name: 'Pokémon Écarlate',         slug: 'ecarlate',    abbr: 'Écarlate', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644647/pokemon_ecarlate_icon_futxba.png' },
+  { name: 'Légendes Pokémon : Arceus',  slug: 'legendes-arceus',   abbr: 'Arceus',   iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779891563/legendes_pokemon_arceus_icon_ayeylt.png' },
   { name: 'Pokémon Perle Scintillante', slug: 'perle-scintillante', abbr: 'Perle',    iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779890262/pokemon_perle_scintillante_icon_bbdt9f.png' },
   { name: 'Pokémon Diamant Étincelant', slug: 'diamant-etincelant', abbr: 'Diamant',  iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779647806/pokemon_diamant_etincelant_icon_mhvpgl.png' },
   { name: 'Pokémon HOME',              slug: 'home',               abbr: 'HOME',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779647676/pokemon_home_icon_ja3vfq.png' },
