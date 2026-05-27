@@ -27,6 +27,7 @@ const TYPE_IMAGES = {
   ice:      'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779833043/glace_rzyq3f.png',
   steel:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779833041/acier_zwph2k.png',
   ground:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779835148/sol_kqatjb.png',
+  fairy:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779893032/fee_dfkdmp.png',
 };
 
 const CAPTURED_KEY         = 'pokedex_captured'; // legacy, conservé pour compatibilité
