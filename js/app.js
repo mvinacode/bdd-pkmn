@@ -1618,6 +1618,12 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
     const excludeVts = new Set(['male', 'shiny_male', 'normal', 'shiny']);
     entries.splice(0, entries.length, ...entries.filter(e => !excludeVts.has(e.variant_type)));
   }
+  // Pokémon exclusivement mâle : masquer les options Femelle et Unisexe
+  const isMaleOnly = !!maleVariant && !femaleVariant;
+  if (isMaleOnly) {
+    const excludeVts = new Set(['female', 'shiny_female', 'normal', 'shiny']);
+    entries.splice(0, entries.length, ...entries.filter(e => !excludeVts.has(e.variant_type)));
+  }
 
   const usePreselect = preselectedVts.length > 0;
   grid.innerHTML = entries.map((e, i) => {
