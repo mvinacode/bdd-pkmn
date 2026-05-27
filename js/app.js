@@ -358,24 +358,6 @@ function renderCard(pokemon, icons = {}) {
     }
   }
 
-  const card = document.createElement('article');
-  card.className = 'poke-card poke-card--' + cardState + (isComplete ? ' poke-card--complete' : '');
-  card.role = 'listitem';
-  card.tabIndex = 0;
-  card.dataset.number = pokemon.number;
-  if (primaryType) card.dataset.primaryType = primaryType;
-
-  const catchBadgeHtml = catch_ ? (() => {
-    const displayCatch = (isShinyDisplay && shinyCatchByNumber[pokemon.number]) ? shinyCatchByNumber[pokemon.number] : catch_;
-    const ballEntry = BALLS.find(b => b.name === displayCatch.ball_name);
-    const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (displayCatch.ball_image_url || '');
-    return `
-    <div class="poke-catch-badge">
-      <img class="poke-catch-ball-img" src="${esc(ballSrc)}" alt="${esc(displayCatch.ball_name)}" title="${esc(displayCatch.ball_name)}" width="22" height="22" loading="lazy">
-      <span class="poke-catch-date-label">${esc(formatCatchDateShort(displayCatch.caught_at))}</span>
-    </div>`;
-  })() : '';
-
   const seenFormsMap = seenMap[pokemon.number] || {};
   const SPECIAL_FORMS = [
     { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female'] },
@@ -395,6 +377,24 @@ function renderCard(pokemon, icons = {}) {
     .join('');
   const baronStatus = formStatuses.find(f => f.key === 'baron')?.status;
   const isComplete = baronStatus === 'owned' && formStatuses.every(f => !f.status || f.status === 'owned');
+
+  const card = document.createElement('article');
+  card.className = 'poke-card poke-card--' + cardState + (isComplete ? ' poke-card--complete' : '');
+  card.role = 'listitem';
+  card.tabIndex = 0;
+  card.dataset.number = pokemon.number;
+  if (primaryType) card.dataset.primaryType = primaryType;
+
+  const catchBadgeHtml = catch_ ? (() => {
+    const displayCatch = (isShinyDisplay && shinyCatchByNumber[pokemon.number]) ? shinyCatchByNumber[pokemon.number] : catch_;
+    const ballEntry = BALLS.find(b => b.name === displayCatch.ball_name);
+    const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (displayCatch.ball_image_url || '');
+    return `
+    <div class="poke-catch-badge">
+      <img class="poke-catch-ball-img" src="${esc(ballSrc)}" alt="${esc(displayCatch.ball_name)}" title="${esc(displayCatch.ball_name)}" width="22" height="22" loading="lazy">
+      <span class="poke-catch-date-label">${esc(formatCatchDateShort(displayCatch.caught_at))}</span>
+    </div>`;
+  })() : '';
 
   card.innerHTML = `
     ${catchBadgeHtml}
