@@ -417,11 +417,14 @@ function renderCard(pokemon, icons = {}) {
   const genderOk = genderMode !== 'any' || genderVtsInGame.length === 0
     || genderVtsInGame.some(vt => seenFormsMap[vt]?.status === 'owned');
 
+  const hasAnyForm = nonBaronForms.some(f => !!f.status)
+    || (genderMode !== 'none' && genderVtsInGame.some(vt => seenFormsMap[vt]?.status === 'owned'));
+
   const isAllForms = !isComplete
     && allSeenOwned
     && allVariantsOwned
     && genderOk
-    && nonBaronForms.some(f => !!f.status)
+    && hasAnyForm
     && nonBaronForms.every(f => !f.status || f.status === 'owned')
     && (!hasMegaInGame || formStatuses.find(f => f.key === 'mega')?.status === 'owned');
 
