@@ -605,6 +605,39 @@ body {
   box-shadow: 0 0 0 1px rgba(229,57,53,0.15);
 }
 
+/* ── Carte complète (toutes formes Obtenu + Baron) ───────────── */
+.poke-card--complete {
+  border-color: rgba(255, 195, 0, 0.45);
+  box-shadow: 0 0 0 1px rgba(255, 195, 0, 0.18);
+}
+
+.poke-card--complete::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 215, 0, 0.14),
+    rgba(255, 250, 170, 0.08),
+    transparent
+  );
+  transform: translateX(-160%) skewX(-16deg);
+  animation: card-complete-shine 4s ease-in-out 0.4s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes card-complete-shine {
+  0%   { transform: translateX(-160%) skewX(-16deg); opacity: 0; }
+  6%   { opacity: 1; }
+  35%  { transform: translateX(260%) skewX(-16deg); opacity: 0; }
+  100% { transform: translateX(260%) skewX(-16deg); opacity: 0; }
+}
+
 /* Compteur dans le header */
 .header-captured {
   display: flex;

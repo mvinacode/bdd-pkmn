@@ -359,7 +359,7 @@ function renderCard(pokemon, icons = {}) {
   }
 
   const card = document.createElement('article');
-  card.className = 'poke-card poke-card--' + cardState;
+  card.className = 'poke-card poke-card--' + cardState + (isComplete ? ' poke-card--complete' : '');
   card.role = 'listitem';
   card.tabIndex = 0;
   card.dataset.number = pokemon.number;
@@ -383,13 +383,18 @@ function renderCard(pokemon, icons = {}) {
     { key: 'mega',    icon: MEGA_ICON_URL,    variants: ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y'] },
     { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
   ];
-  const formIconsHtml = SPECIAL_FORMS.map(({ key, icon, variants }) => {
+  const formStatuses = SPECIAL_FORMS.map(({ key, icon, variants }) => {
     const statuses = variants.map(vt => seenFormsMap[vt]?.status).filter(Boolean);
     let status = statuses.includes('owned') ? 'owned' : statuses.includes('seen') ? 'seen' : null;
     if (key === 'shiny' && catch_?.is_shiny) status = 'owned';
-    if (!status) return '';
-    return `<img src="${esc(icon)}" alt="${key}" class="poke-form-icon poke-form-icon--${status}" width="18" height="18">`;
-  }).filter(Boolean).join('');
+    return { key, icon, status };
+  });
+  const formIconsHtml = formStatuses
+    .filter(({ status }) => !!status)
+    .map(({ key, icon, status }) => `<img src="${esc(icon)}" alt="${key}" class="poke-form-icon poke-form-icon--${status}" width="18" height="18">`)
+    .join('');
+  const baronStatus = formStatuses.find(f => f.key === 'baron')?.status;
+  const isComplete = baronStatus === 'owned' && formStatuses.every(f => !f.status || f.status === 'owned');
 
   card.innerHTML = `
     ${catchBadgeHtml}
