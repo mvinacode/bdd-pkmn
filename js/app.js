@@ -377,9 +377,32 @@ function renderCard(pokemon, icons = {}) {
     .join('');
   const baronStatus = formStatuses.find(f => f.key === 'baron')?.status;
   const isComplete = baronStatus === 'owned' && formStatuses.every(f => !f.status || f.status === 'owned');
+  const nonBaronForms = formStatuses.filter(f => f.key !== 'baron');
+
+  // Détermine quelles formes existent en jeu pour ce Pokémon
+  const pokemonVMap = variantMap[pokemon.number];
+  const hasMegaInGame = !pokemonVMap
+    ? true
+    : ['mega','mega_x','mega_y'].some(vt => vt in pokemonVMap) || !!(specialFormsMap[pokemon.number] && Object.keys(specialFormsMap[pokemon.number]).length);
+
+  const allSeenOwned = Object.values(seenFormsMap).every(f => f.status === 'owned');
+
+  // Vérifie que chaque variante mega/gigamax présente en jeu est individuellement 'owned'
+  // (le shiny de base est géré via formStatuses qui inclut le shiny catch)
+  const SPECIAL_VARIANT_KEYS = ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y','gigamax','shiny_gigamax'];
+  const allSpecialVariantsOwned = !pokemonVMap
+    ? true
+    : SPECIAL_VARIANT_KEYS.filter(vt => vt in pokemonVMap).every(vt => seenFormsMap[vt]?.status === 'owned');
+
+  const isAllForms = !isComplete
+    && allSeenOwned
+    && allSpecialVariantsOwned
+    && nonBaronForms.some(f => !!f.status)
+    && nonBaronForms.every(f => !f.status || f.status === 'owned')
+    && (!hasMegaInGame || formStatuses.find(f => f.key === 'mega')?.status === 'owned');
 
   const card = document.createElement('article');
-  card.className = 'poke-card poke-card--' + cardState + (isComplete ? ' poke-card--complete' : '');
+  card.className = 'poke-card poke-card--' + cardState + (isComplete ? ' poke-card--complete' : '') + (isAllForms ? ' poke-card--all-forms' : '');
   card.role = 'listitem';
   card.tabIndex = 0;
   card.dataset.number = pokemon.number;
@@ -396,6 +419,8 @@ function renderCard(pokemon, icons = {}) {
     </div>`;
   })() : '';
 
+  const allFormsSparkles = '';
+
   const completionSparkles = isComplete ? `
     <span class="sparkle" style="top:3px;left:14px;color:#ff5050;--sparkle-delay:0s;--sparkle-size:0.85rem;--sparkle-dur:2.1s">✦</span>
     <span class="sparkle" style="top:2px;right:12px;color:#ffcc00;--sparkle-delay:0.7s;--sparkle-size:0.65rem;--sparkle-dur:1.8s">✦</span>
@@ -407,6 +432,7 @@ function renderCard(pokemon, icons = {}) {
 
   card.innerHTML = `
     ${completionSparkles}
+    ${allFormsSparkles}
     ${catchBadgeHtml}
     <div class="poke-number">#${esc(padNumber(pokemon.number))}</div>
     <div class="poke-image-wrapper">
