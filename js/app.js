@@ -419,19 +419,23 @@ function renderCard(pokemon, icons = {}) {
     'troizepy','troizepy_shiny',
     ...(genderMode === 'all' ? [...GENDER_VTS_FLAT].filter(vt => !vt.startsWith('alolan')) : []),
   ]);
+  const isVtOk = (vt) => {
+    if (seenFormsMap[vt]?.status === 'owned' || catchCoveredVts.has(vt)) return true;
+    // Équivalences bidirectionnelles (miroir de getVariantStatus)
+    if (vt === 'shiny')
+      return seenFormsMap['shiny_male']?.status === 'owned' || catchCoveredVts.has('shiny_male')
+          || seenFormsMap['shiny_female']?.status === 'owned' || catchCoveredVts.has('shiny_female');
+    if (vt === 'alolan')
+      return seenFormsMap['alolan_male']?.status === 'owned' || catchCoveredVts.has('alolan_male')
+          || seenFormsMap['alolan_female']?.status === 'owned' || catchCoveredVts.has('alolan_female');
+    if (vt === 'alolan_shiny')
+      return seenFormsMap['alolan_shiny_male']?.status === 'owned' || catchCoveredVts.has('alolan_shiny_male')
+          || seenFormsMap['alolan_shiny_female']?.status === 'owned' || catchCoveredVts.has('alolan_shiny_female');
+    return false;
+  };
   const allVariantsOwned = !pokemonVMap
     ? true
-    : [...TRACKED_VT]
-        .filter(vt => vt in pokemonVMap)
-        .every(vt => {
-          if (seenFormsMap[vt]?.status === 'owned' || catchCoveredVts.has(vt)) return true;
-          // 'shiny' dans pokemonVMap peut être couvert par shiny_male ou shiny_female dans seenFormsMap
-          if (vt === 'shiny' && (
-            seenFormsMap['shiny_male']?.status === 'owned' ||
-            seenFormsMap['shiny_female']?.status === 'owned'
-          )) return true;
-          return false;
-        });
+    : [...TRACKED_VT].filter(vt => vt in pokemonVMap).every(isVtOk);
 
   // En mode 'any' : pour chaque groupe de formes genrées présent en jeu,
   // au moins une forme du groupe doit être obtenue.
