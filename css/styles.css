@@ -607,17 +607,9 @@ body {
 
 /* ── Carte toutes formes Obtenu (sans Baron) ────────────────── */
 .poke-card--all-forms {
-  outline: 2px solid #c0c0c0;
-  outline-offset: -2px;
-  animation: all-forms-border 3s linear infinite;
-}
-
-@keyframes all-forms-border {
-  0%   { outline-color: #c0c0c0; }
-  25%  { outline-color: #ffd700; }
-  50%  { outline-color: #e8e8e8; }
-  75%  { outline-color: #ffb700; }
-  100% { outline-color: #c0c0c0; }
+  outline: 3px solid rgba(220, 225, 235, 0.65);
+  outline-offset: -3px;
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.12);
 }
 
 /* ── Carte complète (toutes formes Obtenu + Baron) ───────────── */

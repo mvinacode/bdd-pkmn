@@ -387,16 +387,31 @@ function renderCard(pokemon, icons = {}) {
 
   const allSeenOwned = Object.values(seenFormsMap).every(f => f.status === 'owned');
 
-  // Vérifie que chaque variante mega/gigamax présente en jeu est individuellement 'owned'
-  // (le shiny de base est géré via formStatuses qui inclut le shiny catch)
-  const SPECIAL_VARIANT_KEYS = ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y','gigamax','shiny_gigamax'];
-  const allSpecialVariantsOwned = !pokemonVMap
+  // Variantes obtenues via le système de catch (absentes de seenFormsMap)
+  const catchCoveredVts = new Set([
+    ALOLA_FORM_VT[catch_?.form_label],
+    ALOLA_FORM_VT[recentShinyCatch?.form_label],
+    SPECIAL_FORM_VT[catch_?.form_label],
+    SPECIAL_FORM_VT[recentShinyCatch?.form_label],
+  ].filter(Boolean));
+
+  // Seules les formes "collectables" (alolan + mega/gigamax) sont vérifiées dans variantMap.
+  // Les variants visuels (male/female/etc.) sont ignorés pour éviter les faux négatifs.
+  const TRACKED_VT = new Set([
+    'alolan','alolan_male','alolan_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female',
+    'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
+    'gigamax','shiny_gigamax',
+    'troizepy','troizepy_shiny',
+  ]);
+  const allVariantsOwned = !pokemonVMap
     ? true
-    : SPECIAL_VARIANT_KEYS.filter(vt => vt in pokemonVMap).every(vt => seenFormsMap[vt]?.status === 'owned');
+    : [...TRACKED_VT]
+        .filter(vt => vt in pokemonVMap)
+        .every(vt => seenFormsMap[vt]?.status === 'owned' || catchCoveredVts.has(vt));
 
   const isAllForms = !isComplete
     && allSeenOwned
-    && allSpecialVariantsOwned
+    && allVariantsOwned
     && nonBaronForms.some(f => !!f.status)
     && nonBaronForms.every(f => !f.status || f.status === 'owned')
     && (!hasMegaInGame || formStatuses.find(f => f.key === 'mega')?.status === 'owned');
