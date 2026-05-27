@@ -385,7 +385,12 @@ function renderCard(pokemon, icons = {}) {
     ? true
     : ['mega','mega_x','mega_y'].some(vt => vt in pokemonVMap) || !!(specialFormsMap[pokemon.number] && Object.keys(specialFormsMap[pokemon.number]).length);
 
-  const allSeenOwned = Object.values(seenFormsMap).every(f => f.status === 'owned');
+  // En mode 'any', les formes genrées en 'Vu' ne bloquent pas l'animation
+  const genderMode = window._genderFormsMode || 'none';
+  const GENDER_VTS = ['male', 'female', 'shiny_male', 'shiny_female'];
+  const allSeenOwned = Object.entries(seenFormsMap).every(([vt, f]) =>
+    (genderMode === 'any' && GENDER_VTS.includes(vt)) ? true : f.status === 'owned'
+  );
 
   // Variantes obtenues via le système de catch (absentes de seenFormsMap)
   const catchCoveredVts = new Set([
@@ -397,8 +402,6 @@ function renderCard(pokemon, icons = {}) {
 
   // Seules les formes "collectables" (alolan + mega/gigamax) sont vérifiées dans variantMap.
   // Les variants visuels (male/female/etc.) sont ignorés pour éviter les faux négatifs.
-  const genderMode = window._genderFormsMode || 'none';
-  const GENDER_VTS = ['male', 'female', 'shiny_male', 'shiny_female'];
   const TRACKED_VT = new Set([
     'alolan','alolan_male','alolan_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female',
     'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
@@ -412,13 +415,15 @@ function renderCard(pokemon, icons = {}) {
         .filter(vt => vt in pokemonVMap)
         .every(vt => seenFormsMap[vt]?.status === 'owned' || catchCoveredVts.has(vt));
 
-  // Mode 'any' : au moins un variant genré doit être obtenu si des variantes existent en jeu
-  const genderVtsInGame = GENDER_VTS.filter(vt => pokemonVMap && vt in pokemonVMap);
-  const genderOk = genderMode !== 'any' || genderVtsInGame.length === 0
-    || genderVtsInGame.some(vt => seenFormsMap[vt]?.status === 'owned');
+  // Variantes genrées présentes : via pokemonVMap OU déjà enregistrées par l'utilisateur
+  const genderVtsKnown = GENDER_VTS.filter(vt =>
+    (pokemonVMap && vt in pokemonVMap) || vt in seenFormsMap
+  );
+  const genderOk = genderMode !== 'any' || genderVtsKnown.length === 0
+    || genderVtsKnown.some(vt => seenFormsMap[vt]?.status === 'owned');
 
   const hasAnyForm = nonBaronForms.some(f => !!f.status)
-    || (genderMode !== 'none' && genderVtsInGame.some(vt => seenFormsMap[vt]?.status === 'owned'));
+    || (genderMode !== 'none' && GENDER_VTS.some(vt => seenFormsMap[vt]?.status === 'owned'));
 
   const isAllForms = !isComplete
     && allSeenOwned
