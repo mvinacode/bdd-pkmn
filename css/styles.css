@@ -1535,6 +1535,26 @@ body {
   line-height: 1;
 }
 
+.evo-condition.is-stone-ice {
+  color: #e5fbfb;
+  background: rgba(255,255,255,0.06);
+  text-shadow: 0 0 8px rgba(58,153,180,0.45);
+}
+.evo-condition.is-stone-ice::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #8ed1dd, #3a99b4, #8ed1dd);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-stone-ice::after { content: none; }
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -1829,6 +1849,19 @@ body {
 .evo-condition-item.is-stone.evo-condition--unseen::before,
 .evo-condition-item.is-stone.evo-condition--seen::before {
   background: linear-gradient(135deg, #55a260, #e1d850, #55a260);
+}
+
+/* Pierre Glace */
+.evo-condition-item.is-stone-ice::before {
+  background: linear-gradient(135deg, #8ed1dd, #3a99b4, #8ed1dd);
+}
+.evo-condition-item.is-stone-ice .evo-condition {
+  color: #e5fbfb;
+  text-shadow: 0 0 8px rgba(58,153,180,0.45);
+}
+.evo-condition-item.is-stone-ice.evo-condition--unseen::before,
+.evo-condition-item.is-stone-ice.evo-condition--seen::before {
+  background: linear-gradient(135deg, #8ed1dd, #3a99b4, #8ed1dd);
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
@@ -2435,6 +2468,7 @@ body {
 .forms-list {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 6px;
 }
 

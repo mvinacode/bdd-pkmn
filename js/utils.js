@@ -31,8 +31,9 @@ const BALLS = [
   { name: 'Sombre Ball',  slug: 'dusk-ball',    customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779731066/sombre_ball_wm6o1p.png' },
   { name: 'Rêve Ball',    slug: 'dream-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779759940/reve_ball_opjnxa.png' },
   { name: 'Ultra Ball',   slug: 'ultra-ball-custom', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829455/ultra_ball_ciwfom.png' },
-  { name: 'Étrange Ball', slug: 'etrange-ball',  customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779836157/etrange_wx0z4h.png' },
-  { name: 'Plume Ball',   slug: 'plume-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829453/plume_ball_efk2is.png' },
+  { name: 'Étrange Ball',       slug: 'etrange-ball',       customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779836157/etrange_wx0z4h.png' },
+  { name: 'Poké Ball (Ancienne)', slug: 'poke-ball-ancienne', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779839863/poke_ball_ancienne_ewtcwy.png' },
+  { name: 'Plume Ball',         slug: 'plume-ball',         customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829453/plume_ball_efk2is.png' },
 ];
 
 function ballUrl(slug) {
@@ -59,6 +60,7 @@ const GAMES = [
   { name: 'Pokémon Épée',            slug: 'epee',        abbr: 'Épée',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779646193/pokemon_epee_q42rre.png' },
   { name: "Pokémon Let's Go, Pikachu", slug: 'lets-go-pikachu', abbr: "Let's Go", iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644943/pokemon_let_s_go_pikachu_icon_la54se.png' },
   { name: 'Pokémon GO',                slug: 'pokemon-go',      abbr: 'GO',       iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779651651/pokemon_go_icon_muwgte.png' },
+  { name: 'Pokémon Ultra-Soleil',        slug: 'ultra-soleil',    abbr: 'Ultra-Sol',iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779840127/pokemon_ultra_soleil_ypcr6n.png' },
   { name: 'Pokémon Lune',               slug: 'lune',            abbr: 'Lune',     iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779836279/pokemon_lune_wr0kkn.png' },
   { name: 'Pokémon Soleil',             slug: 'soleil',          abbr: 'Soleil',   iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779760088/pokemon_soleil_r6o19h.png' },
   { name: 'Pokémon Saphir Alpha',       slug: 'saphir-alpha',    abbr: 'Saphir α', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779731368/pokemon_saphir_alpha_icon_bmztft.png' },

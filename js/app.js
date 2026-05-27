@@ -484,7 +484,7 @@ async function loadPokemon(append = false) {
       const iconMap = {};
       for (const row of iconRows) {
         if (!iconMap[row.pokemon_number]) iconMap[row.pokemon_number] = {};
-        const isShiny = row.variant_type === 'shiny' || row.variant_type === 'shiny_male';
+        const isShiny = row.variant_type === 'shiny' || row.variant_type === 'shiny_male' || row.variant_type === 'shiny_female';
         const ikey = isShiny ? 'shiny' : 'normal';
         if (!iconMap[row.pokemon_number][ikey]) iconMap[row.pokemon_number][ikey] = row.image_url;
       }
@@ -528,8 +528,9 @@ function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, is
   let conditionHtml = '';
   if (itemImageUrl) {
     const isStone = !bidirectional && !isGigamax;
+    const isStoneIce = isStone && /glace/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}</span>
     </div>`;
@@ -538,8 +539,9 @@ function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, is
     const isHappiness = condition.toLowerCase().includes('bonheur');
     const isItem = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness;
     const isStone = isItem && /pierre\s/i.test(condition);
+    const isStoneIce = isStone && /glace/i.test(condition);
     const conditionText = condition;
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}">${esc(conditionText)}</span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}">${esc(conditionText)}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
@@ -675,7 +677,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
         const regionalRows  = regionals.map(r => {
           const matchingNext = nextRegionals.find(nr => nr.region === r.region);
           const arrowCond    = r.evolution_condition || condition;
-          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}`;
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, r.evolution_item_image_url || null)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}`;
         }).join('');
         return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition)}${renderNode(nextNode, depth + 1, true)}${regionalRows}</div>`;
       }
@@ -1608,9 +1610,12 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
   entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`, sprite: gmaxV?.image_url      || null });
   entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX_SM + SHINY_SM2,                                           sprite: gmaxShinyV?.image_url || null });
 
-  // Pré-sélectionner "Unisexe" (normal) si le Pokémon n'a pas de variantes mâle/femelle en BDD
-  const hasGenderVariants = !!(maleVariant || femaleVariant);
-  const defaultIdx = hasGenderVariants ? 0 : 4; // 0=Mâle, 4=Unisexe
+  // Pokémon exclusivement femelle : masquer les options Mâle et Unisexe
+  const isFemaleOnly = !maleVariant && !!femaleVariant;
+  if (isFemaleOnly) {
+    const excludeVts = new Set(['male', 'shiny_male', 'normal', 'shiny']);
+    entries.splice(0, entries.length, ...entries.filter(e => !excludeVts.has(e.variant_type)));
+  }
 
   const usePreselect = preselectedVts.length > 0;
   grid.innerHTML = entries.map((e, i) => {
@@ -1863,9 +1868,9 @@ function bindDrawerEvents() {
         const iconMap = {};
         for (const r of allIcons) {
           if (!iconMap[r.pokemon_number]) iconMap[r.pokemon_number] = { normal: null, shiny: null };
-          if ((r.variant_type === 'normal' || r.variant_type === 'male') && !iconMap[r.pokemon_number].normal)
+          if ((r.variant_type === 'normal' || r.variant_type === 'male' || r.variant_type === 'female') && !iconMap[r.pokemon_number].normal)
             iconMap[r.pokemon_number].normal = r.image_url;
-          else if ((r.variant_type === 'shiny' || r.variant_type === 'shiny_male') && !iconMap[r.pokemon_number].shiny)
+          else if ((r.variant_type === 'shiny' || r.variant_type === 'shiny_male' || r.variant_type === 'shiny_female') && !iconMap[r.pokemon_number].shiny)
             iconMap[r.pokemon_number].shiny = r.image_url;
         }
         const alolanSpriteMap = {};

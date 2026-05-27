@@ -154,7 +154,7 @@ async function fetchCardIcons(pokemonNumbers) {
   const { data } = await client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .in('variant_type', ['normal', 'male', 'shiny', 'shiny_male'])
+    .in('variant_type', ['normal', 'male', 'female', 'shiny', 'shiny_male', 'shiny_female'])
     .in('pokemon_number', pokemonNumbers);
   return data || [];
 }
