@@ -1266,10 +1266,10 @@ async function openModal(number) {
     const forms   = seenMap[p.number] || {};
     const entries = Object.entries(forms);
 
-    const captNormal = (catch_ && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && d.status === 'owned');
-    const captShiny  = (catch_ &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && d.status === 'owned');
-    const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && d.status === 'seen');
-    const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && d.status === 'seen');
+    const captNormal = (catch_ && !catch_.is_shiny && !ALOLA_FORM_VT[catch_.form_label]) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
+    const captShiny  = (catch_ &&  catch_.is_shiny && !ALOLA_FORM_VT[catch_.form_label]) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
+    const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'seen');
+    const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'seen');
 
     function applyImg(img, owned, seen) {
       if (!img) return;
