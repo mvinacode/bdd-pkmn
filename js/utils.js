@@ -36,6 +36,7 @@ const BALLS = [
   { name: 'Super Ball (Ancienne)', slug: 'super-ball-ancienne', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779887300/super_ball_ancienne_l0tjfi.png' },
   { name: 'Hyper Ball (Ancienne)', slug: 'hyper-ball-ancienne', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779889427/hyper_ball_ancienne_tvfu1i.png' },
   { name: 'Masse Ball (Ancienne)', slug: 'masse-ball-ancienne', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779890324/masse_ball_ancienne_iyvwiq.png' },
+  { name: 'Mégamasse Ball',        slug: 'megamasse-ball',      customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779891449/megamasse_ball_wb6cza.png' },
   { name: 'Plume Ball',            slug: 'plume-ball',          customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779829453/plume_ball_efk2is.png' },
 ];
 
