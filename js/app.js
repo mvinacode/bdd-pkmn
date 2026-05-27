@@ -65,6 +65,9 @@ let iconCache = {};    // { [pokemon_number]: { normal, shiny } }
 let variantMap = {};       // { [pokemon_number]: { [variant_type]: image_url } } — source de vérité pour sprites
 let specialFormsMap = {}; // { [pokemon_number]: { [form_key]: { form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny } } }
 
+let currentModalPokemonNumber = null;
+let pendingIllusTab = null;
+
 async function addToSeen(number, data) {
   // Mise à jour optimiste du cache (UI instantanée)
   if (!seenMap[number]) seenMap[number] = {};
@@ -706,6 +709,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
 // ── Modal ─────────────────────────────────────────────────────
 
 async function openModal(number) {
+  currentModalPokemonNumber = number;
   els.modalOverlay.hidden = false;
   document.body.style.overflow = 'hidden';
   els.modalContent.innerHTML = '<div class="modal-loading"><div class="pokeball-loader"><div class="pb-top"></div><div class="pb-middle"><div class="pb-btn"></div></div><div class="pb-bottom"></div></div></div>';
@@ -1156,6 +1160,12 @@ async function openModal(number) {
     });
   });
 
+  if (pendingIllusTab) {
+    const targetBtn = els.modalContent.querySelector(`.illus-tab-btn[data-tab="${CSS.escape(pendingIllusTab)}"]`);
+    if (targetBtn) targetBtn.click();
+    pendingIllusTab = null;
+  }
+
   // Onglets formes
   els.modalContent.querySelectorAll('.forms-tabs-nav .illus-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1266,8 +1276,9 @@ async function openModal(number) {
     const forms   = seenMap[p.number] || {};
     const entries = Object.entries(forms);
 
-    const captNormal = (catch_ && !catch_.is_shiny && !ALOLA_FORM_VT[catch_.form_label]) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
-    const captShiny  = (catch_ &&  catch_.is_shiny && !ALOLA_FORM_VT[catch_.form_label]) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
+    const isBaseCatch  = catch_ && !ALOLA_FORM_VT[catch_.form_label] && !SPECIAL_FORM_VT[catch_.form_label] && !/^(Méga|Gigamax|Baron)/.test(catch_.form_label || '');
+    const captNormal = (isBaseCatch && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
+    const captShiny  = (isBaseCatch &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
     const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'seen');
     const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'seen');
 
@@ -1394,6 +1405,7 @@ async function openModal(number) {
 }
 
 function closeModal() {
+  currentModalPokemonNumber = null;
   els.modalOverlay.hidden = true;
   document.body.style.overflow = '';
   els.modalContent.innerHTML = '';
@@ -2011,6 +2023,8 @@ async function saveCatchFromMain() {
     saveBtn.disabled = true;
     saveBtn.textContent = 'Sauvegarde…';
 
+    const savedSeenNum = drawerPokemon.number;
+    const savedSeenVts = formsToMark.map(f => f.variant_type || '');
     const date = $('catch-date').value || new Date().toISOString().slice(0, 10);
     const game = drawerGame?.name || $('catch-game')?.value.trim() || null;
     try {
@@ -2033,6 +2047,12 @@ async function saveCatchFromMain() {
       }
       updateCardAfterCatch(drawerPokemon.number);
       closeCatchDrawer();
+      if (!els.modalOverlay.hidden && currentModalPokemonNumber === savedSeenNum) {
+        if (savedSeenVts.some(vt => vt.includes('mega'))) pendingIllusTab = 'Méga-Évolution';
+        else if (savedSeenVts.some(vt => vt.startsWith('alolan'))) pendingIllusTab = 'Formes régionales';
+        else if (savedSeenVts.some(vt => vt.includes('gigamax'))) pendingIllusTab = 'Gigamax';
+        openModal(savedSeenNum);
+      }
     } catch (err) {
       console.error('[saveCatchFromMain seen]', err);
       saveBtn.disabled = false;
@@ -2102,6 +2122,8 @@ async function saveCatchFromMain() {
     return;
   }
 
+  const savedCatchNum = drawerPokemon.number;
+  const savedCatchVts = formsToCapture.map(f => f.variant_type || '');
   catchByNumber[drawerPokemon.number] = lastData;
   if (lastData?.is_shiny) shinyCatchByNumber[drawerPokemon.number] = lastData;
   if (!variantMap[drawerPokemon.number]) {
@@ -2113,6 +2135,12 @@ async function saveCatchFromMain() {
   updateCapturedCounter();
   updateCardAfterCatch(drawerPokemon.number);
   closeCatchDrawer();
+  if (!els.modalOverlay.hidden && currentModalPokemonNumber === savedCatchNum) {
+    if (savedCatchVts.some(vt => vt.includes('mega'))) pendingIllusTab = 'Méga-Évolution';
+    else if (savedCatchVts.some(vt => vt.startsWith('alolan'))) pendingIllusTab = 'Formes régionales';
+    else if (savedCatchVts.some(vt => vt.includes('gigamax'))) pendingIllusTab = 'Gigamax';
+    openModal(savedCatchNum);
+  }
 }
 
 // ── Ouvre le drawer pré-rempli avec un Pokémon ────────────────
