@@ -1159,6 +1159,9 @@ body {
 .forms-tab-panel.active { display: flex; justify-content: center; }
 .forms-tab-panel.active .variants-rows-wrapper { flex: none; }
 
+/* Cas sans onglets (ex. NidoranF) : centrer les lignes dans la section */
+.variants-section > .variants-rows-wrapper { align-items: center; }
+
 .modal-artwork--pending {
   width: 200px;
   height: 200px;
@@ -2468,7 +2471,6 @@ body {
 .forms-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: 6px;
 }
 
