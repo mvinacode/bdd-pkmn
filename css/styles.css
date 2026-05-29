@@ -618,6 +618,12 @@ body {
   animation: complete-rainbow 3s linear infinite;
 }
 
+/* Pas de bordure argentée pour la sœur si le baron est encore possible */
+[data-all-forms-anim="rainbow"] .poke-card--all-forms:not([data-can-be-baron="false"]) {
+  outline: none;
+  box-shadow: none;
+}
+
 /* ── Carte complète (toutes formes Obtenu + Baron) ───────────── */
 .poke-card--complete {
   animation: complete-rainbow 3s linear infinite;
