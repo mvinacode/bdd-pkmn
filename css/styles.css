@@ -612,8 +612,8 @@ body {
   box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.12);
 }
 
-/* Animation arc-en-ciel pour la sœur (allFormsAnim: rainbow) */
-[data-all-forms-anim="rainbow"] .poke-card--all-forms {
+/* Animation arc-en-ciel pour la sœur — uniquement si le Pokémon ne peut pas être baron */
+[data-all-forms-anim="rainbow"] .poke-card--all-forms[data-can-be-baron="false"] {
   outline: none;
   animation: complete-rainbow 3s linear infinite;
 }

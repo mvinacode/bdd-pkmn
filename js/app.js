@@ -471,6 +471,7 @@ function renderCard(pokemon, icons = {}) {
   card.tabIndex = 0;
   card.dataset.number = pokemon.number;
   if (primaryType) card.dataset.primaryType = primaryType;
+  if (pokemon.can_be_baron === false) card.dataset.canBeBaron = 'false';
 
   const catchBadgeHtml = catch_ ? (() => {
     const displayCatch = (isShinyDisplay && shinyCatchByNumber[pokemon.number]) ? shinyCatchByNumber[pokemon.number] : catch_;
@@ -483,7 +484,7 @@ function renderCard(pokemon, icons = {}) {
     </div>`;
   })() : '';
 
-  const allFormsSparkles = (isAllForms && window._allFormsAnim === 'rainbow') ? `
+  const allFormsSparkles = (isAllForms && window._allFormsAnim === 'rainbow' && pokemon.can_be_baron === false) ? `
     <span class="sparkle" style="top:4px;left:10px;color:#ff5050;--sparkle-delay:0.3s;--sparkle-size:0.8rem;--sparkle-dur:2.2s">✦</span>
     <span class="sparkle" style="top:3px;right:10px;color:#ffcc00;--sparkle-delay:1s;--sparkle-size:0.6rem;--sparkle-dur:1.9s">✦</span>
     <span class="sparkle" style="top:40%;right:3px;color:#44dd66;--sparkle-delay:1.7s;--sparkle-size:0.7rem;--sparkle-dur:2.5s">✦</span>
