@@ -1607,6 +1607,26 @@ body {
 }
 .evo-condition.is-stone-moon::after { content: none; }
 
+.evo-condition.is-stone-fire {
+  color: #f09030;
+  background: rgba(240, 144, 48, 0.08);
+  text-shadow: 0 0 8px rgba(240, 144, 48, 0.45);
+}
+.evo-condition.is-stone-fire::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #c9ca5b, #9e9e45, #f9e830, #f09030);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-stone-fire::after { content: none; }
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -1927,6 +1947,19 @@ body {
 .evo-condition-item.is-stone-moon.evo-condition--unseen::before,
 .evo-condition-item.is-stone-moon.evo-condition--seen::before {
   background: linear-gradient(135deg, #8dad95, #748f7d, #8dad95);
+}
+
+/* Pierre Feu */
+.evo-condition-item.is-stone-fire::before {
+  background: linear-gradient(135deg, #c9ca5b, #9e9e45, #f9e830, #f09030);
+}
+.evo-condition-item.is-stone-fire .evo-condition {
+  color: #f09030;
+  text-shadow: 0 0 8px rgba(240, 144, 48, 0.45);
+}
+.evo-condition-item.is-stone-fire.evo-condition--unseen::before,
+.evo-condition-item.is-stone-fire.evo-condition--seen::before {
+  background: linear-gradient(135deg, #c9ca5b, #9e9e45, #f9e830, #f09030);
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
