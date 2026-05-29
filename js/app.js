@@ -643,12 +643,13 @@ function evoPortrait(node, isCurrent, iconUrl = null, extraClass = '') {
 function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, isGigamax = false) {
   let conditionHtml = '';
   if (itemImageUrl) {
-    const isStone     = !bidirectional && !isGigamax;
-    const isStoneIce  = isStone && /glace/i.test(condition);
-    const isStoneMoon = isStone && /lune/i.test(condition);
-    const isStoneFire = isStone && /feu/i.test(condition);
+    const isStone      = !bidirectional && !isGigamax;
+    const isStoneIce   = isStone && /glace/i.test(condition);
+    const isStoneMoon  = isStone && /lune/i.test(condition);
+    const isStoneFire  = isStone && /feu/i.test(condition);
+    const isStoneLeaf  = isStone && /plante/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}</span>
     </div>`;
@@ -656,12 +657,13 @@ function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, is
     const isNight     = condition.toLowerCase().includes('nuit');
     const isHappiness = condition.toLowerCase().includes('bonheur');
     const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness;
-    const isStone     = isItem && /pierre\s/i.test(condition);
-    const isStoneIce  = isStone && /glace/i.test(condition);
-    const isStoneMoon = isStone && /lune/i.test(condition);
-    const isStoneFire = isStone && /feu/i.test(condition);
+    const isStone      = isItem && /pierre\s/i.test(condition);
+    const isStoneIce   = isStone && /glace/i.test(condition);
+    const isStoneMoon  = isStone && /lune/i.test(condition);
+    const isStoneFire  = isStone && /feu/i.test(condition);
+    const isStoneLeaf  = isStone && /plante/i.test(condition);
     const conditionText = condition;
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}">${esc(conditionText)}</span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}">${esc(conditionText)}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`

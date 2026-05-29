@@ -1633,6 +1633,26 @@ body {
 }
 .evo-condition.is-stone-fire::after { content: none; }
 
+.evo-condition.is-stone-leaf {
+  color: #759e73;
+  background: rgba(117, 158, 115, 0.08);
+  text-shadow: 0 0 8px rgba(117, 158, 115, 0.45);
+}
+.evo-condition.is-stone-leaf::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #bacd9b, #4f4e36, #678f65);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-stone-leaf::after { content: none; }
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -1966,6 +1986,19 @@ body {
 .evo-condition-item.is-stone-fire.evo-condition--unseen::before,
 .evo-condition-item.is-stone-fire.evo-condition--seen::before {
   background: linear-gradient(135deg, #c9ca5b, #9e9e45, #f9e830, #f09030);
+}
+
+/* Pierre Plante */
+.evo-condition-item.is-stone-leaf::before {
+  background: linear-gradient(135deg, #bacd9b, #4f4e36, #678f65);
+}
+.evo-condition-item.is-stone-leaf .evo-condition {
+  color: #759e73;
+  text-shadow: 0 0 8px rgba(117, 158, 115, 0.45);
+}
+.evo-condition-item.is-stone-leaf.evo-condition--unseen::before,
+.evo-condition-item.is-stone-leaf.evo-condition--seen::before {
+  background: linear-gradient(135deg, #bacd9b, #4f4e36, #678f65);
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
