@@ -24,8 +24,8 @@ const CONFIG = {
 // Remplace les UUIDs ci-dessous par les vrais IDs visibles dans
 // Supabase Dashboard → Authentication → Users → colonne "UID"
 const USER_PREFS = {
-  '2005f2e9-6df1-48b7-9420-2a5457d43e45': { genderFormsMode: 'all'  }, // Biche
-  'efd681cf-9264-492d-bd59-a624d6f9668e': { genderFormsMode: 'any'  }, // Sœur
+  '2005f2e9-6df1-48b7-9420-2a5457d43e45': { genderFormsMode: 'all'                           }, // Biche
+  'efd681cf-9264-492d-bd59-a624d6f9668e': { genderFormsMode: 'any', allFormsAnim: 'rainbow' }, // Sœur
 };
 
 /**

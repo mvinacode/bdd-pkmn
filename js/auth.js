@@ -16,6 +16,7 @@ async function initAuth() {
   window._ownerUuid = session.user.id;
   const prefs = (typeof USER_PREFS !== 'undefined' && USER_PREFS[session.user.id]) || {};
   window._genderFormsMode = prefs.genderFormsMode || 'none';
+  if (prefs.allFormsAnim) document.body.dataset.allFormsAnim = prefs.allFormsAnim;
 
   const emailEl = document.getElementById('user-email');
   if (emailEl) emailEl.textContent = session.user.email;

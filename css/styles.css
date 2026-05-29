@@ -612,6 +612,12 @@ body {
   box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.12);
 }
 
+/* Animation arc-en-ciel pour la sœur (allFormsAnim: rainbow) */
+[data-all-forms-anim="rainbow"] .poke-card--all-forms {
+  outline: none;
+  animation: complete-rainbow 3s linear infinite;
+}
+
 /* ── Carte complète (toutes formes Obtenu + Baron) ───────────── */
 .poke-card--complete {
   animation: complete-rainbow 3s linear infinite;
