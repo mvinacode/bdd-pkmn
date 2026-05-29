@@ -447,10 +447,9 @@ function renderCard(pokemon, icons = {}) {
   });
 
   const isComplete = strictOk
-    && allSeenOwned
-    && allVariantsOwned
-    && genderGroupsOk
-    && (pokemon.can_be_baron === false ? true : baronStatus === 'owned')
+    && (pokemon.can_be_baron === false
+      ? allSeenOwned && allVariantsOwned && genderGroupsOk
+      : baronStatus === 'owned')
     && formStatuses.every(f => !f.status || f.status === 'owned');
 
   const hasAnyGenderOwned = [...GENDER_VTS_FLAT].some(vt => seenFormsMap[vt]?.status === 'owned');
