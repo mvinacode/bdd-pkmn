@@ -475,7 +475,14 @@ function renderCard(pokemon, icons = {}) {
     </div>`;
   })() : '';
 
-  const allFormsSparkles = '';
+  const allFormsSparkles = (isAllForms && window._allFormsAnim === 'rainbow') ? `
+    <span class="sparkle" style="top:4px;left:10px;color:#ff5050;--sparkle-delay:0.3s;--sparkle-size:0.8rem;--sparkle-dur:2.2s">✦</span>
+    <span class="sparkle" style="top:3px;right:10px;color:#ffcc00;--sparkle-delay:1s;--sparkle-size:0.6rem;--sparkle-dur:1.9s">✦</span>
+    <span class="sparkle" style="top:40%;right:3px;color:#44dd66;--sparkle-delay:1.7s;--sparkle-size:0.7rem;--sparkle-dur:2.5s">✦</span>
+    <span class="sparkle" style="bottom:22px;left:5px;color:#4488ff;--sparkle-delay:0.6s;--sparkle-size:0.65rem;--sparkle-dur:2.1s">✦</span>
+    <span class="sparkle" style="bottom:8px;right:12px;color:#cc44ff;--sparkle-delay:1.4s;--sparkle-size:0.75rem;--sparkle-dur:2.4s">✦</span>
+    <span class="sparkle" style="top:30%;left:4px;color:#ff8800;--sparkle-delay:2s;--sparkle-size:0.55rem;--sparkle-dur:2s">✦</span>
+  ` : '';
 
   const completionSparkles = isComplete ? `
     <span class="sparkle" style="top:3px;left:14px;color:#ff5050;--sparkle-delay:0s;--sparkle-size:0.85rem;--sparkle-dur:2.1s">✦</span>
