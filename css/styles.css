@@ -1536,6 +1536,20 @@ body {
   padding: 0 4px;
 }
 
+/* La pill s'étire quand le nœud suivant a des branches multiples (ex. Ortide → Rafflesia/Joliflor) */
+.evo-chain > .evo-arrow:has(+ .evo-stage + .evo-branches) {
+  align-self: stretch;
+}
+.evo-chain > .evo-arrow:has(+ .evo-stage + .evo-branches) .evo-condition {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.evo-chain > .evo-arrow:has(+ .evo-stage + .evo-branches) .evo-condition-item {
+  flex: 1;
+}
+
 .evo-condition {
   font-size: 0.82rem;
   font-weight: 700;
