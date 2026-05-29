@@ -1653,6 +1653,26 @@ body {
 }
 .evo-condition.is-stone-leaf::after { content: none; }
 
+.evo-condition.is-stone-sun {
+  color: #df7038;
+  background: rgba(223, 112, 56, 0.08);
+  text-shadow: 0 0 8px rgba(223, 112, 56, 0.45);
+}
+.evo-condition.is-stone-sun::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #f4a169, #90432c, #fbd3b8);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-stone-sun::after { content: none; }
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -1986,6 +2006,19 @@ body {
 .evo-condition-item.is-stone-fire.evo-condition--unseen::before,
 .evo-condition-item.is-stone-fire.evo-condition--seen::before {
   background: linear-gradient(135deg, #c9ca5b, #9e9e45, #f9e830, #f09030);
+}
+
+/* Pierre Soleil */
+.evo-condition-item.is-stone-sun::before {
+  background: linear-gradient(135deg, #f4a169, #90432c, #fbd3b8);
+}
+.evo-condition-item.is-stone-sun .evo-condition {
+  color: #df7038;
+  text-shadow: 0 0 8px rgba(223, 112, 56, 0.45);
+}
+.evo-condition-item.is-stone-sun.evo-condition--unseen::before,
+.evo-condition-item.is-stone-sun.evo-condition--seen::before {
+  background: linear-gradient(135deg, #f4a169, #90432c, #fbd3b8);
 }
 
 /* Pierre Plante */
