@@ -376,7 +376,8 @@ function renderCard(pokemon, icons = {}) {
     .map(({ key, icon, status }) => `<img src="${esc(icon)}" alt="${key}" class="poke-form-icon poke-form-icon--${status}" width="18" height="18">`)
     .join('');
   const baronStatus = formStatuses.find(f => f.key === 'baron')?.status;
-  const isComplete = baronStatus === 'owned' && formStatuses.every(f => !f.status || f.status === 'owned');
+  const isComplete = (pokemon.can_be_baron === false ? true : baronStatus === 'owned')
+    && formStatuses.every(f => !f.status || f.status === 'owned');
   const nonBaronForms = formStatuses.filter(f => f.key !== 'baron');
 
   // Détermine quelles formes existent en jeu pour ce Pokémon

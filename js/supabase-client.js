@@ -40,7 +40,7 @@ async function fetchPokemon({ from = 0, to = 39, search = '', gen = null, type =
     .select(`
       id, number, name_fr, name_en, generation,
       image_url, description_fr,
-      evolves_from_number,
+      evolves_from_number, can_be_baron,
       pokemon_types ( type_name, slot )
     `, { count: 'exact' });
 
@@ -94,7 +94,7 @@ async function fetchPokemonByNumber(number) {
     .from('pokemon')
     .select(`
       id, number, name_fr, name_en, generation,
-      image_url, shiny_artwork_url, description_fr, evolves_from_number,
+      image_url, shiny_artwork_url, description_fr, evolves_from_number, can_be_baron,
       pokemon_types ( type_name, slot )
     `)
     .eq('number', number)
