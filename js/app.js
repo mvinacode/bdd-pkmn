@@ -378,9 +378,6 @@ function renderCard(pokemon, icons = {}) {
   const baronStatus = formStatuses.find(f => f.key === 'baron')?.status;
   const shinyStatus = formStatuses.find(f => f.key === 'shiny')?.status;
   const strictOk    = !window._strictComplete || (!!catch_ && shinyStatus === 'owned');
-  const isComplete  = strictOk
-    && (pokemon.can_be_baron === false ? true : baronStatus === 'owned')
-    && formStatuses.every(f => !f.status || f.status === 'owned');
   const nonBaronForms = formStatuses.filter(f => f.key !== 'baron');
 
   // Détermine quelles formes existent en jeu pour ce Pokémon
@@ -448,6 +445,13 @@ function renderCard(pokemon, icons = {}) {
     if (!existsInGame) return true;
     return group.some(vt => seenFormsMap[vt]?.status === 'owned');
   });
+
+  const isComplete = strictOk
+    && allSeenOwned
+    && allVariantsOwned
+    && genderGroupsOk
+    && (pokemon.can_be_baron === false ? true : baronStatus === 'owned')
+    && formStatuses.every(f => !f.status || f.status === 'owned');
 
   const hasAnyGenderOwned = [...GENDER_VTS_FLAT].some(vt => seenFormsMap[vt]?.status === 'owned');
   const hasAnyForm = nonBaronForms.some(f => !!f.status)
