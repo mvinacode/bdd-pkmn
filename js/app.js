@@ -179,6 +179,8 @@ async function loadCatchesMap() {
         .filter(n =>
           ALOLA_FORM_VT[catchByNumber[n]?.form_label] ||
           ALOLA_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
+          GALAR_FORM_VT[catchByNumber[n]?.form_label] ||
+          GALAR_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
           SPECIAL_FORM_VT[catchByNumber[n]?.form_label] ||
           SPECIAL_FORM_VT[shinyCatchByNumber[n]?.form_label]
         )
@@ -219,6 +221,14 @@ function getVariantStatus(pokemonNumber, variantType) {
     return seen['alolan_shiny_male']?.status || seen['alolan_shiny_female']?.status || '';
   if (variantType === 'alolan_shiny_male' || variantType === 'alolan_shiny_female')
     return seen['alolan_shiny']?.status || '';
+  if (variantType === 'galarian')
+    return seen['galarian_male']?.status || seen['galarian_female']?.status || '';
+  if (variantType === 'galarian_male' || variantType === 'galarian_female')
+    return seen['galarian']?.status || '';
+  if (variantType === 'galarian_shiny')
+    return seen['galarian_shiny_male']?.status || seen['galarian_shiny_female']?.status || '';
+  if (variantType === 'galarian_shiny_male' || variantType === 'galarian_shiny_female')
+    return seen['galarian_shiny']?.status || '';
   return '';
 }
 
@@ -286,6 +296,17 @@ const ALOLA_FORM_VT = {
   'Alola Unisexe':       'alolan',
 };
 
+const GALAR_FORM_VT = {
+  'Galar Mâle Shiny':    'galarian_shiny_male',
+  'Galar Femelle Shiny': 'galarian_shiny_female',
+  'Galar Shiny':         'galarian_shiny',
+  'Galar Unisexe Shiny': 'galarian_shiny',
+  'Galar Mâle':          'galarian_male',
+  'Galar Femelle':       'galarian_female',
+  'Galar':               'galarian',
+  'Galar Unisexe':       'galarian',
+};
+
 function getSpecialFormSprite(pokemonNumber, variantType) {
   const isShiny = variantType.endsWith('_shiny');
   const formKey = isShiny ? variantType.slice(0, -6) : variantType;
@@ -303,6 +324,22 @@ function getAlolanSprite(pokemonNumber, variantType) {
     'alolan_male':         ['alolan_male',            'alolan'],
     'alolan_female':       ['alolan_female',          'alolan'],
     'alolan':              ['alolan'],
+  };
+  for (const fvt of (chains[variantType] || [variantType])) {
+    if (variants[fvt]) return variants[fvt];
+  }
+  return null;
+}
+
+function getGalarianSprite(pokemonNumber, variantType) {
+  const variants = variantMap[pokemonNumber] || {};
+  const chains = {
+    'galarian_shiny_male':   ['galarian_shiny_male',   'galarian_shiny', 'galarian'],
+    'galarian_shiny_female': ['galarian_shiny_female',  'galarian_shiny', 'galarian'],
+    'galarian_shiny':        ['galarian_shiny',          'galarian'],
+    'galarian_male':         ['galarian_male',            'galarian'],
+    'galarian_female':       ['galarian_female',          'galarian'],
+    'galarian':              ['galarian'],
   };
   for (const fvt of (chains[variantType] || [variantType])) {
     if (variants[fvt]) return variants[fvt];
@@ -336,10 +373,14 @@ function renderCard(pokemon, icons = {}) {
   let imgSrc;
   if (isShinyDisplay) {
     const alolaVt   = ALOLA_FORM_VT[recentShinyCatch?.form_label];
+    const galarVt   = GALAR_FORM_VT[recentShinyCatch?.form_label];
     const specialVt = SPECIAL_FORM_VT[recentShinyCatch?.form_label];
     if (alolaVt) {
       const alolaUrl = getAlolanSprite(pokemon.number, alolaVt);
       imgSrc = alolaUrl ? normalizeVariantUrl(alolaUrl) : spriteUrl(pokemon.number, true);
+    } else if (galarVt) {
+      const galarUrl = getGalarianSprite(pokemon.number, galarVt);
+      imgSrc = galarUrl ? normalizeVariantUrl(galarUrl) : spriteUrl(pokemon.number, true);
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || spriteUrl(pokemon.number, true);
     } else {
@@ -347,10 +388,14 @@ function renderCard(pokemon, icons = {}) {
     }
   } else {
     const alolaVt   = ALOLA_FORM_VT[catch_?.form_label];
+    const galarVt   = GALAR_FORM_VT[catch_?.form_label];
     const specialVt = SPECIAL_FORM_VT[catch_?.form_label];
     if (alolaVt) {
       const alolaUrl = getAlolanSprite(pokemon.number, alolaVt);
       imgSrc = alolaUrl ? normalizeVariantUrl(alolaUrl) : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
+    } else if (galarVt) {
+      const galarUrl = getGalarianSprite(pokemon.number, galarVt);
+      imgSrc = galarUrl ? normalizeVariantUrl(galarUrl) : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || catch_?.sprite_url || spriteUrl(pokemon.number, false);
     } else {
@@ -360,7 +405,7 @@ function renderCard(pokemon, icons = {}) {
 
   const seenFormsMap = seenMap[pokemon.number] || {};
   const SPECIAL_FORMS = [
-    { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female'] },
+    { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female'] },
     { key: 'baron',   icon: BARON_ICON_URL,   variants: ['baron', 'shiny_baron'] },
     { key: 'mega',    icon: MEGA_ICON_URL,    variants: ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y'] },
     { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
@@ -392,6 +437,8 @@ function renderCard(pokemon, icons = {}) {
     ['shiny_male', 'shiny_female'],
     ['alolan_male', 'alolan_female'],
     ['alolan_shiny_male', 'alolan_shiny_female'],
+    ['galarian_male', 'galarian_female'],
+    ['galarian_shiny_male', 'galarian_shiny_female'],
   ];
   const GENDER_VTS_FLAT = new Set(GENDER_GROUPS.flat());
 
@@ -404,6 +451,8 @@ function renderCard(pokemon, icons = {}) {
   const catchCoveredVts = new Set([
     ALOLA_FORM_VT[catch_?.form_label],
     ALOLA_FORM_VT[recentShinyCatch?.form_label],
+    GALAR_FORM_VT[catch_?.form_label],
+    GALAR_FORM_VT[recentShinyCatch?.form_label],
     SPECIAL_FORM_VT[catch_?.form_label],
     SPECIAL_FORM_VT[recentShinyCatch?.form_label],
     ...(catch_?.is_shiny || recentShinyCatch ? ['shiny'] : []),
@@ -415,10 +464,12 @@ function renderCard(pokemon, icons = {}) {
     'shiny',
     'alolan','alolan_shiny',
     ...(genderMode !== 'any' ? ['alolan_male','alolan_female','alolan_shiny_male','alolan_shiny_female'] : []),
+    'galarian','galarian_shiny',
+    ...(genderMode !== 'any' ? ['galarian_male','galarian_female','galarian_shiny_male','galarian_shiny_female'] : []),
     'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
     'gigamax','shiny_gigamax',
     'troizepy','troizepy_shiny',
-    ...(genderMode === 'all' ? [...GENDER_VTS_FLAT].filter(vt => !vt.startsWith('alolan')) : []),
+    ...(genderMode === 'all' ? [...GENDER_VTS_FLAT].filter(vt => !vt.startsWith('alolan') && !vt.startsWith('galarian')) : []),
   ]);
   const isVtOk = (vt) => {
     if (seenFormsMap[vt]?.status === 'owned' || catchCoveredVts.has(vt)) return true;
@@ -432,6 +483,12 @@ function renderCard(pokemon, icons = {}) {
     if (vt === 'alolan_shiny')
       return seenFormsMap['alolan_shiny_male']?.status === 'owned' || catchCoveredVts.has('alolan_shiny_male')
           || seenFormsMap['alolan_shiny_female']?.status === 'owned' || catchCoveredVts.has('alolan_shiny_female');
+    if (vt === 'galarian')
+      return seenFormsMap['galarian_male']?.status === 'owned' || catchCoveredVts.has('galarian_male')
+          || seenFormsMap['galarian_female']?.status === 'owned' || catchCoveredVts.has('galarian_female');
+    if (vt === 'galarian_shiny')
+      return seenFormsMap['galarian_shiny_male']?.status === 'owned' || catchCoveredVts.has('galarian_shiny_male')
+          || seenFormsMap['galarian_shiny_female']?.status === 'owned' || catchCoveredVts.has('galarian_shiny_female');
     return false;
   };
   const allVariantsOwned = !pokemonVMap
@@ -906,6 +963,12 @@ async function openModal(number) {
       case 'alolan_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + male + shiny;
       case 'alolan_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female;
       case 'alolan_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female + shiny;
+      case 'galarian':              return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>`;
+      case 'galarian_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>` + shiny;
+      case 'galarian_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + male;
+      case 'galarian_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + male + shiny;
+      case 'galarian_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + female;
+      case 'galarian_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + female + shiny;
       case 'troizepy':       return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
       case 'troizepy_shiny': return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>` + shiny;
       default: {
@@ -986,7 +1049,7 @@ async function openModal(number) {
   function variantCard(v) {
     const status = getVariantStatus(p.number, v.variant_type);
     const meta   = VARIANT_STATUS_META[status];
-    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax', 'alolan_shiny', 'alolan_shiny_male', 'alolan_shiny_female', 'troizepy_shiny'].includes(v.variant_type);
+    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax', 'alolan_shiny', 'alolan_shiny_male', 'alolan_shiny_female', 'galarian_shiny', 'galarian_shiny_male', 'galarian_shiny_female', 'troizepy_shiny'].includes(v.variant_type);
     const sparkles = isShiny
       ? `<span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
          <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
@@ -1022,6 +1085,7 @@ async function openModal(number) {
   const megaYVariants   = variants.filter(v => ['mega_y', 'shiny_mega_y'].includes(v.variant_type));
   const gigamaxVariants = variants.filter(v => ['gigamax', 'shiny_gigamax'].includes(v.variant_type));
   const alolanVariants   = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
+  const galarianVariants = variants.filter(v => ['galarian', 'galarian_shiny', 'galarian_male', 'galarian_shiny_male', 'galarian_female', 'galarian_shiny_female'].includes(v.variant_type));
   const troizepyVariants = variants.filter(v => ['troizepy', 'troizepy_shiny'].includes(v.variant_type));
 
   const neutralBadge = `<span class="gender-badge male">${MALE_SVG}</span><span class="gender-badge female">${FEMALE_SVG}</span>`;
@@ -1110,6 +1174,11 @@ async function openModal(number) {
       id: 'alola', label: "Forme d'Alola",
       html: `<div class="variants-rows-wrapper"><div class="variants-grid">${alolanVariants.map(variantCard).join('')}</div></div>`,
       show: !!alolanVariants.length,
+    },
+    {
+      id: 'galar', label: 'Forme de Galar',
+      html: `<div class="variants-rows-wrapper"><div class="variants-grid">${galarianVariants.map(variantCard).join('')}</div></div>`,
+      show: !!galarianVariants.length,
     },
     {
       id: 'troizepy', label: 'Pichu Troizépi',
@@ -1394,11 +1463,11 @@ async function openModal(number) {
     const forms   = seenMap[p.number] || {};
     const entries = Object.entries(forms);
 
-    const isBaseCatch  = catch_ && !ALOLA_FORM_VT[catch_.form_label] && !SPECIAL_FORM_VT[catch_.form_label] && !/^(Méga|Gigamax|Baron)/.test(catch_.form_label || '');
-    const captNormal = (isBaseCatch && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
-    const captShiny  = (isBaseCatch &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'owned');
-    const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'seen');
-    const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && d.status === 'seen');
+    const isBaseCatch  = catch_ && !ALOLA_FORM_VT[catch_.form_label] && !GALAR_FORM_VT[catch_.form_label] && !SPECIAL_FORM_VT[catch_.form_label] && !/^(Méga|Gigamax|Baron)/.test(catch_.form_label || '');
+    const captNormal = (isBaseCatch && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'owned');
+    const captShiny  = (isBaseCatch &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'owned');
+    const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'seen');
+    const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'seen');
 
     function applyImg(img, owned, seen) {
       if (!img) return;
@@ -1426,10 +1495,10 @@ async function openModal(number) {
         ownedShiny = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'owned');
         seenShinyF = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'seen');
       } else if (isRegional) {
-        ownedNorm  = entries.some(([vt, d]) => vt.startsWith('alolan') && !vt.includes('shiny') && d.status === 'owned');
-        seenNorm   = entries.some(([vt, d]) => vt.startsWith('alolan') && !vt.includes('shiny') && d.status === 'seen');
-        ownedShiny = entries.some(([vt, d]) => vt.startsWith('alolan') &&  vt.includes('shiny') && d.status === 'owned');
-        seenShinyF = entries.some(([vt, d]) => vt.startsWith('alolan') &&  vt.includes('shiny') && d.status === 'seen');
+        ownedNorm  = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) && !vt.includes('shiny') && d.status === 'owned');
+        seenNorm   = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) && !vt.includes('shiny') && d.status === 'seen');
+        ownedShiny = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) &&  vt.includes('shiny') && d.status === 'owned');
+        seenShinyF = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) &&  vt.includes('shiny') && d.status === 'seen');
       } else if (col?.classList.contains('is-special-form')) {
         const sfKey = col.dataset.sfKey;
         if (sfKey) {
@@ -1845,6 +1914,61 @@ function renderDrawerFormsAlolan(variants, alolanSprite) {
   field.hidden = false;
 }
 
+function renderDrawerFormsGalarian(variants, galarianSprite) {
+  const field = $('form-selector-field');
+  const grid  = $('form-grid');
+  if (!field || !grid) return;
+
+  const MALE_ICON    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const FEMALE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const UNISEXE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const MALE_SM      = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const FEMALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const UNISEXE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const SHINY_SM     = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+
+  const galarMaleV      = variants.find(v => v.variant_type === 'galarian_male');
+  const galarFemaleV    = variants.find(v => v.variant_type === 'galarian_female');
+  const galarShinyMaleV = variants.find(v => v.variant_type === 'galarian_shiny_male');
+  const galarShinyFemV  = variants.find(v => v.variant_type === 'galarian_shiny_female');
+  const galarV          = variants.find(v => v.variant_type === 'galarian');
+  const galarShinyV     = variants.find(v => v.variant_type === 'galarian_shiny');
+
+  const base      = galarV?.image_url      || galarianSprite || null;
+  const baseShiny = galarShinyV?.image_url || base;
+  const entries = [
+    { label: 'Galar Mâle',          displayLabel: 'Mâle',          variant_type: 'galarian_male',         iconHtml: MALE_ICON,             sprite: galarMaleV?.image_url      || base      },
+    { label: 'Galar Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'galarian_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: galarShinyMaleV?.image_url || baseShiny },
+    { label: 'Galar Femelle',       displayLabel: 'Femelle',       variant_type: 'galarian_female',       iconHtml: FEMALE_ICON,           sprite: galarFemaleV?.image_url    || base      },
+    { label: 'Galar Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'galarian_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: galarShinyFemV?.image_url  || baseShiny },
+    { label: 'Galar Unisexe',       displayLabel: 'Unisexe',       variant_type: 'galarian',              iconHtml: UNISEXE_ICON,          sprite: base      },
+    { label: 'Galar Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'galarian_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
+  ];
+
+  grid.innerHTML = entries.map((e, i) => `
+    <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
+      <div class="form-opt-icon">${e.iconHtml}</div>
+      <span>${esc(e.displayLabel || e.label)}</span>
+    </button>`).join('');
+
+  drawerForms = [];
+
+  grid.querySelectorAll('.form-opt').forEach(btn =>
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('selected');
+      const entry = entries[parseInt(btn.dataset.idx)];
+      if (btn.classList.contains('selected')) {
+        if (!drawerForms.find(f => f.variant_type === entry.variant_type)) drawerForms.push(entry);
+        if (drawerMode === 'caught') selectDrawerForm(entry);
+      } else {
+        drawerForms = drawerForms.filter(f => f.variant_type !== entry.variant_type);
+      }
+    })
+  );
+
+  field.hidden = false;
+}
+
 function renderDrawerFormsSpecial(specialForm) {
   const field = $('form-selector-field');
   const grid  = $('form-grid');
@@ -1908,6 +2032,8 @@ function selectDrawerForm(v) {
     let src;
     if (drawerPokemon.isAlolan && drawerPokemon.alolanSprite) {
       src = normalizeVariantUrl(drawerPokemon.alolanSprite);
+    } else if (drawerPokemon.isGalarian && drawerPokemon.galarianSprite) {
+      src = normalizeVariantUrl(drawerPokemon.galarianSprite);
     } else if (drawerPokemon.isSpecial && v.sprite) {
       src = normalizeVariantUrl(v.sprite);
     } else if (drawerShiny) {
@@ -2000,9 +2126,10 @@ function bindDrawerEvents() {
         if (!data?.length) { dropdown.hidden = true; return; }
 
         const nums = data.map(p => p.number);
-        const [allIcons, alolanRows, specialFormsData] = await Promise.all([
+        const [allIcons, alolanRows, galarianRows, specialFormsData] = await Promise.all([
           fetchCardIcons(nums).catch(() => []),
           fetchAlolanVariantsForNumbers(nums).catch(() => []),
+          fetchGalarianVariantsForNumbers(nums).catch(() => []),
           fetchSpecialFormsForNumbers(nums).catch(() => ({})),
         ]);
         const iconMap = {};
@@ -2015,27 +2142,35 @@ function bindDrawerEvents() {
         }
         const alolanSpriteMap = {};
         for (const r of alolanRows) alolanSpriteMap[r.pokemon_number] = r.image_url;
+        const galarianSpriteMap = {};
+        for (const r of galarianRows) galarianSpriteMap[r.pokemon_number] = r.image_url;
 
-        // Construire la liste : Pokémon normal + entrée Alola + entrées formes spéciales
+        // Construire la liste : Pokémon normal + entrée Alola + entrée Galar + entrées formes spéciales
         const items = [];
         for (const p of data) {
-          items.push({ p, isAlola: false, specialForm: null });
-          if (alolanSpriteMap[p.number]) items.push({ p, isAlola: true, specialForm: null });
+          items.push({ p, isAlola: false, isGalar: false, specialForm: null });
+          if (alolanSpriteMap[p.number])   items.push({ p, isAlola: true,  isGalar: false, specialForm: null });
+          if (galarianSpriteMap[p.number]) items.push({ p, isAlola: false, isGalar: true,  specialForm: null });
           for (const form of Object.values(specialFormsData[p.number] || {})) {
-            items.push({ p, isAlola: false, specialForm: form });
+            items.push({ p, isAlola: false, isGalar: false, specialForm: form });
           }
         }
 
-        dropdown.innerHTML = items.map(({ p, isAlola, specialForm }) => {
-          const ico         = iconMap[p.number];
-          const alolaSprite = alolanSpriteMap[p.number] || null;
+        dropdown.innerHTML = items.map(({ p, isAlola, isGalar, specialForm }) => {
+          const ico          = iconMap[p.number];
+          const alolaSprite  = alolanSpriteMap[p.number]   || null;
+          const galarSprite  = galarianSpriteMap[p.number] || null;
           const src = isAlola
-            ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(p.number, false))
+            ? (alolaSprite  ? normalizeVariantUrl(alolaSprite)  : spriteUrl(p.number, false))
+            : isGalar
+            ? (galarSprite  ? normalizeVariantUrl(galarSprite)  : spriteUrl(p.number, false))
             : specialForm
             ? (specialForm.image_url ? normalizeVariantUrl(specialForm.image_url) : spriteUrl(p.number, false))
             : (ico?.normal ? normalizeVariantUrl(ico.normal)  : spriteUrl(p.number, false));
           const displayName = isAlola
             ? `${p.name_fr} · Alola`
+            : isGalar
+            ? `${p.name_fr} · Galar`
             : specialForm
             ? `${p.name_fr} · ${specialForm.form_label_fr}`
             : p.name_fr;
@@ -2044,6 +2179,8 @@ function bindDrawerEvents() {
             data-name="${esc(p.name_fr)}"
             data-is-alola="${isAlola ? '1' : '0'}"
             data-alola-sprite="${esc(alolaSprite || '')}"
+            data-is-galar="${isGalar ? '1' : '0'}"
+            data-galar-sprite="${esc(galarSprite || '')}"
             data-special-form-key="${esc(specialForm?.form_key || '')}"
             data-special-form-label="${esc(specialForm?.form_label_fr || '')}">
             <img src="${esc(src)}" width="28" height="28" alt="" style="image-rendering:pixelated">
@@ -2058,6 +2195,8 @@ function bindDrawerEvents() {
             const name           = btn.dataset.name;
             const isAlola        = btn.dataset.isAlola === '1';
             const alolaSprite    = btn.dataset.alolaSprite || null;
+            const isGalar        = btn.dataset.isGalar === '1';
+            const galarSprite    = btn.dataset.galarSprite || null;
             const specialFormKey = btn.dataset.specialFormKey || null;
             const specialFormLbl = btn.dataset.specialFormLabel || null;
             const ico            = iconMap[num] || {};
@@ -2066,17 +2205,22 @@ function bindDrawerEvents() {
               number: num, name_fr: name,
               iconNormal: ico.normal || null, iconShiny: ico.shiny || null,
               isAlolan: isAlola, alolanSprite: alolaSprite,
+              isGalarian: isGalar, galarianSprite: galarSprite,
               isSpecial: !!specialFormKey, specialFormKey, specialFormLabel: specialFormLbl,
             };
 
             const displayName = isAlola
               ? `${name} · Alola`
+              : isGalar
+              ? `${name} · Galar`
               : specialFormKey
               ? `${name} · ${specialFormLbl}`
               : name;
             const sfData = specialFormKey ? specialFormsData[num]?.[specialFormKey] : null;
             const src = isAlola
               ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(num, false))
+              : isGalar
+              ? (galarSprite ? normalizeVariantUrl(galarSprite) : spriteUrl(num, false))
               : sfData?.image_url
               ? normalizeVariantUrl(sfData.image_url)
               : (ico.normal ? normalizeVariantUrl(ico.normal) : spriteUrl(num, false));
@@ -2098,6 +2242,9 @@ function bindDrawerEvents() {
             if (isAlola) {
               const variantData = await fetchVariants(num).catch(() => []);
               renderDrawerFormsAlolan(variantData, alolaSprite);
+            } else if (isGalar) {
+              const variantData = await fetchVariants(num).catch(() => []);
+              renderDrawerFormsGalarian(variantData, galarSprite);
             } else if (specialFormKey && sfData) {
               // Mettre à jour le cache local
               if (!specialFormsMap[num]) specialFormsMap[num] = {};
@@ -2167,7 +2314,7 @@ async function saveCatchFromMain() {
       closeCatchDrawer();
       if (!els.modalOverlay.hidden && currentModalPokemonNumber === savedSeenNum) {
         if (savedSeenVts.some(vt => vt.includes('mega'))) pendingIllusTab = 'Méga-Évolution';
-        else if (savedSeenVts.some(vt => vt.startsWith('alolan'))) pendingIllusTab = 'Formes régionales';
+        else if (savedSeenVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian'))) pendingIllusTab = 'Formes régionales';
         else if (savedSeenVts.some(vt => vt.includes('gigamax'))) pendingIllusTab = 'Gigamax';
         openModal(savedSeenNum);
       }
