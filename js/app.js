@@ -20,6 +20,7 @@ const TYPE_IMAGES = {
   water:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779574460/eau_fruvvb.png',
   flying:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555974/vol_u7plhv.png',
   dragon:  'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779555977/dragon_nbjoqm.png',
+  fighting: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1780260718/combat_evf0gc.png',
   dark:     'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779662872/tenebres_c99vof.png',
   bug:      'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779580557/insecte_rccof2.png',
   electric: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779759222/electrick_zuuwdo.png',
