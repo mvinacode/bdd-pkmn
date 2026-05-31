@@ -878,22 +878,41 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
       ).join('');
       const pikaBranches = `<div class="evo-branches-pikachu">${gigaBranches}${branches}</div>`;
       if (regionals.length > 0) {
-        // excludeRegionals=true sur les enfants : leurs formes régionales sont déjà dans regionalRows
-        const branchesNoReg = node.children.map(c => {
-          const condition = c.node.evolution_condition || '';
-          return `<div class="evo-branch-item">${evoArrow(condition, c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1, true)}</div>`;
-        }).join('');
+        // Enfants réclamés explicitement par une forme régionale via evolution_into_number
+        const claimedNums = new Set(regionals
+          .filter(r => r.evolution_into_number)
+          .map(r => r.evolution_into_number));
+
+        // Branches principales : on exclut les enfants réclamés + les formes régionales des enfants
+        const branchesNoReg = node.children
+          .filter(c => !claimedNums.has(c.node.number))
+          .map(c => {
+            const condition = c.node.evolution_condition || '';
+            return `<div class="evo-branch-item">${evoArrow(condition, c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1, true)}</div>`;
+          }).join('');
         const pikaBranchesNoReg = `<div class="evo-branches-pikachu">${gigaBranches}${branchesNoReg}</div>`;
+
         const regionalRows = regionals.map(r => {
-          const matchingNext = node.children
+          // Priorité 1 : forme régionale d'un enfant (ex : Persian d'Alola)
+          const matchingRegional = node.children
             .flatMap(c => regionalsByNumber[c.node.number] || [])
             .find(nr => nr.region === r.region);
-          const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || '';
-          const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
-          const nextHtml     = matchingNext
-            ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>`
-            : `<div class="evo-stage"></div>`;
-          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${nextHtml}`;
+          if (matchingRegional) {
+            const arrowCond    = r.evolution_condition || matchingRegional.evolution_condition || '';
+            const arrowItemImg = r.evolution_item_image_url || matchingRegional.evolution_item_image_url || null;
+            return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}<div class="evo-stage">${evoRegionalPortrait(matchingRegional)}</div>`;
+          }
+          // Priorité 2 : enfant direct renseigné via evolution_into_number (ex : Berserkatt)
+          if (r.evolution_into_number) {
+            const directChild = node.children.find(c => c.node.number === r.evolution_into_number);
+            if (directChild) {
+              const arrowCond    = r.evolution_condition || directChild.node.evolution_condition || '';
+              const arrowItemImg = r.evolution_item_image_url || directChild.node.evolution_item_image_url || null;
+              const iconUrl      = iconByNumber[directChild.node.number] || null;
+              return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}<div class="evo-stage">${evoPortrait(directChild.node, directChild.node.number === currentNumber, iconUrl)}</div>`;
+            }
+          }
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div><div></div><div class="evo-stage"></div>`;
         }).join('');
         return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div><div></div>${pikaBranchesNoReg}${regionalRows}</div>`;
       }
