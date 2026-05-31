@@ -938,8 +938,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
           }
           return `<div class="evo-stage">${evoRegionalPortrait(r)}</div><div></div><div class="evo-stage"></div>`;
         }).join('');
-        const rootPortraitReg = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
-        return `<div class="evo-chain-regional-grid"><div class="evo-stage evo-stage--root-stretch">${rootPortraitReg}</div><div></div>${pikaBranchesNoReg}${regionalRows}</div>`;
+        return `<div class="evo-chain-regional-grid"><div class="evo-stage evo-stage--root-stretch">${portrait}</div><div></div>${pikaBranchesNoReg}${regionalRows}</div>`;
       }
       const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
       return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div>${pikaBranches}`;

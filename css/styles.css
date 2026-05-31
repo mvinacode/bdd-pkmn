@@ -2160,9 +2160,13 @@ body {
 
 /* Branches Pikachu : Gigamax (haut) → Raichu → Raichu Alola (bas), chacun avec sa propre pill */
 .evo-branches-pikachu {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: max-content auto;
+  row-gap: 6px;
+  align-items: center;
+}
+.evo-branches-pikachu .evo-branch-item {
+  display: contents;
 }
 
 /* Couleur de fond selon le type dans la chaîne */
