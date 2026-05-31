@@ -369,7 +369,7 @@ body {
    CARTE POKÉMON
    ============================================================ */
 .poke-card {
-  background: #ff8100;
+  background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 16px 12px 12px;

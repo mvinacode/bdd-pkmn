@@ -82,14 +82,14 @@
 .poke-card[data-primary-type="electric"] { --card-accent: #fac000; }
 .poke-card[data-primary-type="grass"]    { --card-accent: #3da224; }
 .poke-card[data-primary-type="ice"]      { --card-accent: #3fd1f7; }
-.poke-card[data-primary-type="fighting"] { --card-accent: #CE406A; }
+.poke-card[data-primary-type="fighting"] { --card-accent: #ff8100; background: #ff8100; }
 .poke-card[data-primary-type="poison"]   { --card-accent: #AB6AC8; }
 .poke-card[data-primary-type="ground"]   { --card-accent: #915121; }
 .poke-card[data-primary-type="flying"]   { --card-accent: #81b9ef; }
 .poke-card[data-primary-type="psychic"]  { --card-accent: #ef4179; }
 .poke-card[data-primary-type="bug"]      { --card-accent: #8fa119; }
 .poke-card[data-primary-type="rock"]     { --card-accent: #C5B78C; }
-.poke-card[data-primary-type="ghost"]    { --card-accent: #536FB4; }
+.poke-card[data-primary-type="ghost"]    { --card-accent: #714171; background: #714171; }
 .poke-card[data-primary-type="dragon"]   { --card-accent: #006FC9; }
 .poke-card[data-primary-type="dark"]     { --card-accent: #50413f; }
 .poke-card[data-primary-type="steel"]    { --card-accent: #60a0b8; }
