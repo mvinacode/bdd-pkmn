@@ -790,7 +790,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
     const regionals  = excludeRegionals ? [] : (regionalsByNumber[node.node.number] || []);
     const megas         = node.children.length === 0 ? (megasByNumber[node.node.number] || []) : [];
     const gigamaxesLeaf = node.children.length === 0 ? (gigamaxByNumber[node.node.number] || []) : [];
-    const gigamaxesBranch = node.children.length === 1 ? (gigamaxByNumber[node.node.number] || []) : [];
+    const gigamaxesBranch = node.children.length >= 1  ? (gigamaxByNumber[node.node.number] || []) : [];
     const allBranches = [...megas, ...gigamaxesLeaf];
 
     let megaHtml = '';
@@ -872,6 +872,13 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
       const condition = c.node.evolution_condition || '';
       return `<div class="evo-branch-item">${evoArrow(condition, c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1)}</div>`;
     }).join('');
+    if (gigamaxesBranch.length > 0) {
+      const gigaBranches = gigamaxesBranch.map(g =>
+        `<div class="evo-branch-item">${evoArrow(g.condition_label || g.name, g.item_image_url || null, true, true)}${evoGigamaxPortrait(g)}</div>`
+      ).join('');
+      const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
+      return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}${regionalsHtml}</div><div class="evo-branches-pikachu">${gigaBranches}${branches}</div>`;
+    }
     return `<div class="evo-stage">${portrait}${regionalsHtml}</div><div class="evo-branches">${branches}</div>`;
   }
 
