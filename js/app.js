@@ -876,8 +876,23 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
       const gigaBranches = gigamaxesBranch.map(g =>
         `<div class="evo-branch-item">${evoArrow(g.condition_label || g.name, g.item_image_url || null, true, true)}${evoGigamaxPortrait(g)}</div>`
       ).join('');
+      const pikaBranches = `<div class="evo-branches-pikachu">${gigaBranches}${branches}</div>`;
+      if (regionals.length > 0) {
+        const regionalRows = regionals.map(r => {
+          const matchingNext = node.children
+            .flatMap(c => regionalsByNumber[c.node.number] || [])
+            .find(nr => nr.region === r.region);
+          const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || '';
+          const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
+          const nextHtml     = matchingNext
+            ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>`
+            : `<div class="evo-stage"></div>`;
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${nextHtml}`;
+        }).join('');
+        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div><div></div>${pikaBranches}${regionalRows}</div>`;
+      }
       const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
-      return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}${regionalsHtml}</div><div class="evo-branches-pikachu">${gigaBranches}${branches}</div>`;
+      return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div>${pikaBranches}`;
     }
     return `<div class="evo-stage">${portrait}${regionalsHtml}</div><div class="evo-branches">${branches}</div>`;
   }
