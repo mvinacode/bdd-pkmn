@@ -878,6 +878,12 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
       ).join('');
       const pikaBranches = `<div class="evo-branches-pikachu">${gigaBranches}${branches}</div>`;
       if (regionals.length > 0) {
+        // excludeRegionals=true sur les enfants : leurs formes régionales sont déjà dans regionalRows
+        const branchesNoReg = node.children.map(c => {
+          const condition = c.node.evolution_condition || '';
+          return `<div class="evo-branch-item">${evoArrow(condition, c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1, true)}</div>`;
+        }).join('');
+        const pikaBranchesNoReg = `<div class="evo-branches-pikachu">${gigaBranches}${branchesNoReg}</div>`;
         const regionalRows = regionals.map(r => {
           const matchingNext = node.children
             .flatMap(c => regionalsByNumber[c.node.number] || [])
@@ -889,7 +895,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
             : `<div class="evo-stage"></div>`;
           return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${nextHtml}`;
         }).join('');
-        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div><div></div>${pikaBranches}${regionalRows}</div>`;
+        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div><div></div>${pikaBranchesNoReg}${regionalRows}</div>`;
       }
       const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
       return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div>${pikaBranches}`;
