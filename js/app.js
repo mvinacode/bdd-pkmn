@@ -816,7 +816,7 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
 
     if (node.children.length === 1) {
       const condition = node.children[0].node.evolution_condition || '';
-      if (gigamaxesBranch.length > 0 && regionals.length === 0) {
+      if (gigamaxesBranch.length > 0) {
         const nextNode      = node.children[0];
         const nextRegionals = regionalsByNumber[nextNode.node.number] || [];
         const nextMegas     = megasByNumber[nextNode.node.number] || [];
