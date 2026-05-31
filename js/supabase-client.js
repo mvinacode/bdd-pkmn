@@ -212,15 +212,22 @@ async function fetchGalarianVariantsForNumbers(pokemonNumbers) {
 
 /**
  * Récupère les formes régionales (Alola, Galar…) pour une liste de numéros.
+ * Tente d'inclure evolution_into_number ; retombe sur la requête de base si la colonne n'existe pas.
  */
 async function fetchRegionalForms(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
-  const { data } = await client
+  const { data, error } = await client
     .from('pokemon_regional_forms')
     .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url, evolution_into_number')
     .in('pokemon_number', pokemonNumbers);
-  return data || [];
+  if (!error) return data || [];
+  // Fallback si evolution_into_number n'existe pas encore en base
+  const { data: data2 } = await client
+    .from('pokemon_regional_forms')
+    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url')
+    .in('pokemon_number', pokemonNumbers);
+  return data2 || [];
 }
 
 /**
