@@ -888,13 +888,13 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
         const claimedByExplicit = new Set(regionals
           .filter(r => r.evolution_into_number)
           .map(r => r.evolution_into_number));
-        // Enfants "extra" : pas de formes régionales propres, pas réclamés → heuristique Berserkatt
+        // Enfants "extra" sans formes régionales → heuristique (ex : Berserkatt ↔ Galar)
         const extraChildren = node.children.filter(
           c => !childrenWithRegionals.has(c.node.number) && !claimedByExplicit.has(c.node.number)
         );
         let extraIdx = 0;
 
-        // Résolution en une passe : chaque forme régionale → son cible
+        // Résolution en une passe
         const matches = regionals.map(r => {
           if (r.evolution_into_number) {
             const child = node.children.find(c => c.node.number === r.evolution_into_number);
@@ -909,36 +909,47 @@ function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, iconByNumbe
           return { r, type: 'heuristic', target: hChild };
         });
 
-        // Enfants à retirer des branches principales
+        // Enfants retirés des branches principales
         const claimedNums = new Set(
           matches
             .filter(m => (m.type === 'explicit' || m.type === 'heuristic') && m.target)
             .map(m => m.target.node.number)
         );
-        const branchesNoReg = node.children
-          .filter(c => !claimedNums.has(c.node.number))
-          .map(c => {
-            const condition = c.node.evolution_condition || '';
-            return `<div class="evo-branch-item">${evoArrow(condition, c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1, true)}</div>`;
-          }).join('');
-        const pikaBranchesNoReg = `<div class="evo-branches-pikachu">${gigaBranches}${branchesNoReg}</div>`;
+        const mainChildren = node.children.filter(c => !claimedNums.has(c.node.number));
+        const numBranchRows = gigamaxesBranch.length + mainChildren.length;
 
-        const regionalRows = matches.map(({ r, type, target }) => {
+        // Grid plat 4 colonnes : [pokemon | spacer | flèche | portrait]
+        // Col 1 : root portrait sur numBranchRows lignes
+        const rootStage = `<div class="evo-stage evo-stage--root-stretch" style="grid-row:1/span ${numBranchRows};grid-column:1">${portrait}</div>`;
+
+        // Lignes Gigamax : spacer | flèche bidi | portrait gigamax
+        const gigaItems = gigamaxesBranch.map(g =>
+          `<div></div>${evoArrow(g.condition_label || g.name, g.item_image_url || null, true, true)}${evoGigamaxPortrait(g)}`
+        ).join('');
+
+        // Lignes enfants principaux : spacer | flèche | portrait enfant
+        const childItems = mainChildren.map(c =>
+          `<div></div>${evoArrow(c.node.evolution_condition || '', c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1, true)}`
+        ).join('');
+
+        // Lignes régionales : portrait régional | spacer | flèche | cible
+        const regionalItems = matches.map(({ r, type, target }) => {
           const arrowCond    = r.evolution_condition || '';
           const arrowItemImg = r.evolution_item_image_url || null;
           if (type === 'regional' && target) {
             const cond    = arrowCond || target.evolution_condition || '';
             const itemImg = arrowItemImg || target.evolution_item_image_url || null;
-            return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(cond, itemImg)}<div class="evo-stage">${evoRegionalPortrait(target)}</div>`;
+            return `<div class="evo-stage">${evoRegionalPortrait(r)}</div><div></div>${evoArrow(cond, itemImg)}<div class="evo-stage">${evoRegionalPortrait(target)}</div>`;
           }
           if ((type === 'explicit' || type === 'heuristic') && target) {
             const cond    = arrowCond || target.node.evolution_condition || '';
             const iconUrl = iconByNumber[target.node.number] || null;
-            return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(cond, arrowItemImg)}<div class="evo-stage">${evoPortrait(target.node, target.node.number === currentNumber, iconUrl)}</div>`;
+            return `<div class="evo-stage">${evoRegionalPortrait(r)}</div><div></div>${evoArrow(cond, arrowItemImg)}<div class="evo-stage">${evoPortrait(target.node, target.node.number === currentNumber, iconUrl)}</div>`;
           }
-          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div><div></div><div class="evo-stage"></div>`;
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div><div></div><div></div><div class="evo-stage"></div>`;
         }).join('');
-        return `<div class="evo-chain-regional-grid"><div class="evo-stage evo-stage--root-stretch">${portrait}</div><div></div>${pikaBranchesNoReg}${regionalRows}</div>`;
+
+        return `<div class="evo-chain-pikachu-regional">${rootStage}${gigaItems}${childItems}${regionalItems}</div>`;
       }
       const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
       return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div>${pikaBranches}`;

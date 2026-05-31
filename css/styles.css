@@ -2169,6 +2169,20 @@ body {
   display: contents;
 }
 
+/* Grid aplati 4 colonnes : [pokemon | spacer | flèche | portrait]
+   Tous les portraits (Gigamax, Persian, Alola Persian, Berserkatt…) partagent la col 4. */
+.evo-chain-pikachu-regional {
+  display: grid;
+  grid-template-columns: auto auto max-content auto;
+  align-items: center;
+  row-gap: 12px;
+}
+.evo-chain-pikachu-regional .evo-arrow .evo-condition {
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 /* Couleur de fond selon le type dans la chaîne */
 .evo-type-fire     { background: rgba(255,151,65,0.12); }
 .evo-type-water    { background: rgba(54,146,220,0.12); }
