@@ -1682,6 +1682,26 @@ body {
 }
 .evo-condition.is-stone-sun::after { content: none; }
 
+.evo-condition.is-stone-water {
+  color: #bcddfc;
+  background: rgba(255,255,255,0.04);
+  text-shadow: 0 0 8px rgba(108, 150, 220, 0.5);
+}
+.evo-condition.is-stone-water::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #433690, #967ef7, #6d96c8, #4b4bbe, #bcdefc, #ffffff);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-stone-water::after { content: none; }
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -2058,6 +2078,19 @@ body {
 .evo-condition-item.is-stone-leaf.evo-condition--unseen::before,
 .evo-condition-item.is-stone-leaf.evo-condition--seen::before {
   background: linear-gradient(135deg, #bacd9b, #4f4e36, #678f65);
+}
+
+/* Pierre Eau */
+.evo-condition-item.is-stone-water::before {
+  background: linear-gradient(135deg, #433690, #967ef7, #6d96c8, #4b4bbe, #bcdefc, #ffffff);
+}
+.evo-condition-item.is-stone-water .evo-condition {
+  color: #bcddfc;
+  text-shadow: 0 0 8px rgba(108, 150, 220, 0.5);
+}
+.evo-condition-item.is-stone-water.evo-condition--unseen::before,
+.evo-condition-item.is-stone-water.evo-condition--seen::before {
+  background: linear-gradient(135deg, #433690, #967ef7, #6d96c8, #4b4bbe, #bcdefc, #ffffff);
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
