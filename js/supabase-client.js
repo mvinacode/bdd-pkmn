@@ -219,13 +219,13 @@ async function fetchRegionalForms(pokemonNumbers) {
   if (!client || !pokemonNumbers.length) return [];
   const { data, error } = await client
     .from('pokemon_regional_forms')
-    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url, evolution_into_number')
+    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url, evolution_into_number, can_be_baron')
     .in('pokemon_number', pokemonNumbers);
   if (!error) return data || [];
   // Fallback si evolution_into_number n'existe pas encore en base
   const { data: data2 } = await client
     .from('pokemon_regional_forms')
-    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url')
+    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url, can_be_baron')
     .in('pokemon_number', pokemonNumbers);
   return data2 || [];
 }

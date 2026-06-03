@@ -1972,6 +1972,8 @@ function renderDrawerFormsAlolan(variants, alolanSprite) {
     { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: alolanShinyFemV?.image_url  || baseShiny },
     { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: UNISEXE_ICON,          sprite: base      },
     { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
+    { label: 'Alola Baron',         displayLabel: 'Baron',         variant_type: 'baron',               iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                                  sprite: base      },
+    { label: 'Alola Baron Shiny',   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',         iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: baseShiny },
   ];
 
   grid.innerHTML = entries.map((e, i) => `
@@ -2027,6 +2029,8 @@ function renderDrawerFormsGalarian(variants, galarianSprite) {
     { label: 'Galar Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'galarian_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: galarShinyFemV?.image_url  || baseShiny },
     { label: 'Galar Unisexe',       displayLabel: 'Unisexe',       variant_type: 'galarian',              iconHtml: UNISEXE_ICON,          sprite: base      },
     { label: 'Galar Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'galarian_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
+    { label: 'Galar Baron',         displayLabel: 'Baron',         variant_type: 'baron',                 iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                                  sprite: base      },
+    { label: 'Galar Baron Shiny',   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',           iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: baseShiny },
   ];
 
   grid.innerHTML = entries.map((e, i) => `
