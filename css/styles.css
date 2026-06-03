@@ -1702,6 +1702,15 @@ body {
 }
 .evo-condition.is-stone-water::after { content: none; }
 
+.evo-condition.is-kings-rock {
+  color: #e0ce3a;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #e0ce3a, #ab9232) border-box;
+  text-shadow: 0 0 8px rgba(224, 206, 58, 0.4);
+}
+
 .evo-condition.is-mega {
   border: 1px solid transparent;
   background:
@@ -2078,6 +2087,19 @@ body {
 .evo-condition-item.is-stone-leaf.evo-condition--unseen::before,
 .evo-condition-item.is-stone-leaf.evo-condition--seen::before {
   background: linear-gradient(135deg, #bacd9b, #4f4e36, #678f65);
+}
+
+/* Roche Royale */
+.evo-condition-item.is-kings-rock::before {
+  background: linear-gradient(135deg, #e0ce3a, #ab9232);
+}
+.evo-condition-item.is-kings-rock .evo-condition {
+  color: #e0ce3a;
+  text-shadow: 0 0 8px rgba(224, 206, 58, 0.4);
+}
+.evo-condition-item.is-kings-rock.evo-condition--unseen::before,
+.evo-condition-item.is-kings-rock.evo-condition--seen::before {
+  background: linear-gradient(135deg, #e0ce3a, #ab9232);
 }
 
 /* Pierre Eau */
