@@ -1721,6 +1721,23 @@ body {
   line-height: 1;
 }
 
+.evo-condition.is-rage-move {
+  color: #ce93d8;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #2d004d, #7b1fa2, #ba68c8, #7b1fa2, #2d004d) border-box;
+  text-shadow: 0 0 10px rgba(186, 104, 200, 0.5);
+  white-space: normal;
+  text-align: center;
+  max-width: 12rem;
+  line-height: 1.3;
+}
+.evo-condition.is-rage-move .move-name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .evo-chain-regional-grid .evo-arrow .evo-condition {
   width: 100%;
   text-align: center;

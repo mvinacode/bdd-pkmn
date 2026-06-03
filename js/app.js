@@ -716,7 +716,8 @@ function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, is
   } else if (condition) {
     const isNight     = condition.toLowerCase().includes('nuit');
     const isHappiness = condition.toLowerCase().includes('bonheur');
-    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness;
+    const isRageMove  = /poing de col[eè]re/i.test(condition);
+    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove;
     const isStone      = isItem && /pierre\s/i.test(condition);
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -724,7 +725,10 @@ function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, is
     const isStoneLeaf  = isStone && /plante/i.test(condition);
     const isStoneSun   = isStone && /soleil/i.test(condition);
     const conditionText = condition;
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}">${esc(conditionText)}</span>`;
+    const conditionInner = isRageMove
+      ? esc(condition).replace(/Poing de Col[eè]re/i, '<span class="move-name">$&</span>')
+      : esc(conditionText);
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}">${conditionInner}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
