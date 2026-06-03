@@ -29,6 +29,7 @@ const TYPE_IMAGES = {
   ice:      'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779833043/glace_rzyq3f.png',
   steel:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779833041/acier_zwph2k.png',
   ground:   'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779835148/sol_kqatjb.png',
+  rock:     'https://res.cloudinary.com/dkgfa4apm/image/upload/v1780510452/roche_kfg7gw.png',
   fairy:    'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779893032/fee_dfkdmp.png',
 };
 
@@ -183,6 +184,8 @@ async function loadCatchesMap() {
           ALOLA_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
           GALAR_FORM_VT[catchByNumber[n]?.form_label] ||
           GALAR_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
+          HISUI_FORM_VT[catchByNumber[n]?.form_label] ||
+          HISUI_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
           SPECIAL_FORM_VT[catchByNumber[n]?.form_label] ||
           SPECIAL_FORM_VT[shinyCatchByNumber[n]?.form_label]
         )
@@ -231,6 +234,14 @@ function getVariantStatus(pokemonNumber, variantType) {
     return seen['galarian_shiny_male']?.status || seen['galarian_shiny_female']?.status || '';
   if (variantType === 'galarian_shiny_male' || variantType === 'galarian_shiny_female')
     return seen['galarian_shiny']?.status || '';
+  if (variantType === 'hisuian')
+    return seen['hisuian_male']?.status || seen['hisuian_female']?.status || '';
+  if (variantType === 'hisuian_male' || variantType === 'hisuian_female')
+    return seen['hisuian']?.status || '';
+  if (variantType === 'hisuian_shiny')
+    return seen['hisuian_shiny_male']?.status || seen['hisuian_shiny_female']?.status || '';
+  if (variantType === 'hisuian_shiny_male' || variantType === 'hisuian_shiny_female')
+    return seen['hisuian_shiny']?.status || '';
   return '';
 }
 
@@ -309,6 +320,17 @@ const GALAR_FORM_VT = {
   'Galar Unisexe':       'galarian',
 };
 
+const HISUI_FORM_VT = {
+  'Hisui Mâle Shiny':    'hisuian_shiny_male',
+  'Hisui Femelle Shiny': 'hisuian_shiny_female',
+  'Hisui Shiny':         'hisuian_shiny',
+  'Hisui Unisexe Shiny': 'hisuian_shiny',
+  'Hisui Mâle':          'hisuian_male',
+  'Hisui Femelle':       'hisuian_female',
+  'Hisui':               'hisuian',
+  'Hisui Unisexe':       'hisuian',
+};
+
 function getSpecialFormSprite(pokemonNumber, variantType) {
   const isShiny = variantType.endsWith('_shiny');
   const formKey = isShiny ? variantType.slice(0, -6) : variantType;
@@ -349,6 +371,22 @@ function getGalarianSprite(pokemonNumber, variantType) {
   return null;
 }
 
+function getHisuianSprite(pokemonNumber, variantType) {
+  const variants = variantMap[pokemonNumber] || {};
+  const chains = {
+    'hisuian_shiny_male':   ['hisuian_shiny_male',   'hisuian_shiny', 'hisuian'],
+    'hisuian_shiny_female': ['hisuian_shiny_female',  'hisuian_shiny', 'hisuian'],
+    'hisuian_shiny':        ['hisuian_shiny',          'hisuian'],
+    'hisuian_male':         ['hisuian_male',            'hisuian'],
+    'hisuian_female':       ['hisuian_female',          'hisuian'],
+    'hisuian':              ['hisuian'],
+  };
+  for (const fvt of (chains[variantType] || [variantType])) {
+    if (variants[fvt]) return variants[fvt];
+  }
+  return null;
+}
+
 function getImageUrl(number) {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png`;
 }
@@ -376,6 +414,7 @@ function renderCard(pokemon, icons = {}) {
   if (isShinyDisplay) {
     const alolaVt   = ALOLA_FORM_VT[recentShinyCatch?.form_label];
     const galarVt   = GALAR_FORM_VT[recentShinyCatch?.form_label];
+    const hisuiVt   = HISUI_FORM_VT[recentShinyCatch?.form_label];
     const specialVt = SPECIAL_FORM_VT[recentShinyCatch?.form_label];
     if (alolaVt) {
       const alolaUrl = getAlolanSprite(pokemon.number, alolaVt);
@@ -383,6 +422,9 @@ function renderCard(pokemon, icons = {}) {
     } else if (galarVt) {
       const galarUrl = getGalarianSprite(pokemon.number, galarVt);
       imgSrc = galarUrl ? normalizeVariantUrl(galarUrl) : spriteUrl(pokemon.number, true);
+    } else if (hisuiVt) {
+      const hisuiUrl = getHisuianSprite(pokemon.number, hisuiVt);
+      imgSrc = hisuiUrl ? normalizeVariantUrl(hisuiUrl) : spriteUrl(pokemon.number, true);
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || spriteUrl(pokemon.number, true);
     } else {
@@ -391,6 +433,7 @@ function renderCard(pokemon, icons = {}) {
   } else {
     const alolaVt   = ALOLA_FORM_VT[catch_?.form_label];
     const galarVt   = GALAR_FORM_VT[catch_?.form_label];
+    const hisuiVt   = HISUI_FORM_VT[catch_?.form_label];
     const specialVt = SPECIAL_FORM_VT[catch_?.form_label];
     if (alolaVt) {
       const alolaUrl = getAlolanSprite(pokemon.number, alolaVt);
@@ -398,6 +441,9 @@ function renderCard(pokemon, icons = {}) {
     } else if (galarVt) {
       const galarUrl = getGalarianSprite(pokemon.number, galarVt);
       imgSrc = galarUrl ? normalizeVariantUrl(galarUrl) : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
+    } else if (hisuiVt) {
+      const hisuiUrl = getHisuianSprite(pokemon.number, hisuiVt);
+      imgSrc = hisuiUrl ? normalizeVariantUrl(hisuiUrl) : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || catch_?.sprite_url || spriteUrl(pokemon.number, false);
     } else {
@@ -407,7 +453,7 @@ function renderCard(pokemon, icons = {}) {
 
   const seenFormsMap = seenMap[pokemon.number] || {};
   const SPECIAL_FORMS = [
-    { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female'] },
+    { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female'] },
     { key: 'baron',   icon: BARON_ICON_URL,   variants: ['baron', 'shiny_baron'] },
     { key: 'mega',    icon: MEGA_ICON_URL,    variants: ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y'] },
     { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
@@ -441,6 +487,8 @@ function renderCard(pokemon, icons = {}) {
     ['alolan_shiny_male', 'alolan_shiny_female'],
     ['galarian_male', 'galarian_female'],
     ['galarian_shiny_male', 'galarian_shiny_female'],
+    ['hisuian_male', 'hisuian_female'],
+    ['hisuian_shiny_male', 'hisuian_shiny_female'],
   ];
   const GENDER_VTS_FLAT = new Set(GENDER_GROUPS.flat());
 
@@ -455,6 +503,8 @@ function renderCard(pokemon, icons = {}) {
     ALOLA_FORM_VT[recentShinyCatch?.form_label],
     GALAR_FORM_VT[catch_?.form_label],
     GALAR_FORM_VT[recentShinyCatch?.form_label],
+    HISUI_FORM_VT[catch_?.form_label],
+    HISUI_FORM_VT[recentShinyCatch?.form_label],
     SPECIAL_FORM_VT[catch_?.form_label],
     SPECIAL_FORM_VT[recentShinyCatch?.form_label],
     ...(catch_?.is_shiny || recentShinyCatch ? ['shiny'] : []),
@@ -468,10 +518,12 @@ function renderCard(pokemon, icons = {}) {
     ...(genderMode !== 'any' ? ['alolan_male','alolan_female','alolan_shiny_male','alolan_shiny_female'] : []),
     'galarian','galarian_shiny',
     ...(genderMode !== 'any' ? ['galarian_male','galarian_female','galarian_shiny_male','galarian_shiny_female'] : []),
+    'hisuian','hisuian_shiny',
+    ...(genderMode !== 'any' ? ['hisuian_male','hisuian_female','hisuian_shiny_male','hisuian_shiny_female'] : []),
     'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
     'gigamax','shiny_gigamax',
     'troizepy','troizepy_shiny',
-    ...(genderMode === 'all' ? [...GENDER_VTS_FLAT].filter(vt => !vt.startsWith('alolan') && !vt.startsWith('galarian')) : []),
+    ...(genderMode === 'all' ? [...GENDER_VTS_FLAT].filter(vt => !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('hisuian')) : []),
   ]);
   const isVtOk = (vt) => {
     if (seenFormsMap[vt]?.status === 'owned' || catchCoveredVts.has(vt)) return true;
@@ -491,6 +543,12 @@ function renderCard(pokemon, icons = {}) {
     if (vt === 'galarian_shiny')
       return seenFormsMap['galarian_shiny_male']?.status === 'owned' || catchCoveredVts.has('galarian_shiny_male')
           || seenFormsMap['galarian_shiny_female']?.status === 'owned' || catchCoveredVts.has('galarian_shiny_female');
+    if (vt === 'hisuian')
+      return seenFormsMap['hisuian_male']?.status === 'owned' || catchCoveredVts.has('hisuian_male')
+          || seenFormsMap['hisuian_female']?.status === 'owned' || catchCoveredVts.has('hisuian_female');
+    if (vt === 'hisuian_shiny')
+      return seenFormsMap['hisuian_shiny_male']?.status === 'owned' || catchCoveredVts.has('hisuian_shiny_male')
+          || seenFormsMap['hisuian_shiny_female']?.status === 'owned' || catchCoveredVts.has('hisuian_shiny_female');
     return false;
   };
   const allVariantsOwned = !pokemonVMap
@@ -1057,6 +1115,12 @@ async function openModal(number) {
       case 'galarian_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + male + shiny;
       case 'galarian_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + female;
       case 'galarian_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + female + shiny;
+      case 'hisuian':              return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>`;
+      case 'hisuian_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>` + shiny;
+      case 'hisuian_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + male;
+      case 'hisuian_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + male + shiny;
+      case 'hisuian_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + female;
+      case 'hisuian_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + female + shiny;
       case 'troizepy':       return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
       case 'troizepy_shiny': return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>` + shiny;
       default: {
@@ -1137,7 +1201,7 @@ async function openModal(number) {
   function variantCard(v) {
     const status = getVariantStatus(p.number, v.variant_type);
     const meta   = VARIANT_STATUS_META[status];
-    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax', 'alolan_shiny', 'alolan_shiny_male', 'alolan_shiny_female', 'galarian_shiny', 'galarian_shiny_male', 'galarian_shiny_female', 'troizepy_shiny'].includes(v.variant_type);
+    const isShiny  = ['shiny', 'shiny_male', 'shiny_female', 'shiny_mega', 'shiny_mega_x', 'shiny_mega_y', 'shiny_gigamax', 'alolan_shiny', 'alolan_shiny_male', 'alolan_shiny_female', 'galarian_shiny', 'galarian_shiny_male', 'galarian_shiny_female', 'hisuian_shiny', 'hisuian_shiny_male', 'hisuian_shiny_female', 'troizepy_shiny'].includes(v.variant_type);
     const sparkles = isShiny
       ? `<span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
          <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
@@ -1174,6 +1238,7 @@ async function openModal(number) {
   const gigamaxVariants = variants.filter(v => ['gigamax', 'shiny_gigamax'].includes(v.variant_type));
   const alolanVariants   = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
   const galarianVariants = variants.filter(v => ['galarian', 'galarian_shiny', 'galarian_male', 'galarian_shiny_male', 'galarian_female', 'galarian_shiny_female'].includes(v.variant_type));
+  const hisuianVariants  = variants.filter(v => ['hisuian', 'hisuian_shiny', 'hisuian_male', 'hisuian_shiny_male', 'hisuian_female', 'hisuian_shiny_female'].includes(v.variant_type));
   const troizepyVariants = variants.filter(v => ['troizepy', 'troizepy_shiny'].includes(v.variant_type));
 
   const neutralBadge = `<span class="gender-badge male">${MALE_SVG}</span><span class="gender-badge female">${FEMALE_SVG}</span>`;
@@ -1267,6 +1332,11 @@ async function openModal(number) {
       id: 'galar', label: 'Forme de Galar',
       html: `<div class="variants-rows-wrapper"><div class="variants-grid">${galarianVariants.map(variantCard).join('')}</div></div>`,
       show: !!galarianVariants.length,
+    },
+    {
+      id: 'hisui', label: "Forme d'Hisui",
+      html: `<div class="variants-rows-wrapper"><div class="variants-grid">${hisuianVariants.map(variantCard).join('')}</div></div>`,
+      show: !!hisuianVariants.length,
     },
     {
       id: 'troizepy', label: 'Pichu Troizépi',
@@ -1583,10 +1653,10 @@ async function openModal(number) {
         ownedShiny = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'owned');
         seenShinyF = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'seen');
       } else if (isRegional) {
-        ownedNorm  = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) && !vt.includes('shiny') && d.status === 'owned');
-        seenNorm   = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) && !vt.includes('shiny') && d.status === 'seen');
-        ownedShiny = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) &&  vt.includes('shiny') && d.status === 'owned');
-        seenShinyF = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian')) &&  vt.includes('shiny') && d.status === 'seen');
+        ownedNorm  = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) && !vt.includes('shiny') && d.status === 'owned');
+        seenNorm   = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) && !vt.includes('shiny') && d.status === 'seen');
+        ownedShiny = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) &&  vt.includes('shiny') && d.status === 'owned');
+        seenShinyF = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) &&  vt.includes('shiny') && d.status === 'seen');
       } else if (col?.classList.contains('is-special-form')) {
         const sfKey = col.dataset.sfKey;
         if (sfKey) {
@@ -2061,6 +2131,63 @@ function renderDrawerFormsGalarian(variants, galarianSprite) {
   field.hidden = false;
 }
 
+function renderDrawerFormsHisuian(variants, hisuianSprite) {
+  const field = $('form-selector-field');
+  const grid  = $('form-grid');
+  if (!field || !grid) return;
+
+  const MALE_ICON    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const FEMALE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const UNISEXE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const MALE_SM      = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const FEMALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+  const UNISEXE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const SHINY_SM     = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+
+  const hisuiMaleV      = variants.find(v => v.variant_type === 'hisuian_male');
+  const hisuiFemaleV    = variants.find(v => v.variant_type === 'hisuian_female');
+  const hisuiShinyMaleV = variants.find(v => v.variant_type === 'hisuian_shiny_male');
+  const hisuiShinyFemV  = variants.find(v => v.variant_type === 'hisuian_shiny_female');
+  const hisuiV          = variants.find(v => v.variant_type === 'hisuian');
+  const hisuiShinyV     = variants.find(v => v.variant_type === 'hisuian_shiny');
+
+  const base      = hisuiV?.image_url      || hisuianSprite || null;
+  const baseShiny = hisuiShinyV?.image_url || base;
+  const entries = [
+    { label: 'Hisui Mâle',          displayLabel: 'Mâle',          variant_type: 'hisuian_male',         iconHtml: MALE_ICON,             sprite: hisuiMaleV?.image_url      || base      },
+    { label: 'Hisui Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'hisuian_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: hisuiShinyMaleV?.image_url || baseShiny },
+    { label: 'Hisui Femelle',       displayLabel: 'Femelle',       variant_type: 'hisuian_female',       iconHtml: FEMALE_ICON,           sprite: hisuiFemaleV?.image_url    || base      },
+    { label: 'Hisui Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'hisuian_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: hisuiShinyFemV?.image_url  || baseShiny },
+    { label: 'Hisui Unisexe',       displayLabel: 'Unisexe',       variant_type: 'hisuian',              iconHtml: UNISEXE_ICON,          sprite: base      },
+    { label: 'Hisui Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'hisuian_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
+    { label: 'Hisui Baron',         displayLabel: 'Baron',         variant_type: 'baron',                iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                                  sprite: base      },
+    { label: 'Hisui Baron Shiny',   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',          iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: baseShiny },
+  ];
+
+  grid.innerHTML = entries.map((e, i) => `
+    <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
+      <div class="form-opt-icon">${e.iconHtml}</div>
+      <span>${esc(e.displayLabel || e.label)}</span>
+    </button>`).join('');
+
+  drawerForms = [];
+
+  grid.querySelectorAll('.form-opt').forEach(btn =>
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('selected');
+      const entry = entries[parseInt(btn.dataset.idx)];
+      if (btn.classList.contains('selected')) {
+        if (!drawerForms.find(f => f.variant_type === entry.variant_type)) drawerForms.push(entry);
+        if (drawerMode === 'caught') selectDrawerForm(entry);
+      } else {
+        drawerForms = drawerForms.filter(f => f.variant_type !== entry.variant_type);
+      }
+    })
+  );
+
+  field.hidden = false;
+}
+
 function renderDrawerFormsSpecial(specialForm) {
   const field = $('form-selector-field');
   const grid  = $('form-grid');
@@ -2126,6 +2253,8 @@ function selectDrawerForm(v) {
       src = normalizeVariantUrl(drawerPokemon.alolanSprite);
     } else if (drawerPokemon.isGalarian && drawerPokemon.galarianSprite) {
       src = normalizeVariantUrl(drawerPokemon.galarianSprite);
+    } else if (drawerPokemon.isHisuian && drawerPokemon.hisuianSprite) {
+      src = normalizeVariantUrl(drawerPokemon.hisuianSprite);
     } else if (drawerPokemon.isSpecial && v.sprite) {
       src = normalizeVariantUrl(v.sprite);
     } else if (drawerShiny) {
@@ -2218,10 +2347,11 @@ function bindDrawerEvents() {
         if (!data?.length) { dropdown.hidden = true; return; }
 
         const nums = data.map(p => p.number);
-        const [allIcons, alolanRows, galarianRows, specialFormsData] = await Promise.all([
+        const [allIcons, alolanRows, galarianRows, hisuianRows, specialFormsData] = await Promise.all([
           fetchCardIcons(nums).catch(() => []),
           fetchAlolanVariantsForNumbers(nums).catch(() => []),
           fetchGalarianVariantsForNumbers(nums).catch(() => []),
+          fetchHisuianVariantsForNumbers(nums).catch(() => []),
           fetchSpecialFormsForNumbers(nums).catch(() => ({})),
         ]);
         const iconMap = {};
@@ -2236,26 +2366,32 @@ function bindDrawerEvents() {
         for (const r of alolanRows) alolanSpriteMap[r.pokemon_number] = r.image_url;
         const galarianSpriteMap = {};
         for (const r of galarianRows) galarianSpriteMap[r.pokemon_number] = r.image_url;
+        const hisuianSpriteMap = {};
+        for (const r of hisuianRows) hisuianSpriteMap[r.pokemon_number] = r.image_url;
 
-        // Construire la liste : Pokémon normal + entrée Alola + entrée Galar + entrées formes spéciales
+        // Construire la liste : Pokémon normal + entrées régionales + entrées formes spéciales
         const items = [];
         for (const p of data) {
-          items.push({ p, isAlola: false, isGalar: false, specialForm: null });
-          if (alolanSpriteMap[p.number])   items.push({ p, isAlola: true,  isGalar: false, specialForm: null });
-          if (galarianSpriteMap[p.number]) items.push({ p, isAlola: false, isGalar: true,  specialForm: null });
+          items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: null });
+          if (alolanSpriteMap[p.number])   items.push({ p, isAlola: true,  isGalar: false, isHisui: false, specialForm: null });
+          if (galarianSpriteMap[p.number]) items.push({ p, isAlola: false, isGalar: true,  isHisui: false, specialForm: null });
+          if (hisuianSpriteMap[p.number])  items.push({ p, isAlola: false, isGalar: false, isHisui: true,  specialForm: null });
           for (const form of Object.values(specialFormsData[p.number] || {})) {
-            items.push({ p, isAlola: false, isGalar: false, specialForm: form });
+            items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: form });
           }
         }
 
-        dropdown.innerHTML = items.map(({ p, isAlola, isGalar, specialForm }) => {
+        dropdown.innerHTML = items.map(({ p, isAlola, isGalar, isHisui, specialForm }) => {
           const ico          = iconMap[p.number];
-          const alolaSprite  = alolanSpriteMap[p.number]   || null;
+          const alolaSprite  = alolanSpriteMap[p.number]  || null;
           const galarSprite  = galarianSpriteMap[p.number] || null;
+          const hisuiSprite  = hisuianSpriteMap[p.number] || null;
           const src = isAlola
             ? (alolaSprite  ? normalizeVariantUrl(alolaSprite)  : spriteUrl(p.number, false))
             : isGalar
             ? (galarSprite  ? normalizeVariantUrl(galarSprite)  : spriteUrl(p.number, false))
+            : isHisui
+            ? (hisuiSprite  ? normalizeVariantUrl(hisuiSprite)  : spriteUrl(p.number, false))
             : specialForm
             ? (specialForm.image_url ? normalizeVariantUrl(specialForm.image_url) : spriteUrl(p.number, false))
             : (ico?.normal ? normalizeVariantUrl(ico.normal)  : spriteUrl(p.number, false));
@@ -2263,6 +2399,8 @@ function bindDrawerEvents() {
             ? `${p.name_fr} · Alola`
             : isGalar
             ? `${p.name_fr} · Galar`
+            : isHisui
+            ? `${p.name_fr} · Hisui`
             : specialForm
             ? `${p.name_fr} · ${specialForm.form_label_fr}`
             : p.name_fr;
@@ -2273,6 +2411,8 @@ function bindDrawerEvents() {
             data-alola-sprite="${esc(alolaSprite || '')}"
             data-is-galar="${isGalar ? '1' : '0'}"
             data-galar-sprite="${esc(galarSprite || '')}"
+            data-is-hisui="${isHisui ? '1' : '0'}"
+            data-hisui-sprite="${esc(hisuiSprite || '')}"
             data-special-form-key="${esc(specialForm?.form_key || '')}"
             data-special-form-label="${esc(specialForm?.form_label_fr || '')}">
             <img src="${esc(src)}" width="28" height="28" alt="" style="image-rendering:pixelated">
@@ -2289,6 +2429,8 @@ function bindDrawerEvents() {
             const alolaSprite    = btn.dataset.alolaSprite || null;
             const isGalar        = btn.dataset.isGalar === '1';
             const galarSprite    = btn.dataset.galarSprite || null;
+            const isHisui        = btn.dataset.isHisui === '1';
+            const hisuiSprite    = btn.dataset.hisuiSprite || null;
             const specialFormKey = btn.dataset.specialFormKey || null;
             const specialFormLbl = btn.dataset.specialFormLabel || null;
             const ico            = iconMap[num] || {};
@@ -2298,6 +2440,7 @@ function bindDrawerEvents() {
               iconNormal: ico.normal || null, iconShiny: ico.shiny || null,
               isAlolan: isAlola, alolanSprite: alolaSprite,
               isGalarian: isGalar, galarianSprite: galarSprite,
+              isHisuian: isHisui, hisuianSprite: hisuiSprite,
               isSpecial: !!specialFormKey, specialFormKey, specialFormLabel: specialFormLbl,
             };
 
@@ -2305,6 +2448,8 @@ function bindDrawerEvents() {
               ? `${name} · Alola`
               : isGalar
               ? `${name} · Galar`
+              : isHisui
+              ? `${name} · Hisui`
               : specialFormKey
               ? `${name} · ${specialFormLbl}`
               : name;
@@ -2313,6 +2458,8 @@ function bindDrawerEvents() {
               ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(num, false))
               : isGalar
               ? (galarSprite ? normalizeVariantUrl(galarSprite) : spriteUrl(num, false))
+              : isHisui
+              ? (hisuiSprite ? normalizeVariantUrl(hisuiSprite) : spriteUrl(num, false))
               : sfData?.image_url
               ? normalizeVariantUrl(sfData.image_url)
               : (ico.normal ? normalizeVariantUrl(ico.normal) : spriteUrl(num, false));
@@ -2337,8 +2484,10 @@ function bindDrawerEvents() {
             } else if (isGalar) {
               const variantData = await fetchVariants(num).catch(() => []);
               renderDrawerFormsGalarian(variantData, galarSprite);
+            } else if (isHisui) {
+              const variantData = await fetchVariants(num).catch(() => []);
+              renderDrawerFormsHisuian(variantData, hisuiSprite);
             } else if (specialFormKey && sfData) {
-              // Mettre à jour le cache local
               if (!specialFormsMap[num]) specialFormsMap[num] = {};
               specialFormsMap[num][specialFormKey] = sfData;
               renderDrawerFormsSpecial(sfData);
@@ -2406,7 +2555,7 @@ async function saveCatchFromMain() {
       closeCatchDrawer();
       if (!els.modalOverlay.hidden && currentModalPokemonNumber === savedSeenNum) {
         if (savedSeenVts.some(vt => vt.includes('mega'))) pendingIllusTab = 'Méga-Évolution';
-        else if (savedSeenVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian'))) pendingIllusTab = 'Formes régionales';
+        else if (savedSeenVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'))) pendingIllusTab = 'Formes régionales';
         else if (savedSeenVts.some(vt => vt.includes('gigamax'))) pendingIllusTab = 'Gigamax';
         openModal(savedSeenNum);
       }
@@ -2494,7 +2643,7 @@ async function saveCatchFromMain() {
   closeCatchDrawer();
   if (!els.modalOverlay.hidden && currentModalPokemonNumber === savedCatchNum) {
     if (savedCatchVts.some(vt => vt.includes('mega'))) pendingIllusTab = 'Méga-Évolution';
-    else if (savedCatchVts.some(vt => vt.startsWith('alolan'))) pendingIllusTab = 'Formes régionales';
+    else if (savedCatchVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'))) pendingIllusTab = 'Formes régionales';
     else if (savedCatchVts.some(vt => vt.includes('gigamax'))) pendingIllusTab = 'Gigamax';
     openModal(savedCatchNum);
   }
