@@ -225,6 +225,20 @@ async function fetchHisuianVariantsForNumbers(pokemonNumbers) {
 }
 
 /**
+ * Retourne les numéros de Pokémon dont au moins une forme régionale a can_be_baron = true.
+ */
+async function fetchRegionalBaronNumbers(pokemonNumbers) {
+  const client = getSupabaseClient();
+  if (!client || !pokemonNumbers.length) return [];
+  const { data } = await client
+    .from('pokemon_regional_forms')
+    .select('pokemon_number')
+    .eq('can_be_baron', true)
+    .in('pokemon_number', pokemonNumbers);
+  return (data || []).map(r => r.pokemon_number);
+}
+
+/**
  * Récupère les formes régionales (Alola, Galar…) pour une liste de numéros.
  * Tente d'inclure evolution_into_number ; retombe sur la requête de base si la colonne n'existe pas.
  */

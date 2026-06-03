@@ -67,6 +67,7 @@ let seenMap  = {};     // { [pokemon_number]: { [variant_type]: { is_shiny, spri
 let iconCache = {};    // { [pokemon_number]: { normal, shiny } }
 let variantMap = {};       // { [pokemon_number]: { [variant_type]: image_url } } — source de vérité pour sprites
 let specialFormsMap = {}; // { [pokemon_number]: { [form_key]: { form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny } } }
+let regionalBaronMap = {}; // { [pokemon_number]: true } — formes régionales ayant can_be_baron = true
 
 let currentModalPokemonNumber = null;
 let pendingIllusTab = null;
@@ -175,11 +176,13 @@ async function loadCatchesMap() {
     Promise.all([
       fetchVariantMap(allNums),
       fetchSpecialFormsForNumbers(allNums),
-    ]).then(([vMap, sfMap]) => {
+      fetchRegionalBaronNumbers(allNums),
+    ]).then(([vMap, sfMap, baronNums]) => {
       variantMap = vMap;
       specialFormsMap = sfMap;
-      allNums
-        .filter(n =>
+      regionalBaronMap = Object.fromEntries(baronNums.map(n => [n, true]));
+      const numsToRefresh = new Set([
+        ...allNums.filter(n =>
           ALOLA_FORM_VT[catchByNumber[n]?.form_label] ||
           ALOLA_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
           GALAR_FORM_VT[catchByNumber[n]?.form_label] ||
@@ -188,8 +191,10 @@ async function loadCatchesMap() {
           HISUI_FORM_VT[shinyCatchByNumber[n]?.form_label] ||
           SPECIAL_FORM_VT[catchByNumber[n]?.form_label] ||
           SPECIAL_FORM_VT[shinyCatchByNumber[n]?.form_label]
-        )
-        .forEach(n => updateCardAfterCatch(n));
+        ),
+        ...baronNums,
+      ]);
+      numsToRefresh.forEach(n => updateCardAfterCatch(n));
     }).catch(() => {});
   }
 }
@@ -563,8 +568,12 @@ function renderCard(pokemon, icons = {}) {
     return group.some(vt => seenFormsMap[vt]?.status === 'owned');
   });
 
+  // Une forme régionale (ex: Hisui) peut avoir can_be_baron=true même si le Pokémon de base ne peut pas être baron
+  const hasHisuianForms = Object.keys(seenFormsMap).some(vt => vt.startsWith('hisuian'));
+  const hisuiCanBeBaron = hasHisuianForms && !!regionalBaronMap[pokemon.number];
+  const requiresBaronForComplete = pokemon.can_be_baron !== false || hisuiCanBeBaron;
   const isComplete = strictOk
-    && (pokemon.can_be_baron === false
+    && (!requiresBaronForComplete
       ? allSeenOwned && allVariantsOwned && genderGroupsOk
       : baronStatus === 'owned')
     && formStatuses.every(f => !f.status || f.status === 'owned');
