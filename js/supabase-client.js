@@ -183,46 +183,22 @@ async function fetchVariantIcons(pokemonNumbers) {
 }
 
 /**
- * Récupère les variantes Alola (type 'alolan') pour une liste de numéros — utilisé dans la recherche drawer.
+ * Récupère les variantes d'un type régional donné pour une liste de numéros — utilisé dans la recherche drawer.
  */
-async function fetchAlolanVariantsForNumbers(pokemonNumbers) {
+async function _fetchVariantsByType(variantType, pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .eq('variant_type', 'alolan')
+    .eq('variant_type', variantType)
     .in('pokemon_number', pokemonNumbers);
   return data || [];
 }
 
-/**
- * Récupère les variantes Galar (type 'galarian') pour une liste de numéros — utilisé dans la recherche drawer.
- */
-async function fetchGalarianVariantsForNumbers(pokemonNumbers) {
-  const client = getSupabaseClient();
-  if (!client || !pokemonNumbers.length) return [];
-  const { data } = await client
-    .from('pokemon_variants')
-    .select('pokemon_number, variant_type, image_url')
-    .eq('variant_type', 'galarian')
-    .in('pokemon_number', pokemonNumbers);
-  return data || [];
-}
-
-/**
- * Récupère les variantes Hisui (type 'hisuian') pour une liste de numéros — utilisé dans la recherche drawer.
- */
-async function fetchHisuianVariantsForNumbers(pokemonNumbers) {
-  const client = getSupabaseClient();
-  if (!client || !pokemonNumbers.length) return [];
-  const { data } = await client
-    .from('pokemon_variants')
-    .select('pokemon_number, variant_type, image_url')
-    .eq('variant_type', 'hisuian')
-    .in('pokemon_number', pokemonNumbers);
-  return data || [];
-}
+async function fetchAlolanVariantsForNumbers(pokemonNumbers)   { return _fetchVariantsByType('alolan',   pokemonNumbers); }
+async function fetchGalarianVariantsForNumbers(pokemonNumbers) { return _fetchVariantsByType('galarian', pokemonNumbers); }
+async function fetchHisuianVariantsForNumbers(pokemonNumbers)  { return _fetchVariantsByType('hisuian',  pokemonNumbers); }
 
 /**
  * Retourne les numéros de Pokémon dont au moins une forme régionale a can_be_baron = true.

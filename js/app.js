@@ -52,6 +52,21 @@ const BARON_ICON_URL       = 'https://res.cloudinary.com/dkgfa4apm/image/upload/
 const MALE_SVG             = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
 const FEMALE_SVG           = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
 
+// Icônes colorées pour les sélecteurs de formes (drawer + journal)
+const ICON_MALE_LG   = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+const ICON_MALE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+const ICON_FEMALE_LG = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+const ICON_FEMALE_SM = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+const ICON_UNISEX_LG = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+const ICON_UNISEX_SM = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+const ICON_SHINY_SM  = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+const ICON_BARON_LG  = `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`;
+const ICON_BARON_XS  = `<img src="${BARON_ICON_URL}" width="22" height="22" alt="">`;
+const ICON_MEGA_LG   = `<img src="${MEGA_ICON_URL}" width="28" height="28" alt="">`;
+const ICON_MEGA_SM   = `<img src="${MEGA_ICON_URL}" width="22" height="22" alt="">`;
+const ICON_GMAX_LG   = `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`;
+const ICON_GMAX_SM   = `<img src="${GIGAMAX_ICON_URL}" width="22" height="22" alt="">`;
+
 // ── État ─────────────────────────────────────────────────────
 
 const state = {
@@ -1937,34 +1952,20 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
   const grid  = $('form-grid');
   if (!field || !grid) return;
 
-  const MALE_ICON     = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_ICON   = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-
   const maleVariant   = variants.find(v => v.variant_type === 'male');
   const femaleVariant = variants.find(v => v.variant_type === 'female');
 
-  const MALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_SM  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_SM = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SHINY_SM   = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
-
-  // Entrées fixes (toujours présentes pour tous les Pokémon)
   const entries = [
-    { label: 'Mâle',          variant_type: 'male',         iconHtml: MALE_ICON,                sprite: maleVariant?.image_url   || iconMap.normal || null },
-    { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: MALE_SM + SHINY_SM,       sprite: iconMap.shiny  || null },
-    { label: 'Femelle',       variant_type: 'female',       iconHtml: FEMALE_ICON,              sprite: femaleVariant?.image_url || iconMap.normal || null },
-    { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: FEMALE_SM + SHINY_SM,     sprite: iconMap.shiny  || null },
-    { label: 'Unisexe',       variant_type: 'normal',       iconHtml: UNISEXE_ICON,             sprite: iconMap.normal || null },
-    { label: 'Unisexe Shiny', variant_type: 'shiny',        iconHtml: UNISEXE_SM + SHINY_SM,    sprite: iconMap.shiny  || null },
-    { label: 'Baron',         variant_type: 'baron',        iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                              sprite: iconMap.normal || null },
-    { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: iconMap.normal || null },
+    { label: 'Mâle',          variant_type: 'male',         iconHtml: ICON_MALE_LG,                   sprite: maleVariant?.image_url   || iconMap.normal || null },
+    { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: ICON_MALE_SM + ICON_SHINY_SM,   sprite: iconMap.shiny  || null },
+    { label: 'Femelle',       variant_type: 'female',       iconHtml: ICON_FEMALE_LG,                 sprite: femaleVariant?.image_url || iconMap.normal || null },
+    { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
+    { label: 'Unisexe',       variant_type: 'normal',       iconHtml: ICON_UNISEX_LG,                 sprite: iconMap.normal || null },
+    { label: 'Unisexe Shiny', variant_type: 'shiny',        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
+    { label: 'Baron',         variant_type: 'baron',        iconHtml: ICON_BARON_LG,                  sprite: iconMap.normal || null },
+    { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: ICON_BARON_XS + ICON_SHINY_SM,  sprite: iconMap.normal || null },
   ];
 
-  // Mégas — toujours présents avec variante shiny (sprite si disponible en BDD)
-  const MEGA_SM  = `<img src="${MEGA_ICON_URL}"    width="22" height="22" alt="">`;
-  const GMAX_SM  = `<img src="${GIGAMAX_ICON_URL}" width="22" height="22" alt="">`;
-  const SHINY_SM2 = `<img src="${SHINY_ICON_URL}"  width="20" height="20" alt="">`;
   const megasWithImg = megas.filter(m => m.image_url);
   if (megasWithImg.length > 0) {
     for (const m of megasWithImg) {
@@ -1972,19 +1973,18 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
                     : m.name?.toLowerCase().includes(' y') ? 'mega_y' : 'mega';
       const vtShiny = vt === 'mega_x' ? 'shiny_mega_x' : vt === 'mega_y' ? 'shiny_mega_y' : 'shiny_mega';
       const label   = vt === 'mega_x' ? 'Méga-Évo. X' : vt === 'mega_y' ? 'Méga-Évo. Y' : 'Méga-Évolution';
-      entries.push({ label,                 variant_type: vt,      iconHtml: `<img src="${MEGA_ICON_URL}" width="28" height="28" alt="">`, sprite: m.image_url });
-      entries.push({ label: label+' Shiny', variant_type: vtShiny, iconHtml: MEGA_SM + SHINY_SM2, sprite: null });
+      entries.push({ label,                 variant_type: vt,      iconHtml: ICON_MEGA_LG,                  sprite: m.image_url });
+      entries.push({ label: label+' Shiny', variant_type: vtShiny, iconHtml: ICON_MEGA_SM + ICON_SHINY_SM, sprite: null });
     }
   } else {
-    entries.push({ label: 'Méga-Évolution',       variant_type: 'mega',       iconHtml: `<img src="${MEGA_ICON_URL}" width="28" height="28" alt="">`, sprite: null });
-    entries.push({ label: 'Méga-Évolution Shiny', variant_type: 'shiny_mega', iconHtml: MEGA_SM + SHINY_SM2, sprite: null });
+    entries.push({ label: 'Méga-Évolution',       variant_type: 'mega',       iconHtml: ICON_MEGA_LG,                  sprite: null });
+    entries.push({ label: 'Méga-Évolution Shiny', variant_type: 'shiny_mega', iconHtml: ICON_MEGA_SM + ICON_SHINY_SM, sprite: null });
   }
 
-  // Gigamax — toujours présent avec variante shiny (sprite si disponible en BDD)
   const gmaxV      = variants.find(v => v.variant_type === 'gigamax');
   const gmaxShinyV = variants.find(v => v.variant_type === 'shiny_gigamax');
-  entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`, sprite: gmaxV?.image_url      || null });
-  entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX_SM + SHINY_SM2,                                           sprite: gmaxShinyV?.image_url || null });
+  entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: ICON_GMAX_LG,                  sprite: gmaxV?.image_url      || null });
+  entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: ICON_GMAX_SM + ICON_SHINY_SM, sprite: gmaxShinyV?.image_url || null });
 
   // Pokémon exclusivement femelle : masquer les options Mâle et Unisexe
   const isFemaleOnly = !maleVariant && !!femaleVariant;
@@ -2032,37 +2032,33 @@ function renderDrawerForms(variants, iconMap, megas = [], preselectedVts = []) {
   field.hidden = false;
 }
 
-function renderDrawerFormsAlolan(variants, alolanSprite) {
+function renderDrawerFormsRegional(variants, sprite, regionId) {
   const field = $('form-selector-field');
   const grid  = $('form-grid');
   if (!field || !grid) return;
 
-  const MALE_ICON    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const MALE_SM      = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SHINY_SM     = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
+  const regionLabel = { alolan: 'Alola', galarian: 'Galar', hisuian: 'Hisui' }[regionId] || regionId;
+  const p = regionId;
 
-  const alolanMaleV      = variants.find(v => v.variant_type === 'alolan_male');
-  const alolanFemaleV    = variants.find(v => v.variant_type === 'alolan_female');
-  const alolanShinyMaleV = variants.find(v => v.variant_type === 'alolan_shiny_male');
-  const alolanShinyFemV  = variants.find(v => v.variant_type === 'alolan_shiny_female');
-  const alolanV          = variants.find(v => v.variant_type === 'alolan');
-  const alolanShinyV     = variants.find(v => v.variant_type === 'alolan_shiny');
+  const vMale      = variants.find(v => v.variant_type === `${p}_male`);
+  const vFemale    = variants.find(v => v.variant_type === `${p}_female`);
+  const vShinyMale = variants.find(v => v.variant_type === `${p}_shiny_male`);
+  const vShinyFem  = variants.find(v => v.variant_type === `${p}_shiny_female`);
+  const vBase      = variants.find(v => v.variant_type === p);
+  const vShiny     = variants.find(v => v.variant_type === `${p}_shiny`);
 
-  const base      = alolanV?.image_url      || alolanSprite || null;
-  const baseShiny = alolanShinyV?.image_url || base;
+  const base      = vBase?.image_url  || sprite || null;
+  const baseShiny = vShiny?.image_url || base;
+
   const entries = [
-    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: MALE_ICON,             sprite: alolanMaleV?.image_url      || base      },
-    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: alolanShinyMaleV?.image_url || baseShiny },
-    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: FEMALE_ICON,           sprite: alolanFemaleV?.image_url    || base      },
-    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: alolanShinyFemV?.image_url  || baseShiny },
-    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: UNISEXE_ICON,          sprite: base      },
-    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
-    { label: 'Alola Baron',         displayLabel: 'Baron',         variant_type: 'baron',               iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                                  sprite: base      },
-    { label: 'Alola Baron Shiny',   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',         iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: baseShiny },
+    { label: `${regionLabel} Mâle`,          displayLabel: 'Mâle',          variant_type: `${p}_male`,         iconHtml: ICON_MALE_LG,                   sprite: vMale?.image_url      || base      },
+    { label: `${regionLabel} Mâle Shiny`,    displayLabel: 'Mâle Shiny',    variant_type: `${p}_shiny_male`,   iconHtml: ICON_MALE_SM + ICON_SHINY_SM,   sprite: vShinyMale?.image_url || baseShiny },
+    { label: `${regionLabel} Femelle`,       displayLabel: 'Femelle',       variant_type: `${p}_female`,       iconHtml: ICON_FEMALE_LG,                 sprite: vFemale?.image_url    || base      },
+    { label: `${regionLabel} Femelle Shiny`, displayLabel: 'Femelle Shiny', variant_type: `${p}_shiny_female`, iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM, sprite: vShinyFem?.image_url  || baseShiny },
+    { label: `${regionLabel} Unisexe`,       displayLabel: 'Unisexe',       variant_type: p,                   iconHtml: ICON_UNISEX_LG,                 sprite: base      },
+    { label: `${regionLabel} Unisexe Shiny`, displayLabel: 'Unisexe Shiny', variant_type: `${p}_shiny`,        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: baseShiny },
+    { label: `${regionLabel} Baron`,         displayLabel: 'Baron',         variant_type: 'baron',             iconHtml: ICON_BARON_LG,                  sprite: base      },
+    { label: `${regionLabel} Baron Shiny`,   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',       iconHtml: ICON_BARON_XS + ICON_SHINY_SM,  sprite: baseShiny },
   ];
 
   grid.innerHTML = entries.map((e, i) => `
@@ -2089,135 +2085,19 @@ function renderDrawerFormsAlolan(variants, alolanSprite) {
   field.hidden = false;
 }
 
-function renderDrawerFormsGalarian(variants, galarianSprite) {
-  const field = $('form-selector-field');
-  const grid  = $('form-grid');
-  if (!field || !grid) return;
-
-  const MALE_ICON    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const MALE_SM      = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SHINY_SM     = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
-
-  const galarMaleV      = variants.find(v => v.variant_type === 'galarian_male');
-  const galarFemaleV    = variants.find(v => v.variant_type === 'galarian_female');
-  const galarShinyMaleV = variants.find(v => v.variant_type === 'galarian_shiny_male');
-  const galarShinyFemV  = variants.find(v => v.variant_type === 'galarian_shiny_female');
-  const galarV          = variants.find(v => v.variant_type === 'galarian');
-  const galarShinyV     = variants.find(v => v.variant_type === 'galarian_shiny');
-
-  const base      = galarV?.image_url      || galarianSprite || null;
-  const baseShiny = galarShinyV?.image_url || base;
-  const entries = [
-    { label: 'Galar Mâle',          displayLabel: 'Mâle',          variant_type: 'galarian_male',         iconHtml: MALE_ICON,             sprite: galarMaleV?.image_url      || base      },
-    { label: 'Galar Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'galarian_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: galarShinyMaleV?.image_url || baseShiny },
-    { label: 'Galar Femelle',       displayLabel: 'Femelle',       variant_type: 'galarian_female',       iconHtml: FEMALE_ICON,           sprite: galarFemaleV?.image_url    || base      },
-    { label: 'Galar Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'galarian_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: galarShinyFemV?.image_url  || baseShiny },
-    { label: 'Galar Unisexe',       displayLabel: 'Unisexe',       variant_type: 'galarian',              iconHtml: UNISEXE_ICON,          sprite: base      },
-    { label: 'Galar Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'galarian_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
-    { label: 'Galar Baron',         displayLabel: 'Baron',         variant_type: 'baron',                 iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                                  sprite: base      },
-    { label: 'Galar Baron Shiny',   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',           iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: baseShiny },
-  ];
-
-  grid.innerHTML = entries.map((e, i) => `
-    <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
-      <div class="form-opt-icon">${e.iconHtml}</div>
-      <span>${esc(e.displayLabel || e.label)}</span>
-    </button>`).join('');
-
-  drawerForms = [];
-
-  grid.querySelectorAll('.form-opt').forEach(btn =>
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selected');
-      const entry = entries[parseInt(btn.dataset.idx)];
-      if (btn.classList.contains('selected')) {
-        if (!drawerForms.find(f => f.variant_type === entry.variant_type)) drawerForms.push(entry);
-        if (drawerMode === 'caught') selectDrawerForm(entry);
-      } else {
-        drawerForms = drawerForms.filter(f => f.variant_type !== entry.variant_type);
-      }
-    })
-  );
-
-  field.hidden = false;
-}
-
-function renderDrawerFormsHisuian(variants, hisuianSprite) {
-  const field = $('form-selector-field');
-  const grid  = $('form-grid');
-  if (!field || !grid) return;
-
-  const MALE_ICON    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_ICON  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const MALE_SM      = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_SM    = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const UNISEXE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SHINY_SM     = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
-
-  const hisuiMaleV      = variants.find(v => v.variant_type === 'hisuian_male');
-  const hisuiFemaleV    = variants.find(v => v.variant_type === 'hisuian_female');
-  const hisuiShinyMaleV = variants.find(v => v.variant_type === 'hisuian_shiny_male');
-  const hisuiShinyFemV  = variants.find(v => v.variant_type === 'hisuian_shiny_female');
-  const hisuiV          = variants.find(v => v.variant_type === 'hisuian');
-  const hisuiShinyV     = variants.find(v => v.variant_type === 'hisuian_shiny');
-
-  const base      = hisuiV?.image_url      || hisuianSprite || null;
-  const baseShiny = hisuiShinyV?.image_url || base;
-  const entries = [
-    { label: 'Hisui Mâle',          displayLabel: 'Mâle',          variant_type: 'hisuian_male',         iconHtml: MALE_ICON,             sprite: hisuiMaleV?.image_url      || base      },
-    { label: 'Hisui Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'hisuian_shiny_male',   iconHtml: MALE_SM + SHINY_SM,    sprite: hisuiShinyMaleV?.image_url || baseShiny },
-    { label: 'Hisui Femelle',       displayLabel: 'Femelle',       variant_type: 'hisuian_female',       iconHtml: FEMALE_ICON,           sprite: hisuiFemaleV?.image_url    || base      },
-    { label: 'Hisui Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'hisuian_shiny_female', iconHtml: FEMALE_SM + SHINY_SM,  sprite: hisuiShinyFemV?.image_url  || baseShiny },
-    { label: 'Hisui Unisexe',       displayLabel: 'Unisexe',       variant_type: 'hisuian',              iconHtml: UNISEXE_ICON,          sprite: base      },
-    { label: 'Hisui Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'hisuian_shiny',        iconHtml: UNISEXE_SM + SHINY_SM, sprite: baseShiny },
-    { label: 'Hisui Baron',         displayLabel: 'Baron',         variant_type: 'baron',                iconHtml: `<img src="${BARON_ICON_URL}" width="28" height="28" alt="">`,                                                                                  sprite: base      },
-    { label: 'Hisui Baron Shiny',   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',          iconHtml: `<img src="${BARON_ICON_URL}" width="22" height="22" alt=""><img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`, sprite: baseShiny },
-  ];
-
-  grid.innerHTML = entries.map((e, i) => `
-    <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
-      <div class="form-opt-icon">${e.iconHtml}</div>
-      <span>${esc(e.displayLabel || e.label)}</span>
-    </button>`).join('');
-
-  drawerForms = [];
-
-  grid.querySelectorAll('.form-opt').forEach(btn =>
-    btn.addEventListener('click', () => {
-      btn.classList.toggle('selected');
-      const entry = entries[parseInt(btn.dataset.idx)];
-      if (btn.classList.contains('selected')) {
-        if (!drawerForms.find(f => f.variant_type === entry.variant_type)) drawerForms.push(entry);
-        if (drawerMode === 'caught') selectDrawerForm(entry);
-      } else {
-        drawerForms = drawerForms.filter(f => f.variant_type !== entry.variant_type);
-      }
-    })
-  );
-
-  field.hidden = false;
-}
+function renderDrawerFormsAlolan(variants, sprite)   { renderDrawerFormsRegional(variants, sprite, 'alolan'); }
+function renderDrawerFormsGalarian(variants, sprite) { renderDrawerFormsRegional(variants, sprite, 'galarian'); }
+function renderDrawerFormsHisuian(variants, sprite)  { renderDrawerFormsRegional(variants, sprite, 'hisuian'); }
 
 function renderDrawerFormsSpecial(specialForm) {
   const field = $('form-selector-field');
   const grid  = $('form-grid');
   if (!field || !grid) return;
 
-  const MALE_ICON   = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const MALE_SM     = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const FEMALE_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const FEMALE_SM   = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const SHINY_SM    = `<img src="${SHINY_ICON_URL}" width="20" height="20" alt="">`;
-
   const isMale     = specialForm.form_group === 'Pikachu Casquette';
   const isGendered = specialForm.form_group === 'Pikachu Partenaire';
-  const ICON    = isMale ? MALE_ICON   : FEMALE_ICON;
-  const ICON_SM = isMale ? MALE_SM     : FEMALE_SM;
+  const ICON    = isMale ? ICON_MALE_LG   : ICON_FEMALE_LG;
+  const ICON_SM = isMale ? ICON_MALE_SM   : ICON_FEMALE_SM;
   const genderLabel = isMale ? 'Mâle' : 'Femelle';
 
   const label   = specialForm.form_label_fr;
@@ -2225,13 +2105,13 @@ function renderDrawerFormsSpecial(specialForm) {
   const vtShiny = specialForm.form_key + '_shiny';
 
   const entries = isGendered ? [
-    { label: label,            displayLabel: 'Mâle',         variant_type: vt,                      iconHtml: MALE_ICON,            sprite: specialForm.image_url                               || null },
-    { label: label + ' Shiny', displayLabel: 'Mâle Shiny',   variant_type: vtShiny,                 iconHtml: MALE_SM   + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
-    { label: label,            displayLabel: 'Femelle',       variant_type: vt      + '_female',     iconHtml: FEMALE_ICON,          sprite: specialForm.image_url                               || null },
-    { label: label + ' Shiny', displayLabel: 'Femelle Shiny', variant_type: vtShiny + '_female',     iconHtml: FEMALE_SM + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+    { label: label,            displayLabel: 'Mâle',         variant_type: vt,                      iconHtml: ICON_MALE_LG,                  sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny', displayLabel: 'Mâle Shiny',   variant_type: vtShiny,                 iconHtml: ICON_MALE_SM + ICON_SHINY_SM,  sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+    { label: label,            displayLabel: 'Femelle',       variant_type: vt      + '_female',     iconHtml: ICON_FEMALE_LG,                sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny', displayLabel: 'Femelle Shiny', variant_type: vtShiny + '_female',     iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM,sprite: specialForm.image_url_shiny || specialForm.image_url || null },
   ] : [
-    { label: label,            displayLabel: genderLabel,            variant_type: vt,      iconHtml: ICON,               sprite: specialForm.image_url                               || null },
-    { label: label + ' Shiny', displayLabel: genderLabel + ' Shiny', variant_type: vtShiny, iconHtml: ICON_SM + SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+    { label: label,            displayLabel: genderLabel,            variant_type: vt,      iconHtml: ICON,                     sprite: specialForm.image_url                               || null },
+    { label: label + ' Shiny', displayLabel: genderLabel + ' Shiny', variant_type: vtShiny, iconHtml: ICON_SM + ICON_SHINY_SM,  sprite: specialForm.image_url_shiny || specialForm.image_url || null },
   ];
 
   grid.innerHTML = entries.map((e, i) => `

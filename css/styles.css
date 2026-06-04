@@ -1711,18 +1711,6 @@ body {
   text-shadow: none;
 }
 
-.evo-condition-item.is-trade::before {
-  background: linear-gradient(135deg, #111111, #888888, #111111);
-}
-.evo-condition-item.is-trade .evo-condition {
-  color: #111111;
-  text-shadow: none;
-}
-.evo-condition-item.is-trade.evo-condition--unseen::before,
-.evo-condition-item.is-trade.evo-condition--seen::before {
-  background: linear-gradient(135deg, #111111, #888888, #111111);
-}
-
 .evo-condition.is-kings-rock {
   color: #e0ce3a;
   border: 1px solid transparent;
@@ -2134,6 +2122,19 @@ body {
 .evo-condition-item.is-stone-water.evo-condition--unseen::before,
 .evo-condition-item.is-stone-water.evo-condition--seen::before {
   background: linear-gradient(135deg, #433690, #967ef7, #6d96c8, #4b4bbe, #bcdefc, #ffffff);
+}
+
+/* Échange */
+.evo-condition-item.is-trade::before {
+  background: linear-gradient(135deg, #111111, #888888, #111111);
+}
+.evo-condition-item.is-trade .evo-condition {
+  color: #111111;
+  text-shadow: none;
+}
+.evo-condition-item.is-trade.evo-condition--unseen::before,
+.evo-condition-item.is-trade.evo-condition--seen::before {
+  background: linear-gradient(135deg, #111111, #888888, #111111);
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */

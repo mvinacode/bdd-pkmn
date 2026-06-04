@@ -44,9 +44,10 @@ const BALLS = [
   { name: 'Origine Ball',          slug: 'origine-ball',        customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779899131/origine_ball_f0h7ap.png' },
 ];
 
+const BALL_MAP = Object.fromEntries(BALLS.map(b => [b.slug, b]));
+
 function ballUrl(slug) {
-  const custom = BALLS.find(b => b.slug === slug)?.customUrl;
-  return custom || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${slug}.png`;
+  return BALL_MAP[slug]?.customUrl || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${slug}.png`;
 }
 
 function spriteUrl(number, shiny) {

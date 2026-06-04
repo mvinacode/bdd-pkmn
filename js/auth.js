@@ -7,7 +7,15 @@ async function initAuth() {
   const client = getSupabaseClient();
   if (!client) { window.location.href = 'login.html'; return false; }
 
-  const { data: { session } } = await client.auth.getSession();
+  let session;
+  try {
+    const { data } = await client.auth.getSession();
+    session = data.session;
+  } catch (e) {
+    console.error('[Auth] getSession failed:', e);
+    window.location.href = 'login.html';
+    return false;
+  }
   if (!session?.user) {
     window.location.href = 'login.html';
     return false;
