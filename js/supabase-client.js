@@ -439,7 +439,7 @@ export async function updateCatchesBySession(sessionId, updates) {
 /**
  * Supprime toutes les captures d'une session (même session_id).
  */
-export export async function deleteCatchesBySession(sessionId) {
+export async function deleteCatchesBySession(sessionId) {
   const client = getSupabaseClient();
   if (!client) return { error: { message: 'Supabase non configuré' } };
   const { error } = await client.from('catches').delete().eq('session_id', sessionId);
