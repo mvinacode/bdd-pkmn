@@ -21,6 +21,7 @@ async function initAuth() {
     document.body.dataset.allFormsAnim = prefs.allFormsAnim;
   }
   window._strictComplete = prefs.strictComplete === true;
+  window._requireAllFormsForComplete = prefs.requireAllFormsForComplete === true;
 
   const emailEl = document.getElementById('user-email');
   if (emailEl) emailEl.textContent = session.user.email;
