@@ -1702,6 +1702,27 @@ body {
 }
 .evo-condition.is-stone-water::after { content: none; }
 
+.evo-condition.is-trade {
+  color: #111111;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(210,210,210,0.92), rgba(210,210,210,0.92)) padding-box,
+    linear-gradient(135deg, #111111, #888888, #111111) border-box;
+  text-shadow: none;
+}
+
+.evo-condition-item.is-trade::before {
+  background: linear-gradient(135deg, #111111, #888888, #111111);
+}
+.evo-condition-item.is-trade .evo-condition {
+  color: #111111;
+  text-shadow: none;
+}
+.evo-condition-item.is-trade.evo-condition--unseen::before,
+.evo-condition-item.is-trade.evo-condition--seen::before {
+  background: linear-gradient(135deg, #111111, #888888, #111111);
+}
+
 .evo-condition.is-kings-rock {
   color: #e0ce3a;
   border: 1px solid transparent;
