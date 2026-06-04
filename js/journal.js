@@ -90,10 +90,21 @@ function formLabelToVariantType(label) {
     'Mâle':    'male',            'Mâle Shiny':    'shiny_male',
     'Femelle': 'female',          'Femelle Shiny': 'shiny_female',
     'Baron':   'baron',           'Baron Shiny':   'shiny_baron',
-    'Alola':              'alolan',       'Alola Shiny':        'alolan_shiny',
-    'Alola Unisexe':      'alolan',       'Alola Unisexe Shiny': 'alolan_shiny',
-    'Alola Mâle':         'alolan_male',  'Alola Mâle Shiny':   'alolan_shiny_male',
-    'Alola Femelle':      'alolan_female','Alola Femelle Shiny': 'alolan_shiny_female',
+    'Alola':              'alolan',            'Alola Shiny':             'alolan_shiny',
+    'Alola Unisexe':      'alolan',            'Alola Unisexe Shiny':    'alolan_shiny',
+    'Alola Mâle':         'alolan_male',       'Alola Mâle Shiny':       'alolan_shiny_male',
+    'Alola Femelle':      'alolan_female',     'Alola Femelle Shiny':    'alolan_shiny_female',
+    'Alola Baron':        'baron',             'Alola Baron Shiny':      'shiny_baron',
+    'Galar':              'galarian',          'Galar Shiny':            'galarian_shiny',
+    'Galar Unisexe':      'galarian',          'Galar Unisexe Shiny':    'galarian_shiny',
+    'Galar Mâle':         'galarian_male',     'Galar Mâle Shiny':       'galarian_shiny_male',
+    'Galar Femelle':      'galarian_female',   'Galar Femelle Shiny':    'galarian_shiny_female',
+    'Galar Baron':        'baron',             'Galar Baron Shiny':      'shiny_baron',
+    'Hisui':              'hisuian',           'Hisui Shiny':            'hisuian_shiny',
+    'Hisui Unisexe':      'hisuian',           'Hisui Unisexe Shiny':    'hisuian_shiny',
+    'Hisui Mâle':         'hisuian_male',      'Hisui Mâle Shiny':       'hisuian_shiny_male',
+    'Hisui Femelle':      'hisuian_female',    'Hisui Femelle Shiny':    'hisuian_shiny_female',
+    'Hisui Baron':        'baron',             'Hisui Baron Shiny':      'shiny_baron',
     'Méga-Évolution':       'mega',       'Méga-Évolution Shiny':       'shiny_mega',
     'Méga-Évo. X':          'mega_x',     'Méga-Évo. X Shiny':          'shiny_mega_x',
     'Méga-Évo. Y':          'mega_y',     'Méga-Évo. Y Shiny':          'shiny_mega_y',
@@ -352,31 +363,38 @@ function buildFormEntries(variants, megas, iconMap) {
   return entries;
 }
 
-function buildFormEntriesAlolan(variants, iconMap) {
+function buildFormEntriesRegional(variants, iconMap, regionId) {
   const M26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
   const F26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
   const U26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
   const M20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
   const F20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
   const U20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SH20 = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
+  const SH20  = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
+  const BAR28 = `<img src="${_BARON_URL}" width="28" height="28" alt="">`;
+  const BAR22 = `<img src="${_BARON_URL}" width="22" height="22" alt="">`;
 
-  const alolanV          = variants.find(v => v.variant_type === 'alolan');
-  const alolanShinyV     = variants.find(v => v.variant_type === 'alolan_shiny');
-  const alolanMaleV      = variants.find(v => v.variant_type === 'alolan_male');
-  const alolanFemaleV    = variants.find(v => v.variant_type === 'alolan_female');
-  const alolanShinyMaleV = variants.find(v => v.variant_type === 'alolan_shiny_male');
-  const alolanShinyFemV  = variants.find(v => v.variant_type === 'alolan_shiny_female');
+  const regionLabel = { alolan: 'Alola', galarian: 'Galar', hisuian: 'Hisui' }[regionId];
+  const p = regionId;
 
-  const base      = alolanV?.image_url      || iconMap.normal || null;
-  const baseShiny = alolanShinyV?.image_url || base;
+  const vMale      = variants.find(v => v.variant_type === `${p}_male`);
+  const vFemale    = variants.find(v => v.variant_type === `${p}_female`);
+  const vShinyMale = variants.find(v => v.variant_type === `${p}_shiny_male`);
+  const vShinyFem  = variants.find(v => v.variant_type === `${p}_shiny_female`);
+  const vBase      = variants.find(v => v.variant_type === p);
+  const vShiny     = variants.find(v => v.variant_type === `${p}_shiny`);
+
+  const base      = vBase?.image_url  || iconMap.normal || null;
+  const baseShiny = vShiny?.image_url || base;
   return [
-    { label: 'Alola Mâle',          displayLabel: 'Mâle',          variant_type: 'alolan_male',         iconHtml: M26,        sprite: alolanMaleV?.image_url      || base      },
-    { label: 'Alola Mâle Shiny',    displayLabel: 'Mâle Shiny',    variant_type: 'alolan_shiny_male',   iconHtml: M20 + SH20, sprite: alolanShinyMaleV?.image_url || baseShiny },
-    { label: 'Alola Femelle',       displayLabel: 'Femelle',       variant_type: 'alolan_female',       iconHtml: F26,        sprite: alolanFemaleV?.image_url    || base      },
-    { label: 'Alola Femelle Shiny', displayLabel: 'Femelle Shiny', variant_type: 'alolan_shiny_female', iconHtml: F20 + SH20, sprite: alolanShinyFemV?.image_url  || baseShiny },
-    { label: 'Alola Unisexe',       displayLabel: 'Unisexe',       variant_type: 'alolan',              iconHtml: U26,        sprite: base      },
-    { label: 'Alola Unisexe Shiny', displayLabel: 'Unisexe Shiny', variant_type: 'alolan_shiny',        iconHtml: U20 + SH20, sprite: baseShiny },
+    { label: `${regionLabel} Mâle`,          displayLabel: 'Mâle',          variant_type: `${p}_male`,         iconHtml: M26,        sprite: vMale?.image_url      || base      },
+    { label: `${regionLabel} Mâle Shiny`,    displayLabel: 'Mâle Shiny',    variant_type: `${p}_shiny_male`,   iconHtml: M20 + SH20, sprite: vShinyMale?.image_url || baseShiny },
+    { label: `${regionLabel} Femelle`,       displayLabel: 'Femelle',       variant_type: `${p}_female`,       iconHtml: F26,        sprite: vFemale?.image_url    || base      },
+    { label: `${regionLabel} Femelle Shiny`, displayLabel: 'Femelle Shiny', variant_type: `${p}_shiny_female`, iconHtml: F20 + SH20, sprite: vShinyFem?.image_url  || baseShiny },
+    { label: `${regionLabel} Unisexe`,       displayLabel: 'Unisexe',       variant_type: p,                   iconHtml: U26,        sprite: base      },
+    { label: `${regionLabel} Unisexe Shiny`, displayLabel: 'Unisexe Shiny', variant_type: `${p}_shiny`,        iconHtml: U20 + SH20, sprite: baseShiny },
+    { label: `${regionLabel} Baron`,         displayLabel: 'Baron',         variant_type: 'baron',             iconHtml: BAR28,      sprite: base      },
+    { label: `${regionLabel} Baron Shiny`,   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',       iconHtml: BAR22+SH20, sprite: baseShiny },
   ];
 }
 
@@ -530,10 +548,14 @@ function buildEditModal() {
     // 2. Synchroniser les formes (diff ajout / suppression)
     if (_formEntries.length > 0) {
       const selectedEntries = selectedBtns.map(b => _formEntries[parseInt(b.dataset.idx)]);
-      // 'Alola' (ancien format DB) et 'Alola Unisexe' sont équivalents
+      // Normalise les labels "Unisexe" stockés sous la forme courte (ex: 'Alola' → 'Alola Unisexe')
       const normLabel = l => {
-        if (l === 'Alola') return 'Alola Unisexe';
+        if (l === 'Alola')       return 'Alola Unisexe';
         if (l === 'Alola Shiny') return 'Alola Unisexe Shiny';
+        if (l === 'Galar')       return 'Galar Unisexe';
+        if (l === 'Galar Shiny') return 'Galar Unisexe Shiny';
+        if (l === 'Hisui')       return 'Hisui Unisexe';
+        if (l === 'Hisui Shiny') return 'Hisui Unisexe Shiny';
         return l;
       };
       const origLabels = new Set(_editSessionForms.map(f => normLabel(f.form_label)));
@@ -660,19 +682,27 @@ async function loadModalFormGrid(session) {
     shiny:  spriteUrl(session.pokemon_number, true),
   };
 
-  const isAlolanSession  = session.forms.some(f => formLabelToVariantType(f.form_label)?.startsWith('alolan'));
-  const specialFormKey   = (() => {
+  // Détecte la région par le préfixe du form_label (couvre aussi "Alola Baron", "Galar Baron", etc.)
+  const region = (() => {
+    for (const f of session.forms) {
+      if (f.form_label?.startsWith('Alola')) return 'alolan';
+      if (f.form_label?.startsWith('Galar')) return 'galarian';
+      if (f.form_label?.startsWith('Hisui')) return 'hisuian';
+    }
+    return null;
+  })();
+  const specialFormKey = region ? null : (() => {
     for (const f of session.forms) {
       const vt = formLabelToVariantType(f.form_label);
-      if (!vt || vt.startsWith('alolan')) continue;
+      if (!vt) continue;
       const key = vt.endsWith('_shiny') ? vt.slice(0, -6) : vt;
       if (specialFormsMap[session.pokemon_number]?.[key]) return key;
     }
     return null;
   })();
   const sfEntry = specialFormKey ? specialFormsMap[session.pokemon_number]?.[specialFormKey] : null;
-  _formEntries = isAlolanSession
-    ? buildFormEntriesAlolan(variantData, iconMap)
+  _formEntries = region
+    ? buildFormEntriesRegional(variantData, iconMap, region)
     : sfEntry
     ? buildFormEntriesSpecial(sfEntry)
     : buildFormEntries(variantData, megaData, iconMap);
