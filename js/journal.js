@@ -1,6 +1,11 @@
-/**
- * JOURNAL.JS — Page journal des captures (une entrée par session de sauvegarde)
- */
+import { BALLS, GAMES, ballUrl, spriteUrl, esc, getOwnerUuid } from './utils.js';
+import {
+  fetchCatches, fetchVariantMap, fetchSpecialFormsForNumbers,
+  fetchVariants, fetchMegaEvolutions, insertCatch, deleteCatch,
+  updateCatchesBySession, deleteCatchesBySession,
+  deleteSeenByVariantType, upsertSeen,
+} from './supabase-client.js';
+import { initAuth } from './auth.js';
 
 const $ = id => document.getElementById(id);
 

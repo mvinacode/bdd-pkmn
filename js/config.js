@@ -1,4 +1,4 @@
-const CONFIG = {
+export const CONFIG = {
   // ── Supabase ───────────────────────────────────────────────
   SUPABASE_URL:      'https://mymkrfqpluimluehorby.supabase.co',
   SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15bWtyZnFwbHVpbWx1ZWhvcmJ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwODc5OTMsImV4cCI6MjA5MzY2Mzk5M30.hA5QtNdblMK0sirWdRNKjkhYJ_KtI1I6vY7WQuqlYPE',
@@ -23,7 +23,7 @@ const CONFIG = {
 //
 // Remplace les UUIDs ci-dessous par les vrais IDs visibles dans
 // Supabase Dashboard → Authentication → Users → colonne "UID"
-const USER_PREFS = {
+export const USER_PREFS = {
   '2005f2e9-6df1-48b7-9420-2a5457d43e45': { genderFormsMode: 'all', strictComplete: true, requireAllFormsForComplete: true }, // Biche
   'efd681cf-9264-492d-bd59-a624d6f9668e': { genderFormsMode: 'any', allFormsAnim: 'rainbow' }, // Sœur
 };
@@ -33,7 +33,7 @@ const USER_PREFS = {
  * Format Cloudinary : /image/upload/{transformations}/pokemon/{number}.png
  * Fallback : artwork officiel PokeAPI (GitHub raw).
  */
-function getPokemonImageUrl(number, { width = 200 } = {}) {
+export function getPokemonImageUrl(number, { width = 200 } = {}) {
   const source = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png`;
   if (CONFIG.CLOUDINARY_CLOUD === 'VOTRE_CLOUD_NAME') return source;
   // Mode "fetch" Cloudinary : proxy + optimisation automatique (f_auto, q_auto)
@@ -45,7 +45,7 @@ function getPokemonImageUrl(number, { width = 200 } = {}) {
 /**
  * Renvoie vrai si Supabase est correctement configuré.
  */
-function isSupabaseConfigured() {
+export function isSupabaseConfigured() {
   return (
     CONFIG.SUPABASE_URL !== 'VOTRE_SUPABASE_URL' &&
     CONFIG.SUPABASE_ANON_KEY !== 'VOTRE_SUPABASE_ANON_KEY' &&

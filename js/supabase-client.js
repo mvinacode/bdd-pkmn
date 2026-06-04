@@ -1,12 +1,8 @@
-/**
- * SUPABASE CLIENT
- * Wrapper autour du SDK Supabase — toutes les requêtes DB passent ici.
- * La RLS (Row Level Security) est activée côté Supabase : lecture seule pour les anonymes.
- */
+import { CONFIG, isSupabaseConfigured } from './config.js';
 
 let _supabase = null;
 
-function getSupabaseClient() {
+export function getSupabaseClient() {
   if (!_supabase) {
     if (!isSupabaseConfigured()) return null;
     try {
@@ -31,7 +27,7 @@ function normalizePokemon(p) {
 /**
  * Récupère une page de Pokémon avec filtres.
  */
-async function fetchPokemon({ from = 0, to = 39, search = '', gen = null, type = null, sortBy = 'number', capturedOnly = false, capturedNumbers = [] } = {}) {
+export async function fetchPokemon({ from = 0, to = 39, search = '', gen = null, type = null, sortBy = 'number', capturedOnly = false, capturedNumbers = [] } = {}) {
   const client = getSupabaseClient();
   if (!client) return { data: [], count: 0, error: { message: 'Supabase non configuré' } };
 
@@ -86,7 +82,7 @@ async function fetchPokemon({ from = 0, to = 39, search = '', gen = null, type =
 /**
  * Récupère un seul Pokémon par son numéro national.
  */
-async function fetchPokemonByNumber(number) {
+export async function fetchPokemonByNumber(number) {
   const client = getSupabaseClient();
   if (!client) return { data: null, error: { message: 'Supabase non configuré' } };
 
@@ -112,7 +108,7 @@ async function fetchPokemonByNumber(number) {
  * Récupère la chaîne d'évolution complète autour d'un Pokémon.
  * Retourne : { root, chain[] } où chain est un tableau de tableaux (pour les branches).
  */
-async function fetchEvolutionChain(pokemon) {
+export async function fetchEvolutionChain(pokemon) {
   const client = getSupabaseClient();
   if (!client) return null;
 
@@ -148,7 +144,7 @@ async function fetchEvolutionChain(pokemon) {
 /**
  * Récupère les icônes normale + shiny pour les cartes de la grille principale.
  */
-async function fetchCardIcons(pokemonNumbers) {
+export async function fetchCardIcons(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
@@ -162,7 +158,7 @@ async function fetchCardIcons(pokemonNumbers) {
 /**
  * Récupère l'icône normale (variant_type='normal') pour une liste de numéros.
  */
-async function fetchVariantIcons(pokemonNumbers) {
+export async function fetchVariantIcons(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
@@ -196,14 +192,14 @@ async function _fetchVariantsByType(variantType, pokemonNumbers) {
   return data || [];
 }
 
-async function fetchAlolanVariantsForNumbers(pokemonNumbers)   { return _fetchVariantsByType('alolan',   pokemonNumbers); }
-async function fetchGalarianVariantsForNumbers(pokemonNumbers) { return _fetchVariantsByType('galarian', pokemonNumbers); }
-async function fetchHisuianVariantsForNumbers(pokemonNumbers)  { return _fetchVariantsByType('hisuian',  pokemonNumbers); }
+export async function fetchAlolanVariantsForNumbers(pokemonNumbers)   { return _fetchVariantsByType('alolan',   pokemonNumbers); }
+export async function fetchGalarianVariantsForNumbers(pokemonNumbers) { return _fetchVariantsByType('galarian', pokemonNumbers); }
+export async function fetchHisuianVariantsForNumbers(pokemonNumbers)  { return _fetchVariantsByType('hisuian',  pokemonNumbers); }
 
 /**
  * Retourne les numéros de Pokémon dont au moins une forme régionale a can_be_baron = true.
  */
-async function fetchRegionalBaronNumbers(pokemonNumbers) {
+export async function fetchRegionalBaronNumbers(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
@@ -218,7 +214,7 @@ async function fetchRegionalBaronNumbers(pokemonNumbers) {
  * Récupère les formes régionales (Alola, Galar…) pour une liste de numéros.
  * Tente d'inclure evolution_into_number ; retombe sur la requête de base si la colonne n'existe pas.
  */
-async function fetchRegionalForms(pokemonNumbers) {
+export async function fetchRegionalForms(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data, error } = await client
@@ -237,7 +233,7 @@ async function fetchRegionalForms(pokemonNumbers) {
 /**
  * Récupère les méga-évolutions pour une liste de numéros de Pokémon.
  */
-async function fetchMegaEvolutions(pokemonNumbers) {
+export async function fetchMegaEvolutions(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
@@ -250,7 +246,7 @@ async function fetchMegaEvolutions(pokemonNumbers) {
 /**
  * Récupère les formes Gigamax d'un Pokémon (modal).
  */
-async function fetchGigamax(pokemonNumber) {
+export async function fetchGigamax(pokemonNumber) {
   const client = getSupabaseClient();
   if (!client) return [];
   const { data } = await client
@@ -264,7 +260,7 @@ async function fetchGigamax(pokemonNumber) {
 /**
  * Récupère l'icône sprite gigamax (variant_type='gigamax') pour une liste de numéros.
  */
-async function fetchGigamaxVariantIcons(pokemonNumbers) {
+export async function fetchGigamaxVariantIcons(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
@@ -278,7 +274,7 @@ async function fetchGigamaxVariantIcons(pokemonNumbers) {
 /**
  * Récupère les formes Gigamax pour une liste de numéros (chaîne d'évolution).
  */
-async function fetchGigamaxForChain(pokemonNumbers) {
+export async function fetchGigamaxForChain(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
   const { data } = await client
@@ -292,7 +288,7 @@ async function fetchGigamaxForChain(pokemonNumbers) {
  * Récupère tous les variants pour une liste de numéros — utilisé par le journal.
  * Retourne { [pokemon_number]: { [variant_type]: image_url } }
  */
-async function fetchVariantMap(pokemonNumbers) {
+export async function fetchVariantMap(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return {};
   const { data } = await client
@@ -310,7 +306,7 @@ async function fetchVariantMap(pokemonNumbers) {
 /**
  * Récupère les variantes visuelles d'un Pokémon (mâle/femelle, shiny, custom…).
  */
-async function fetchVariants(pokemonNumber) {
+export async function fetchVariants(pokemonNumber) {
   const client = getSupabaseClient();
   if (!client) return [];
   const { data } = await client
@@ -324,7 +320,7 @@ async function fetchVariants(pokemonNumber) {
 /**
  * Récupère les formes spéciales d'un Pokémon.
  */
-async function fetchForms(pokemonNumber) {
+export async function fetchForms(pokemonNumber) {
   const client = getSupabaseClient();
   if (!client) return [];
   const { data } = await client
@@ -338,7 +334,7 @@ async function fetchForms(pokemonNumber) {
 /**
  * Récupère toutes les captures d'un propriétaire.
  */
-async function fetchCatches(ownerUuid) {
+export async function fetchCatches(ownerUuid) {
   const client = getSupabaseClient();
   if (!client) return { data: [], error: { message: 'Supabase non configuré' } };
   const { data, error } = await client
@@ -353,7 +349,7 @@ async function fetchCatches(ownerUuid) {
 /**
  * Récupère toutes les formes vues/obtenues pour un utilisateur.
  */
-async function fetchSeen(ownerUuid) {
+export async function fetchSeen(ownerUuid) {
   const client = getSupabaseClient();
   if (!client) return { data: [], error: null };
   const { data, error } = await client.from('pokemon_seen').select('*').eq('owner_uuid', ownerUuid);
@@ -364,7 +360,7 @@ async function fetchSeen(ownerUuid) {
 /**
  * Insère ou met à jour une forme vue/obtenue (upsert sur owner+number+variant).
  */
-async function upsertSeen(seenData) {
+export async function upsertSeen(seenData) {
   const client = getSupabaseClient();
   if (!client) return { data: null, error: { message: 'Supabase non configuré' } };
   const { data, error } = await client
@@ -378,7 +374,7 @@ async function upsertSeen(seenData) {
 /**
  * Supprime une forme vue par son id.
  */
-async function deleteSeenForm(id) {
+export async function deleteSeenForm(id) {
   const client = getSupabaseClient();
   if (!client) return { error: { message: 'Supabase non configuré' } };
   const { error } = await client.from('pokemon_seen').delete().eq('id', id);
@@ -388,7 +384,7 @@ async function deleteSeenForm(id) {
 /**
  * Supprime une forme vue par son variant_type pour un utilisateur et un Pokémon.
  */
-async function deleteSeenByVariantType(ownerUuid, pokemonNumber, variantType) {
+export async function deleteSeenByVariantType(ownerUuid, pokemonNumber, variantType) {
   const client = getSupabaseClient();
   if (!client) return { error: { message: 'Supabase non configuré' } };
   const { error } = await client.from('pokemon_seen').delete()
@@ -401,7 +397,7 @@ async function deleteSeenByVariantType(ownerUuid, pokemonNumber, variantType) {
 /**
  * Supprime toutes les formes vues d'un Pokémon pour un utilisateur.
  */
-async function deleteAllSeenForPokemon(ownerUuid, pokemonNumber) {
+export async function deleteAllSeenForPokemon(ownerUuid, pokemonNumber) {
   const client = getSupabaseClient();
   if (!client) return { error: { message: 'Supabase non configuré' } };
   const { error } = await client.from('pokemon_seen').delete()
@@ -413,7 +409,7 @@ async function deleteAllSeenForPokemon(ownerUuid, pokemonNumber) {
 /**
  * Insère une nouvelle capture.
  */
-async function insertCatch(catchData) {
+export async function insertCatch(catchData) {
   const client = getSupabaseClient();
   if (!client) return { data: null, error: { message: 'Supabase non configuré' } };
   const { data, error } = await client.from('catches').insert(catchData).select().single();
@@ -423,7 +419,7 @@ async function insertCatch(catchData) {
 /**
  * Supprime une capture par son id.
  */
-async function deleteCatch(id) {
+export async function deleteCatch(id) {
   const client = getSupabaseClient();
   if (!client) return { error: { message: 'Supabase non configuré' } };
   const { error } = await client.from('catches').delete().eq('id', id);
@@ -433,7 +429,7 @@ async function deleteCatch(id) {
 /**
  * Met à jour toutes les captures d'une session (même session_id).
  */
-async function updateCatchesBySession(sessionId, updates) {
+export async function updateCatchesBySession(sessionId, updates) {
   const client = getSupabaseClient();
   if (!client) return { error: { message: 'Supabase non configuré' } };
   const { error } = await client.from('catches').update(updates).eq('session_id', sessionId);
@@ -443,7 +439,7 @@ async function updateCatchesBySession(sessionId, updates) {
 /**
  * Supprime toutes les captures d'une session (même session_id).
  */
-async function deleteCatchesBySession(sessionId) {
+export export async function deleteCatchesBySession(sessionId) {
   const client = getSupabaseClient();
   if (!client) return { error: { message: 'Supabase non configuré' } };
   const { error } = await client.from('catches').delete().eq('session_id', sessionId);
@@ -454,7 +450,7 @@ async function deleteCatchesBySession(sessionId) {
  * Récupère les formes spéciales (pokemon_special_forms) pour une liste de numéros.
  * Retourne { [pokemon_number]: { [form_key]: { form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny } } }
  */
-async function fetchSpecialFormsForNumbers(pokemonNumbers) {
+export async function fetchSpecialFormsForNumbers(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return {};
   const { data } = await client
@@ -473,7 +469,7 @@ async function fetchSpecialFormsForNumbers(pokemonNumbers) {
 /**
  * Récupère les formes spéciales d'un seul Pokémon.
  */
-async function fetchSpecialFormsByNumber(pokemonNumber) {
+export async function fetchSpecialFormsByNumber(pokemonNumber) {
   const client = getSupabaseClient();
   if (!client) return [];
   const { data } = await client
@@ -487,7 +483,7 @@ async function fetchSpecialFormsByNumber(pokemonNumber) {
 /**
  * Récupère la liste des types distincts présents en base.
  */
-async function fetchTypes() {
+export async function fetchTypes() {
   const client = getSupabaseClient();
   if (!client) return [];
   const { data, error } = await client.from('pokemon_types').select('type_name').order('type_name');

@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "skills": {
+    "brainstorming": {
+      "source": "davidkiss/smart-ai-skills",
+      "sourceType": "github",
+      "skillPath": "skills/brainstorming/SKILL.md",
+      "computedHash": "4328a67d1a9f251c3cfb20232a13c6a1344250d89b79fb82ec3b625a5043ffac"
+    },
+    "clean-architecture": {
+      "source": "Mindrally/skills",
+      "sourceType": "github",
+      "skillPath": "clean-architecture/SKILL.md",
+      "computedHash": "39cf5addffbea70a7f8d09c323eb3cc5637c0b746656f9111d657eb7a9efa559"
+    },
+    "coding": {
+      "source": "davidkiss/smart-ai-skills",
+      "sourceType": "github",
+      "skillPath": "skills/coding/SKILL.md",
+      "computedHash": "25d0af55037dc35547b7da0227758c26afde685aa5172a351ec31fd2ff9af941"
+    },
+    "investigator": {
+      "source": "davidkiss/smart-ai-skills",
+      "sourceType": "github",
+      "skillPath": "skills/investigator/SKILL.md",
+      "computedHash": "bc5117f6b033025f8cbffb139bd8ed36c1eb4ce378c340d0318041e36f92761b"
+    },
+    "reflection": {
+      "source": "davidkiss/smart-ai-skills",
+      "sourceType": "github",
+      "skillPath": "skills/reflection/SKILL.md",
+      "computedHash": "e184fba396a2165012ef97f6b75ac6c36215978fc2801edb50801dc2c04c113a"
+    },
+    "skill-editor": {
+      "source": "davidkiss/smart-ai-skills",
+      "sourceType": "github",
+      "skillPath": "skills/skill-editor/SKILL.md",
+      "computedHash": "135c7ab8f4da18faf0886a3d75d4742e9ba0ed78fae9cfcd6ed3bae896ad8ebb"
+    },
+    "subagent-task-execution": {
+      "source": "davidkiss/smart-ai-skills",
+      "sourceType": "github",
+      "skillPath": "skills/subagent-task-execution/SKILL.md",
+      "computedHash": "2b3158a36dc8be1b2f3c9c4b9a90cd85ed07fd48ceccd3a33acfd5c1768a8434"
+    },
+    "task-breakdown": {
+      "source": "davidkiss/smart-ai-skills",
+      "sourceType": "github",
+      "skillPath": "skills/task-breakdown/SKILL.md",
+      "computedHash": "3413c020beb8289cb5d62853870b4e37692813e42c1457314804230465025fb7"
+    }
+  }
+}

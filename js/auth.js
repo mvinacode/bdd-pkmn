@@ -1,9 +1,7 @@
-/**
- * AUTH.JS — Gestion de la session Supabase Auth
- * À charger après supabase-client.js sur toutes les pages protégées.
- */
+import { getSupabaseClient } from './supabase-client.js';
+import { USER_PREFS } from './config.js';
 
-async function initAuth() {
+export async function initAuth() {
   const client = getSupabaseClient();
   if (!client) { window.location.href = 'login.html'; return false; }
 
@@ -22,7 +20,7 @@ async function initAuth() {
   }
 
   window._ownerUuid = session.user.id;
-  const prefs = (typeof USER_PREFS !== 'undefined' && USER_PREFS[session.user.id]) || {};
+  const prefs = USER_PREFS[session.user.id] || {};
   window._genderFormsMode = prefs.genderFormsMode || 'none';
   if (prefs.allFormsAnim) {
     window._allFormsAnim = prefs.allFormsAnim;

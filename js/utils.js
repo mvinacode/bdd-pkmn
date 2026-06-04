@@ -1,9 +1,4 @@
-/**
- * UTILS.JS — Fonctions utilitaires partagées entre app.js et catches.js
- */
-
-
-const BALLS = [
+export const BALLS = [
   { name: 'Poké Ball',    slug: 'poke-ball', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779138950/poke_ball_gdlzec.png' },
   { name: 'Super Ball',   slug: 'great-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779544047/super_ball_hljkjm.png' },
   { name: 'Hyper Ball',   slug: 'ultra-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779557250/hyper_ball_gkxwfs.png' },
@@ -44,23 +39,23 @@ const BALLS = [
   { name: 'Origine Ball',          slug: 'origine-ball',        customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779899131/origine_ball_f0h7ap.png' },
 ];
 
-const BALL_MAP = Object.fromEntries(BALLS.map(b => [b.slug, b]));
+export const BALL_MAP = Object.fromEntries(BALLS.map(b => [b.slug, b]));
 
-function ballUrl(slug) {
+export function ballUrl(slug) {
   return BALL_MAP[slug]?.customUrl || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${slug}.png`;
 }
 
-function spriteUrl(number, shiny) {
+export function spriteUrl(number, shiny) {
   return shiny
     ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${number}.png`
     : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png`;
 }
 
-function getOwnerUuid() {
+export function getOwnerUuid() {
   return window._ownerUuid || null;
 }
 
-const GAMES = [
+export const GAMES = [
   { name: 'Légendes Pokémon : Z-A', slug: 'legendes-za', abbr: 'Z-A',      iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779641869/legendes_pkmn_z_a_icon_bqvbys.png' },
   { name: 'Pokémon Violet',           slug: 'violet',      abbr: 'Violet',   iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779893340/pokemon_violet_nel5xl.png' },
   { name: 'Pokémon Écarlate',         slug: 'ecarlate',    abbr: 'Écarlate', iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779644647/pokemon_ecarlate_icon_futxba.png' },
@@ -84,6 +79,6 @@ const GAMES = [
   { name: 'Pokémon X',                slug: 'pokemon-x',       abbr: 'X',        iconUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779666515/pokemon_x_uopvkn.png' },
 ];
 
-function esc(str) {
+export function esc(str) {
   return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
