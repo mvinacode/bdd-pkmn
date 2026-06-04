@@ -174,7 +174,9 @@ export function renderCard(pokemon, icons = {}) {
   const hasHisuianForms = Object.keys(seenFormsMap).some(vt => vt.startsWith('hisuian'));
   const hisuiCanBeBaron = hasHisuianForms && !!store.regionalBaronMap[pokemon.number];
   const requiresBaronForComplete = pokemon.can_be_baron !== false || hisuiCanBeBaron;
-  const isComplete = strictOk
+  // Garde : au moins une forme réellement possédée (évite la complétion vacuuse sur vide)
+  const hasAnyOwnedStatus = !!catch_ || Object.values(seenFormsMap).some(f => f.status === 'owned');
+  const isComplete = hasAnyOwnedStatus && strictOk
     && (!requiresBaronForComplete
       ? allSeenOwned && allVariantsOwned && genderGroupsOk
       : baronStatus === 'owned' && (!window._requireAllFormsForComplete || (allSeenOwned && allVariantsOwned && genderGroupsOk)))
