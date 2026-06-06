@@ -1496,9 +1496,8 @@ body {
   row-gap: 12px;
 }
 
-.evo-regional-subchain {
-  display: flex;
-  align-items: center;
+.evo-chain-regional-grid--3stage {
+  grid-template-columns: auto auto auto auto auto;
 }
 
 .evo-regionals {

@@ -171,29 +171,47 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
         const nextNode      = node.children[0];
         const nextRegionals = regionalsByNumber[nextNode.node.number] || [];
         const isMultiLevel  = nextNode.children.length === 1;
-        const subchainHtml  = isMultiLevel
-          ? `<div class="evo-regional-subchain">${renderNode(nextNode, depth + 1, true)}</div>`
-          : renderNode(nextNode, depth + 1, true);
-        const regionalRows  = regionals.map(r => {
+
+        if (isMultiLevel) {
+          // Grille 5 colonnes : [A] [→] [B] [→] [C] sur chaque ligne
+          const nextNextNode      = nextNode.children[0];
+          const condition2        = nextNextNode.node.evolution_condition || '';
+          const nextNextIconUrl   = iconByNumber[nextNextNode.node.number] || null;
+          const nextIconUrl2      = iconByNumber[nextNode.node.number] || null;
+          const baseRow = [
+            `<div class="evo-stage">${portrait}</div>`,
+            evoArrow(condition, nextNode.node.evolution_item_image_url || null),
+            `<div class="evo-stage">${evoPortrait(nextNode.node, nextNode.node.number === currentNumber, nextIconUrl2)}</div>`,
+            evoArrow(condition2, nextNextNode.node.evolution_item_image_url || null),
+            `<div class="evo-stage">${evoPortrait(nextNextNode.node, nextNextNode.node.number === currentNumber, nextNextIconUrl)}</div>`,
+          ].join('');
+          const nextNextRegionals = regionalsByNumber[nextNextNode.node.number] || [];
+          const regionalRows = regionals.map(r => {
+            const matchingNext     = nextRegionals.find(nr => nr.region === r.region);
+            const matchingNextNext = nextNextRegionals.find(nr => nr.region === r.region);
+            const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || condition;
+            const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
+            const arrowCond2    = matchingNext?.evolution_condition || matchingNextNext?.evolution_condition || condition2;
+            const arrowItemImg2 = matchingNext?.evolution_item_image_url || matchingNextNext?.evolution_item_image_url || nextNextNode.node.evolution_item_image_url || null;
+            return [
+              `<div class="evo-stage">${evoRegionalPortrait(r)}</div>`,
+              evoArrow(arrowCond, arrowItemImg),
+              `<div class="evo-stage">${matchingNext ? evoRegionalPortrait(matchingNext) : ''}</div>`,
+              evoArrow(arrowCond2, arrowItemImg2),
+              `<div class="evo-stage">${matchingNextNext ? evoRegionalPortrait(matchingNextNext) : ''}</div>`,
+            ].join('');
+          }).join('');
+          return `<div class="evo-chain-regional-grid evo-chain-regional-grid--3stage">${baseRow}${regionalRows}</div>`;
+        }
+
+        // Grille 3 colonnes standard (chaîne 2 stades)
+        const regionalRows = regionals.map(r => {
           const matchingNext = nextRegionals.find(nr => nr.region === r.region);
           const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || condition;
           const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
-          let thirdCell;
-          if (!matchingNext) {
-            thirdCell = '<div class="evo-stage"></div>';
-          } else if (isMultiLevel) {
-            const nextNextNode      = nextNode.children[0];
-            const nextNextRegionals = regionalsByNumber[nextNextNode.node.number] || [];
-            const matchingNextNext  = nextNextRegionals.find(nr => nr.region === r.region);
-            const arrowCond2    = matchingNext.evolution_condition || matchingNextNext?.evolution_condition || nextNextNode.node.evolution_condition || '';
-            const arrowItemImg2 = matchingNext.evolution_item_image_url || matchingNextNext?.evolution_item_image_url || nextNextNode.node.evolution_item_image_url || null;
-            thirdCell = `<div class="evo-regional-subchain"><div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>${evoArrow(arrowCond2, arrowItemImg2)}<div class="evo-stage">${matchingNextNext ? evoRegionalPortrait(matchingNextNext) : ''}</div></div>`;
-          } else {
-            thirdCell = `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>`;
-          }
-          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${thirdCell}`;
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}`;
         }).join('');
-        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${subchainHtml}${regionalRows}</div>`;
+        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${renderNode(nextNode, depth + 1, true)}${regionalRows}</div>`;
       }
       return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1, excludeRegionals)}`;
     }
