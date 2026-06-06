@@ -1496,6 +1496,11 @@ body {
   row-gap: 12px;
 }
 
+.evo-regional-subchain {
+  display: flex;
+  align-items: center;
+}
+
 .evo-regionals {
   display: flex;
   gap: 8px;

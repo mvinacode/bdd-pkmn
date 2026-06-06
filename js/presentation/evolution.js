@@ -170,15 +170,32 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
       if (regionals.length > 0) {
         const nextNode      = node.children[0];
         const nextRegionals = regionalsByNumber[nextNode.node.number] || [];
+        const isMultiLevel  = nextNode.children.length === 1;
+        const subchainHtml  = isMultiLevel
+          ? `<div class="evo-regional-subchain">${renderNode(nextNode, depth + 1, true)}</div>`
+          : renderNode(nextNode, depth + 1, true);
         const regionalRows  = regionals.map(r => {
           const matchingNext = nextRegionals.find(nr => nr.region === r.region);
           const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || condition;
           const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
-          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}`;
+          let thirdCell;
+          if (!matchingNext) {
+            thirdCell = '<div class="evo-stage"></div>';
+          } else if (isMultiLevel) {
+            const nextNextNode      = nextNode.children[0];
+            const nextNextRegionals = regionalsByNumber[nextNextNode.node.number] || [];
+            const matchingNextNext  = nextNextRegionals.find(nr => nr.region === r.region);
+            const arrowCond2    = matchingNext.evolution_condition || matchingNextNext?.evolution_condition || nextNextNode.node.evolution_condition || '';
+            const arrowItemImg2 = matchingNext.evolution_item_image_url || matchingNextNext?.evolution_item_image_url || nextNextNode.node.evolution_item_image_url || null;
+            thirdCell = `<div class="evo-regional-subchain"><div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>${evoArrow(arrowCond2, arrowItemImg2)}<div class="evo-stage">${matchingNextNext ? evoRegionalPortrait(matchingNextNext) : ''}</div></div>`;
+          } else {
+            thirdCell = `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>`;
+          }
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${thirdCell}`;
         }).join('');
-        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${renderNode(nextNode, depth + 1, true)}${regionalRows}</div>`;
+        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${subchainHtml}${regionalRows}</div>`;
       }
-      return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1)}`;
+      return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1, excludeRegionals)}`;
     }
 
     const regionalsHtml = regionals.length ? `<div class="evo-regionals">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
