@@ -24,6 +24,7 @@ export function setModalCallbacks({ updateCardAfterCatch, openDrawerWithPokemon 
 
 const MODAL_MALE_SVG   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
 const MODAL_FEMALE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
+const MODAL_ASEXUE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
 
 function seenFormIcon(vt, sfMap = {}) {
   const S = 14;
@@ -36,9 +37,11 @@ function seenFormIcon(vt, sfMap = {}) {
   const genderless= `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="${S}" height="${S}"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
   switch (vt) {
     case 'normal':        return genderless;
+    case 'asexue':        return genderless;
     case 'male':          return male;
     case 'female':        return female;
     case 'shiny':         return genderless + shiny;
+    case 'asexue_shiny':  return genderless + shiny;
     case 'shiny_male':    return male + shiny;
     case 'shiny_female':  return female + shiny;
     case 'mega': case 'mega_x': case 'mega_y': return mega;
@@ -263,6 +266,7 @@ export async function openModal(number) {
     }
 
     const neutralVariants  = variants.filter(v => ['normal', 'shiny'].includes(v.variant_type));
+    const asexueVariants   = variants.filter(v => ['asexue', 'asexue_shiny'].includes(v.variant_type));
     const maleVariants     = variants.filter(v => ['male', 'shiny_male'].includes(v.variant_type));
     const femaleVariants   = variants.filter(v => ['female', 'shiny_female'].includes(v.variant_type));
     const megaVariants     = variants.filter(v => ['mega', 'shiny_mega', 'mega_x', 'shiny_mega_x'].includes(v.variant_type));
@@ -276,6 +280,7 @@ export async function openModal(number) {
     const neutralBadge = `<span class="gender-badge male">${MODAL_MALE_SVG}</span><span class="gender-badge female">${MODAL_FEMALE_SVG}</span>`;
     const maleBadge    = `<span class="gender-badge male">${MODAL_MALE_SVG}</span>`;
     const femaleBadge  = `<span class="gender-badge female">${MODAL_FEMALE_SVG}</span>`;
+    const asexueBadge  = `<span class="gender-badge asexue">${MODAL_ASEXUE_SVG}</span>`;
 
     const SF_GROUP_ORDER = ['Pikachu Cosplayeur', 'Pikachu Casquette', 'Pikachu Partenaire', 'Spéciales'];
     const sfByGroup = {};
@@ -291,6 +296,7 @@ export async function openModal(number) {
 
     const baseFormsContent = [
       variantRow(neutralBadge, neutralVariants),
+      variantRow(asexueBadge,  asexueVariants),
       variantRow(maleBadge,    maleVariants),
       variantRow(femaleBadge,  femaleVariants),
     ].join('');
@@ -307,7 +313,7 @@ export async function openModal(number) {
     })() : '';
 
     const formTabList = [
-      { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: !!(neutralVariants.length || maleVariants.length || femaleVariants.length) },
+      { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: !!(neutralVariants.length || asexueVariants.length || maleVariants.length || femaleVariants.length) },
       ...sfSortedGroups.map(grp => ({
         id: grp, label: grp,
         html: `<div class="variants-grid variants-grid--2col">${sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]).join('')}</div>`,

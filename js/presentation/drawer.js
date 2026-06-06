@@ -111,14 +111,15 @@ export function renderDrawerForms(variants, iconMap, megas = [], preselectedVts 
 
   const maleVariant   = variants.find(v => v.variant_type === 'male');
   const femaleVariant = variants.find(v => v.variant_type === 'female');
+  const asexueVariant = variants.find(v => v.variant_type === 'asexue');
 
   const entries = [
     { label: 'Mâle',          variant_type: 'male',         iconHtml: ICON_MALE_LG,                   sprite: maleVariant?.image_url   || iconMap.normal || null },
     { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: ICON_MALE_SM + ICON_SHINY_SM,   sprite: iconMap.shiny  || null },
     { label: 'Femelle',       variant_type: 'female',       iconHtml: ICON_FEMALE_LG,                 sprite: femaleVariant?.image_url || iconMap.normal || null },
     { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
-    { label: 'Asexué',       variant_type: 'normal',       iconHtml: ICON_UNISEX_LG,                 sprite: iconMap.normal || null },
-    { label: 'Asexué Shiny', variant_type: 'shiny',        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
+    { label: 'Asexué',       variant_type: asexueVariant ? 'asexue' : 'normal',       iconHtml: ICON_UNISEX_LG,                 sprite: asexueVariant?.image_url || iconMap.normal || null },
+    { label: 'Asexué Shiny', variant_type: asexueVariant ? 'asexue_shiny' : 'shiny', iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
     { label: 'Baron',         variant_type: 'baron',        iconHtml: ICON_BARON_LG,                  sprite: iconMap.normal || null },
     { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: ICON_BARON_XS + ICON_SHINY_SM,  sprite: iconMap.normal || null },
   ];
@@ -144,12 +145,12 @@ export function renderDrawerForms(variants, iconMap, megas = [], preselectedVts 
 
   const isFemaleOnly = !maleVariant && !!femaleVariant;
   if (isFemaleOnly) {
-    const excl = new Set(['male', 'shiny_male', 'normal', 'shiny']);
+    const excl = new Set(['male', 'shiny_male', 'normal', 'shiny', 'asexue', 'asexue_shiny']);
     entries.splice(0, entries.length, ...entries.filter(e => !excl.has(e.variant_type)));
   }
   const isMaleOnly = !!maleVariant && !femaleVariant;
   if (isMaleOnly) {
-    const excl = new Set(['female', 'shiny_female', 'normal', 'shiny']);
+    const excl = new Set(['female', 'shiny_female', 'normal', 'shiny', 'asexue', 'asexue_shiny']);
     entries.splice(0, entries.length, ...entries.filter(e => !excl.has(e.variant_type)));
   }
 

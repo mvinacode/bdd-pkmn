@@ -2528,6 +2528,7 @@ body {
 
 .gender-badge.male   { background: #3692DC; }
 .gender-badge.female { background: #E46AB2; }
+.gender-badge.asexue { background: #555e70; }
 .gender-badge.mega {
   background: linear-gradient(135deg, #3ddc6e, #ff70b0, #90b8ff);
   font-style: italic;

@@ -150,7 +150,7 @@ export async function fetchCardIcons(pokemonNumbers) {
   const { data } = await client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .in('variant_type', ['normal', 'male', 'female', 'shiny', 'shiny_male', 'shiny_female'])
+    .in('variant_type', ['normal', 'asexue', 'male', 'female', 'shiny', 'asexue_shiny', 'shiny_male', 'shiny_female'])
     .in('pokemon_number', pokemonNumbers);
   return data || [];
 }
@@ -164,11 +164,11 @@ export async function fetchVariantIcons(pokemonNumbers) {
   const { data } = await client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .in('variant_type', ['normal', 'male', 'female'])
+    .in('variant_type', ['normal', 'asexue', 'male', 'female'])
     .in('pokemon_number', pokemonNumbers);
   if (!data) return [];
-  // Préférer normal > male > female
-  const PRIO = { normal: 0, male: 1, female: 2 };
+  // Préférer normal > asexue > male > female
+  const PRIO = { normal: 0, asexue: 1, male: 2, female: 3 };
   const map = {};
   for (const row of data) {
     if (!map[row.pokemon_number] || PRIO[row.variant_type] < PRIO[map[row.pokemon_number].variant_type]) {
