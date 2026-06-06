@@ -40,7 +40,8 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isNight     = condition.toLowerCase().includes('nuit');
     const isHappiness = condition.toLowerCase().includes('bonheur');
     const isRageMove  = /poing de col[eè]re/i.test(condition);
-    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove;
+    const isGalanoaBand  = /bracelet\s+galanoa/i.test(condition);
+    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isGalanoaBand;
     const isStone      = isItem && /pierre\s/i.test(condition);
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -50,7 +51,6 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneWater = isStone && /\beau\b/i.test(condition);
     const isKingsRock    = /roche\s+royale/i.test(condition);
     const isTradeEvo     = /échange/i.test(condition) && !isKingsRock;
-    const isGalanoaBand  = /bracelet\s+galanoa/i.test(condition);
     const conditionInner = isRageMove
       ? esc(condition).replace(/Poing de Col[eè]re/i, '<span class="move-name">$&</span>')
       : esc(condition);
