@@ -16,7 +16,7 @@ import {
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
   fetchHisuianVariantsForNumbers, fetchSpecialFormsForNumbers,
   insertCatch, fetchVariantMap,
-} from '../supabase-client.js';
+} from '../supabase-client.js?v=1';
 
 // Callbacks injectés par app.js (évite circulaire drawer ↔ modal)
 let _openModal = null;

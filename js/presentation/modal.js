@@ -11,7 +11,7 @@ import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms, deleteCatch,
-} from '../supabase-client.js';
+} from '../supabase-client.js?v=1';
 import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=178';
 
 // Callbacks injectés par app.js pour éviter circulaire
