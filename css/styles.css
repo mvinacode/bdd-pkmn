@@ -1789,6 +1789,19 @@ body {
   text-underline-offset: 2px;
 }
 
+.evo-condition.is-critical {
+  color: #f0c040;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #3a1f00, #b87a10, #f5d060, #b87a10, #3a1f00) border-box;
+  text-shadow: 0 0 10px rgba(240, 192, 64, 0.45);
+  white-space: normal;
+  text-align: center;
+  max-width: 9rem;
+  line-height: 1.35;
+}
+
 .evo-chain-regional-grid .evo-arrow .evo-condition {
   width: 100%;
   text-align: center;

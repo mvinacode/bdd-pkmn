@@ -42,7 +42,8 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isHappiness = condition.toLowerCase().includes('bonheur');
     const isRageMove  = /poing de col[eè]re/i.test(condition);
     const isGalanoaBand  = /(bracelet|couronne)\s+galanoa/i.test(condition);
-    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isGalanoaBand;
+    const isCritical  = /coup.{0,5}critique/i.test(condition);
+    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isGalanoaBand && !isCritical;
     const isStone      = isItem && /pierre\s/i.test(condition);
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -55,7 +56,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const conditionInner = isRageMove
       ? esc(condition).replace(/Poing de Col[eè]re/i, '<span class="move-name">$&</span>')
       : esc(condition);
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo ? ' is-trade' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}">${conditionInner}</span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo ? ' is-trade' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}${isCritical ? ' is-critical' : ''}">${conditionInner}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
