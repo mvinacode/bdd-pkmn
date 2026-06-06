@@ -48,12 +48,13 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneLeaf  = isStone && /plante/i.test(condition);
     const isStoneSun   = isStone && /soleil/i.test(condition);
     const isStoneWater = isStone && /\beau\b/i.test(condition);
-    const isKingsRock  = /roche\s+royale/i.test(condition);
-    const isTradeEvo   = /échange/i.test(condition) && !isKingsRock;
+    const isKingsRock    = /roche\s+royale/i.test(condition);
+    const isTradeEvo     = /échange/i.test(condition) && !isKingsRock;
+    const isGalanoaBand  = /bracelet\s+galanoa/i.test(condition);
     const conditionInner = isRageMove
       ? esc(condition).replace(/Poing de Col[eè]re/i, '<span class="move-name">$&</span>')
       : esc(condition);
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo ? ' is-trade' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}">${conditionInner}</span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo ? ' is-trade' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}">${conditionInner}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
