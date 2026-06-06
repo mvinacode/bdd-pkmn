@@ -191,8 +191,8 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
             const matchingNextNext = nextNextRegionals.find(nr => nr.region === r.region);
             const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || condition;
             const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
-            const arrowCond2    = matchingNext?.evolution_condition || matchingNextNext?.evolution_condition || condition2;
-            const arrowItemImg2 = matchingNext?.evolution_item_image_url || matchingNextNext?.evolution_item_image_url || nextNextNode.node.evolution_item_image_url || null;
+            const arrowCond2    = matchingNextNext?.evolution_condition || condition2;
+            const arrowItemImg2 = matchingNextNext?.evolution_item_image_url || nextNextNode.node.evolution_item_image_url || null;
             return [
               `<div class="evo-stage">${evoRegionalPortrait(r)}</div>`,
               evoArrow(arrowCond, arrowItemImg),
