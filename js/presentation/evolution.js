@@ -204,16 +204,28 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
           return `<div class="evo-chain-regional-grid evo-chain-regional-grid--3stage">${baseRow}${regionalRows}</div>`;
         }
 
-        // Grille 3 colonnes standard (chaîne 2 stades)
-        // Le portrait du nextNode seul en col 3 ; les mégas/gigamaxes en dehors de la grille
+        // Grille régionale (chaîne 2 stades)
         const leafIconUrl  = iconByNumber[nextNode.node.number] || null;
         const leafPortrait = evoPortrait(nextNode.node, nextNode.node.number === currentNumber, leafIconUrl);
         const leafMegas    = megasByNumber[nextNode.node.number] || [];
         const leafGiga     = gigamaxByNumber[nextNode.node.number] || [];
-        let leafBranchHtml = '';
+
         if (leafMegas.length === 1 && leafGiga.length === 0) {
-          leafBranchHtml = `${evoArrow(leafMegas[0].condition_label, leafMegas[0].item_image_url || null, true)}${evoMegaPortrait(leafMegas[0])}`;
-        } else if (leafGiga.length === 1 && leafMegas.length === 0) {
+          // 5 colonnes : Méga intégré à la grille sur la ligne du Pokémon de base uniquement
+          const megaArrow    = evoArrow(leafMegas[0].condition_label, leafMegas[0].item_image_url || null, true);
+          const megaPortrait = evoMegaPortrait(leafMegas[0]);
+          const regionalRows = regionals.map(r => {
+            const matchingNext = nextRegionals.find(nr => nr.region === r.region);
+            const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || condition;
+            const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
+            return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}<div></div><div></div>`;
+          }).join('');
+          return `<div class="evo-chain-regional-grid evo-chain-regional-grid--3stage"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}<div class="evo-stage">${leafPortrait}</div>${megaArrow}${megaPortrait}${regionalRows}</div>`;
+        }
+
+        // 3 colonnes ; méga/gigas multiples en élément frère
+        let leafBranchHtml = '';
+        if (leafGiga.length === 1 && leafMegas.length === 0) {
           leafBranchHtml = `${evoArrow(leafGiga[0].condition_label || leafGiga[0].name, leafGiga[0].item_image_url || null, true, true)}${evoGigamaxPortrait(leafGiga[0])}`;
         } else if (leafMegas.length + leafGiga.length > 1) {
           const bs = [
