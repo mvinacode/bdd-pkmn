@@ -357,9 +357,9 @@ export function bindDrawerEvents() {
         const iconMap = {};
         for (const r of allIcons) {
           if (!iconMap[r.pokemon_number]) iconMap[r.pokemon_number] = { normal: null, shiny: null };
-          if ((['normal','male','female'].includes(r.variant_type)) && !iconMap[r.pokemon_number].normal)
+          if ((['normal','asexue','male','female'].includes(r.variant_type)) && !iconMap[r.pokemon_number].normal)
             iconMap[r.pokemon_number].normal = r.image_url;
-          else if ((['shiny','shiny_male','shiny_female'].includes(r.variant_type)) && !iconMap[r.pokemon_number].shiny)
+          else if ((['shiny','asexue_shiny','shiny_male','shiny_female'].includes(r.variant_type)) && !iconMap[r.pokemon_number].shiny)
             iconMap[r.pokemon_number].shiny = r.image_url;
         }
         const alolanSpriteMap    = Object.fromEntries(alolanRows.map(r => [r.pokemon_number, r.image_url]));

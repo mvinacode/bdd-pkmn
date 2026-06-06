@@ -5,7 +5,7 @@ import { debounce } from './domain/constants.js';
 import { loadCatchesMap, setCatchesCallbacks } from './application/catches.js';
 import { renderGrid, updateCardAfterCatch, setCardCallbacks } from './presentation/card.js';
 import { openModal, closeModal, setModalCallbacks } from './presentation/modal.js?v=181';
-import { bindDrawerEvents, openDrawerWithPokemon, setDrawerCallbacks } from './presentation/drawer.js?v=1';
+import { bindDrawerEvents, openDrawerWithPokemon, setDrawerCallbacks } from './presentation/drawer.js?v=2';
 import { populateTypeFilters } from './presentation/filters.js';
 import { fetchPokemon, fetchCardIcons, getSupabaseClient } from './supabase-client.js';
 
