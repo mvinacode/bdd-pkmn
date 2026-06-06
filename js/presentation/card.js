@@ -13,7 +13,7 @@ let _openModal = null;
 export function setCardCallbacks({ openModal }) { _openModal = openModal; }
 
 const SPECIAL_FORMS_ICONS = [
-  { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female'] },
+  { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','asexue_shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female'] },
   { key: 'baron',   icon: BARON_ICON_URL,   variants: ['baron', 'shiny_baron'] },
   { key: 'mega',    icon: MEGA_ICON_URL,    variants: ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y'] },
   { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
@@ -123,7 +123,7 @@ export function renderCard(pokemon, icons = {}) {
   ].filter(Boolean));
 
   const TRACKED_VT = new Set([
-    'shiny',
+    'shiny','asexue','asexue_shiny',
     'alolan','alolan_shiny',
     ...(genderMode !== 'any' ? ['alolan_male','alolan_female','alolan_shiny_male','alolan_shiny_female'] : []),
     'galarian','galarian_shiny',
