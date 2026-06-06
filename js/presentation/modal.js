@@ -12,7 +12,7 @@ import {
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms, deleteCatch,
 } from '../supabase-client.js';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=172';
+import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=178';
 
 // Callbacks injectés par app.js pour éviter circulaire
 let _updateCardAfterCatch = null;
@@ -251,6 +251,17 @@ export async function openModal(number) {
       </div>`;
     }
 
+    function regionalVariantRows(prefix, allVariants) {
+      const neutral = allVariants.filter(v => [prefix, `${prefix}_shiny`].includes(v.variant_type));
+      const male    = allVariants.filter(v => [`${prefix}_male`, `${prefix}_shiny_male`].includes(v.variant_type));
+      const female  = allVariants.filter(v => [`${prefix}_female`, `${prefix}_shiny_female`].includes(v.variant_type));
+      return [
+        variantRow(neutralBadge, neutral),
+        variantRow(maleBadge,    male),
+        variantRow(femaleBadge,  female),
+      ].join('');
+    }
+
     const neutralVariants  = variants.filter(v => ['normal', 'shiny'].includes(v.variant_type));
     const maleVariants     = variants.filter(v => ['male', 'shiny_male'].includes(v.variant_type));
     const femaleVariants   = variants.filter(v => ['female', 'shiny_female'].includes(v.variant_type));
@@ -303,9 +314,9 @@ export async function openModal(number) {
         show: true,
       })),
       { id: 'mega',     label: 'Méga-Évolution',   html: `<div class="variants-rows-wrapper">${megaFormsContent}</div>`, show: !!megaVariants.length },
-      { id: 'alola',    label: "Forme d'Alola",     html: `<div class="variants-rows-wrapper"><div class="variants-grid">${alolanVariants.map(variantCard).join('')}</div></div>`, show: !!alolanVariants.length },
-      { id: 'galar',    label: 'Forme de Galar',    html: `<div class="variants-rows-wrapper"><div class="variants-grid">${galarianVariants.map(variantCard).join('')}</div></div>`, show: !!galarianVariants.length },
-      { id: 'hisui',    label: "Forme d'Hisui",     html: `<div class="variants-rows-wrapper"><div class="variants-grid">${hisuianVariants.map(variantCard).join('')}</div></div>`, show: !!hisuianVariants.length },
+      { id: 'alola',    label: "Forme d'Alola",     html: `<div class="variants-rows-wrapper">${regionalVariantRows('alolan',   alolanVariants)}</div>`,   show: !!alolanVariants.length },
+      { id: 'galar',    label: 'Forme de Galar',    html: `<div class="variants-rows-wrapper">${regionalVariantRows('galarian', galarianVariants)}</div>`, show: !!galarianVariants.length },
+      { id: 'hisui',    label: "Forme d'Hisui",     html: `<div class="variants-rows-wrapper">${regionalVariantRows('hisuian',  hisuianVariants)}</div>`,  show: !!hisuianVariants.length },
       { id: 'troizepy', label: 'Pichu Troizépi',    html: `<div class="variants-rows-wrapper">${variantRow(femaleBadge, troizepyVariants)}</div>`, show: !!troizepyVariants.length },
       { id: 'gigamax',  label: 'Gigamax',            html: `<div class="variants-rows-wrapper"><div class="variants-grid">${gigamaxVariants.map(variantCard).join('')}</div></div>`, show: !!gigamaxVariants.length },
     ].filter(t => t.show);

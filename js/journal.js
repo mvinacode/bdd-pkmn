@@ -44,34 +44,34 @@ function formLabelToIcons(label, isShiny) {
   if (label === 'Shiny')             return _NEUTRAL_ICO + _SHINY_ICO;
   if (label === 'Mâle')              return _MALE_ICO;
   if (label === 'Femelle')           return _FEMALE_ICO;
-  if (label === 'Unisexe')           return _NEUTRAL_ICO;
+  if (label === 'Asexué')           return _NEUTRAL_ICO;
   if (label === 'Mâle Shiny')        return _MALE_ICO    + _SHINY_ICO;
   if (label === 'Femelle Shiny')     return _FEMALE_ICO  + _SHINY_ICO;
-  if (label === 'Unisexe Shiny')     return _NEUTRAL_ICO + _SHINY_ICO;
+  if (label === 'Asexué Shiny')     return _NEUTRAL_ICO + _SHINY_ICO;
   if (label === 'Baron')             return _BARON_ICO;
   if (label === 'Baron Shiny')       return _BARON_ICO   + _SHINY_ICO;
   if (label === 'Alola Mâle')          return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _MALE_ICO;
   if (label === 'Alola Mâle Shiny')   return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _MALE_ICO + _SHINY_ICO;
   if (label === 'Alola Femelle')      return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _FEMALE_ICO;
   if (label === 'Alola Femelle Shiny')return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + _FEMALE_ICO + _SHINY_ICO;
-  if (label === 'Alola Unisexe')      return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>`;
-  if (label === 'Alola Unisexe Shiny')return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + _SHINY_ICO;
+  if (label === 'Alola Asexué')      return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>`;
+  if (label === 'Alola Asexué Shiny')return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + _SHINY_ICO;
   if (label === 'Alola')              return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>`;
   if (label === 'Alola Shiny')        return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + _SHINY_ICO;
   if (label === 'Galar Mâle')          return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + _MALE_ICO;
   if (label === 'Galar Mâle Shiny')    return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + _MALE_ICO + _SHINY_ICO;
   if (label === 'Galar Femelle')       return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + _FEMALE_ICO;
   if (label === 'Galar Femelle Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + _FEMALE_ICO + _SHINY_ICO;
-  if (label === 'Galar Unisexe')       return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>`;
-  if (label === 'Galar Unisexe Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>` + _SHINY_ICO;
+  if (label === 'Galar Asexué')       return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>`;
+  if (label === 'Galar Asexué Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>` + _SHINY_ICO;
   if (label === 'Galar')               return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>`;
   if (label === 'Galar Shiny')         return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>` + _SHINY_ICO;
   if (label === 'Hisui Mâle')          return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + _MALE_ICO;
   if (label === 'Hisui Mâle Shiny')    return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + _MALE_ICO + _SHINY_ICO;
   if (label === 'Hisui Femelle')       return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + _FEMALE_ICO;
   if (label === 'Hisui Femelle Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + _FEMALE_ICO + _SHINY_ICO;
-  if (label === 'Hisui Unisexe')       return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>`;
-  if (label === 'Hisui Unisexe Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>` + _SHINY_ICO;
+  if (label === 'Hisui Asexué')       return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>`;
+  if (label === 'Hisui Asexué Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>` + _SHINY_ICO;
   if (label === 'Hisui')               return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>`;
   if (label === 'Hisui Shiny')         return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>` + _SHINY_ICO;
   if (label.startsWith('Méga'))      return _MEGA_ICO    + (label.includes('Shiny') ? _SHINY_ICO : '');
@@ -85,23 +85,23 @@ function formLabelToIcons(label, isShiny) {
 
 function formLabelToVariantType(label) {
   const MAP = {
-    'Normale': 'normal',          'Unisexe': 'normal',
-    'Shiny':   'shiny',           'Unisexe Shiny': 'shiny',
+    'Normale': 'normal',          'Asexué': 'normal',
+    'Shiny':   'shiny',           'Asexué Shiny': 'shiny',
     'Mâle':    'male',            'Mâle Shiny':    'shiny_male',
     'Femelle': 'female',          'Femelle Shiny': 'shiny_female',
     'Baron':   'baron',           'Baron Shiny':   'shiny_baron',
     'Alola':              'alolan',            'Alola Shiny':             'alolan_shiny',
-    'Alola Unisexe':      'alolan',            'Alola Unisexe Shiny':    'alolan_shiny',
+    'Alola Asexué':      'alolan',            'Alola Asexué Shiny':    'alolan_shiny',
     'Alola Mâle':         'alolan_male',       'Alola Mâle Shiny':       'alolan_shiny_male',
     'Alola Femelle':      'alolan_female',     'Alola Femelle Shiny':    'alolan_shiny_female',
     'Alola Baron':        'baron',             'Alola Baron Shiny':      'shiny_baron',
     'Galar':              'galarian',          'Galar Shiny':            'galarian_shiny',
-    'Galar Unisexe':      'galarian',          'Galar Unisexe Shiny':    'galarian_shiny',
+    'Galar Asexué':      'galarian',          'Galar Asexué Shiny':    'galarian_shiny',
     'Galar Mâle':         'galarian_male',     'Galar Mâle Shiny':       'galarian_shiny_male',
     'Galar Femelle':      'galarian_female',   'Galar Femelle Shiny':    'galarian_shiny_female',
     'Galar Baron':        'baron',             'Galar Baron Shiny':      'shiny_baron',
     'Hisui':              'hisuian',           'Hisui Shiny':            'hisuian_shiny',
-    'Hisui Unisexe':      'hisuian',           'Hisui Unisexe Shiny':    'hisuian_shiny',
+    'Hisui Asexué':      'hisuian',           'Hisui Asexué Shiny':    'hisuian_shiny',
     'Hisui Mâle':         'hisuian_male',      'Hisui Mâle Shiny':       'hisuian_shiny_male',
     'Hisui Femelle':      'hisuian_female',    'Hisui Femelle Shiny':    'hisuian_shiny_female',
     'Hisui Baron':        'baron',             'Hisui Baron Shiny':      'shiny_baron',
@@ -336,8 +336,8 @@ function buildFormEntries(variants, megas, iconMap) {
     { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: M20 + SH20,     sprite: iconMap.shiny  || null },
     { label: 'Femelle',       variant_type: 'female',       iconHtml: F26,            sprite: femaleV?.image_url || iconMap.normal || null },
     { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: F20 + SH20,     sprite: iconMap.shiny  || null },
-    { label: 'Unisexe',       variant_type: 'normal',       iconHtml: U26,            sprite: iconMap.normal || null },
-    { label: 'Unisexe Shiny', variant_type: 'shiny',        iconHtml: U20 + SH20,     sprite: iconMap.shiny  || null },
+    { label: 'Asexué',       variant_type: 'normal',       iconHtml: U26,            sprite: iconMap.normal || null },
+    { label: 'Asexué Shiny', variant_type: 'shiny',        iconHtml: U20 + SH20,     sprite: iconMap.shiny  || null },
     { label: 'Baron',         variant_type: 'baron',        iconHtml: BAR28,          sprite: iconMap.normal || null },
     { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: BAR22 + SH20,   sprite: iconMap.normal || null },
   ];
@@ -391,8 +391,8 @@ function buildFormEntriesRegional(variants, iconMap, regionId) {
     { label: `${regionLabel} Mâle Shiny`,    displayLabel: 'Mâle Shiny',    variant_type: `${p}_shiny_male`,   iconHtml: M20 + SH20, sprite: vShinyMale?.image_url || baseShiny },
     { label: `${regionLabel} Femelle`,       displayLabel: 'Femelle',       variant_type: `${p}_female`,       iconHtml: F26,        sprite: vFemale?.image_url    || base      },
     { label: `${regionLabel} Femelle Shiny`, displayLabel: 'Femelle Shiny', variant_type: `${p}_shiny_female`, iconHtml: F20 + SH20, sprite: vShinyFem?.image_url  || baseShiny },
-    { label: `${regionLabel} Unisexe`,       displayLabel: 'Unisexe',       variant_type: p,                   iconHtml: U26,        sprite: base      },
-    { label: `${regionLabel} Unisexe Shiny`, displayLabel: 'Unisexe Shiny', variant_type: `${p}_shiny`,        iconHtml: U20 + SH20, sprite: baseShiny },
+    { label: `${regionLabel} Asexué`,       displayLabel: 'Asexué',       variant_type: p,                   iconHtml: U26,        sprite: base      },
+    { label: `${regionLabel} Asexué Shiny`, displayLabel: 'Asexué Shiny', variant_type: `${p}_shiny`,        iconHtml: U20 + SH20, sprite: baseShiny },
     { label: `${regionLabel} Baron`,         displayLabel: 'Baron',         variant_type: 'baron',             iconHtml: BAR28,      sprite: base      },
     { label: `${regionLabel} Baron Shiny`,   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',       iconHtml: BAR22+SH20, sprite: baseShiny },
   ];
@@ -548,14 +548,14 @@ function buildEditModal() {
     // 2. Synchroniser les formes (diff ajout / suppression)
     if (_formEntries.length > 0) {
       const selectedEntries = selectedBtns.map(b => _formEntries[parseInt(b.dataset.idx)]);
-      // Normalise les labels "Unisexe" stockés sous la forme courte (ex: 'Alola' → 'Alola Unisexe')
+      // Normalise les labels "Asexué" stockés sous la forme courte (ex: 'Alola' → 'Alola Asexué')
       const normLabel = l => {
-        if (l === 'Alola')       return 'Alola Unisexe';
-        if (l === 'Alola Shiny') return 'Alola Unisexe Shiny';
-        if (l === 'Galar')       return 'Galar Unisexe';
-        if (l === 'Galar Shiny') return 'Galar Unisexe Shiny';
-        if (l === 'Hisui')       return 'Hisui Unisexe';
-        if (l === 'Hisui Shiny') return 'Hisui Unisexe Shiny';
+        if (l === 'Alola')       return 'Alola Asexué';
+        if (l === 'Alola Shiny') return 'Alola Asexué Shiny';
+        if (l === 'Galar')       return 'Galar Asexué';
+        if (l === 'Galar Shiny') return 'Galar Asexué Shiny';
+        if (l === 'Hisui')       return 'Hisui Asexué';
+        if (l === 'Hisui Shiny') return 'Hisui Asexué Shiny';
         return l;
       };
       const origLabels = new Set(_editSessionForms.map(f => normLabel(f.form_label)));
@@ -709,8 +709,8 @@ async function loadModalFormGrid(session) {
   _editSessionForms = [...session.forms];
 
   const normalizeLabel = l => {
-    if (l === 'Alola') return 'Alola Unisexe';
-    if (l === 'Alola Shiny') return 'Alola Unisexe Shiny';
+    if (l === 'Alola') return 'Alola Asexué';
+    if (l === 'Alola Shiny') return 'Alola Asexué Shiny';
     return l;
   };
   const selectedLabels = new Set(session.forms.map(f => normalizeLabel(f.form_label)));

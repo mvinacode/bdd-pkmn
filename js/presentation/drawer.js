@@ -117,8 +117,8 @@ export function renderDrawerForms(variants, iconMap, megas = [], preselectedVts 
     { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: ICON_MALE_SM + ICON_SHINY_SM,   sprite: iconMap.shiny  || null },
     { label: 'Femelle',       variant_type: 'female',       iconHtml: ICON_FEMALE_LG,                 sprite: femaleVariant?.image_url || iconMap.normal || null },
     { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
-    { label: 'Unisexe',       variant_type: 'normal',       iconHtml: ICON_UNISEX_LG,                 sprite: iconMap.normal || null },
-    { label: 'Unisexe Shiny', variant_type: 'shiny',        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
+    { label: 'Asexué',       variant_type: 'normal',       iconHtml: ICON_UNISEX_LG,                 sprite: iconMap.normal || null },
+    { label: 'Asexué Shiny', variant_type: 'shiny',        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: iconMap.shiny  || null },
     { label: 'Baron',         variant_type: 'baron',        iconHtml: ICON_BARON_LG,                  sprite: iconMap.normal || null },
     { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: ICON_BARON_XS + ICON_SHINY_SM,  sprite: iconMap.normal || null },
   ];
@@ -196,8 +196,8 @@ export function renderDrawerFormsRegional(variants, sprite, regionId) {
     { label: `${regionLabel} Mâle Shiny`,    displayLabel: 'Mâle Shiny',    variant_type: `${p}_shiny_male`,   iconHtml: ICON_MALE_SM + ICON_SHINY_SM,   sprite: vShinyMale?.image_url || baseShiny },
     { label: `${regionLabel} Femelle`,       displayLabel: 'Femelle',       variant_type: `${p}_female`,       iconHtml: ICON_FEMALE_LG,                 sprite: vFemale?.image_url    || base      },
     { label: `${regionLabel} Femelle Shiny`, displayLabel: 'Femelle Shiny', variant_type: `${p}_shiny_female`, iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM, sprite: vShinyFem?.image_url  || baseShiny },
-    { label: `${regionLabel} Unisexe`,       displayLabel: 'Unisexe',       variant_type: p,                   iconHtml: ICON_UNISEX_LG,                 sprite: base      },
-    { label: `${regionLabel} Unisexe Shiny`, displayLabel: 'Unisexe Shiny', variant_type: `${p}_shiny`,        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: baseShiny },
+    { label: `${regionLabel} Asexué`,       displayLabel: 'Asexué',       variant_type: p,                   iconHtml: ICON_UNISEX_LG,                 sprite: base      },
+    { label: `${regionLabel} Asexué Shiny`, displayLabel: 'Asexué Shiny', variant_type: `${p}_shiny`,        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: baseShiny },
     { label: `${regionLabel} Baron`,         displayLabel: 'Baron',         variant_type: 'baron',             iconHtml: ICON_BARON_LG,                  sprite: base      },
     { label: `${regionLabel} Baron Shiny`,   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',       iconHtml: ICON_BARON_XS + ICON_SHINY_SM,  sprite: baseShiny },
   ];

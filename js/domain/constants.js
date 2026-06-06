@@ -62,33 +62,33 @@ export const ALOLA_FORM_VT = {
   'Alola Mâle Shiny':    'alolan_shiny_male',
   'Alola Femelle Shiny': 'alolan_shiny_female',
   'Alola Shiny':         'alolan_shiny',
-  'Alola Unisexe Shiny': 'alolan_shiny',
+  'Alola Asexué Shiny': 'alolan_shiny',
   'Alola Mâle':          'alolan_male',
   'Alola Femelle':       'alolan_female',
   'Alola':               'alolan',
-  'Alola Unisexe':       'alolan',
+  'Alola Asexué':       'alolan',
 };
 
 export const GALAR_FORM_VT = {
   'Galar Mâle Shiny':    'galarian_shiny_male',
   'Galar Femelle Shiny': 'galarian_shiny_female',
   'Galar Shiny':         'galarian_shiny',
-  'Galar Unisexe Shiny': 'galarian_shiny',
+  'Galar Asexué Shiny': 'galarian_shiny',
   'Galar Mâle':          'galarian_male',
   'Galar Femelle':       'galarian_female',
   'Galar':               'galarian',
-  'Galar Unisexe':       'galarian',
+  'Galar Asexué':       'galarian',
 };
 
 export const HISUI_FORM_VT = {
   'Hisui Mâle Shiny':    'hisuian_shiny_male',
   'Hisui Femelle Shiny': 'hisuian_shiny_female',
   'Hisui Shiny':         'hisuian_shiny',
-  'Hisui Unisexe Shiny': 'hisuian_shiny',
+  'Hisui Asexué Shiny': 'hisuian_shiny',
   'Hisui Mâle':          'hisuian_male',
   'Hisui Femelle':       'hisuian_female',
   'Hisui':               'hisuian',
-  'Hisui Unisexe':       'hisuian',
+  'Hisui Asexué':       'hisuian',
 };
 
 export const VARIANT_STATUS_META = {

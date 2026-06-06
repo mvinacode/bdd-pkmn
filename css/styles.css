@@ -2016,7 +2016,7 @@ body {
 }
 
 .evo-condition-item.is-galanoa-band::before {
-  background: linear-gradient(135deg, #7e553a, #f0742b, #338e0f);
+  background: linear-gradient(135deg, #7e553a, #f0742b, #338e0f) !important;
 }
 .evo-condition-item.is-galanoa-band .evo-condition {
   color: #fd7b2c !important;
@@ -2294,6 +2294,21 @@ body {
 }
 .evo-chain-pikachu-regional .evo-arrow .evo-condition {
   width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* Dual-root : grille unifiée [portrait | flèche | cible] sur toutes les lignes */
+.evo-dual-root-grid {
+  display: grid;
+  grid-template-columns: max-content max-content max-content;
+  align-items: center;
+  justify-items: start;
+  row-gap: 6px;
+  column-gap: 4px;
+}
+.evo-dual-root-grid .evo-condition {
+  width: 200px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -2597,7 +2612,10 @@ body {
 .variant-card[data-type="shiny_female"],
 .variant-card[data-type="alolan_shiny"],
 .variant-card[data-type="alolan_shiny_male"],
-.variant-card[data-type="alolan_shiny_female"] {
+.variant-card[data-type="alolan_shiny_female"],
+.variant-card[data-type="galarian_shiny"],
+.variant-card[data-type="galarian_shiny_male"],
+.variant-card[data-type="galarian_shiny_female"] {
   border-color: rgba(253,216,53,0.25);
 }
 .variant-card[data-type="shiny"] .variant-label,
@@ -2605,7 +2623,10 @@ body {
 .variant-card[data-type="shiny_female"] .variant-label,
 .variant-card[data-type="alolan_shiny"] .variant-label,
 .variant-card[data-type="alolan_shiny_male"] .variant-label,
-.variant-card[data-type="alolan_shiny_female"] .variant-label {
+.variant-card[data-type="alolan_shiny_female"] .variant-label,
+.variant-card[data-type="galarian_shiny"] .variant-label,
+.variant-card[data-type="galarian_shiny_male"] .variant-label,
+.variant-card[data-type="galarian_shiny_female"] .variant-label {
   color: var(--yellow);
   font-weight: 700;
 }
