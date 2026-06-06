@@ -211,7 +211,7 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
           const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
           return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}`;
         }).join('');
-        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}${renderNode(nextNode, depth + 1, true)}${regionalRows}</div>`;
+        return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}<div class="evo-inline-chain">${renderNode(nextNode, depth + 1, true)}</div>${regionalRows}</div>`;
       }
       return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1, excludeRegionals)}`;
     }
