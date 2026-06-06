@@ -1716,12 +1716,12 @@ body {
 }
 
 .evo-condition.is-galanoa-band {
-  color: #fd7b2c;
-  border: 1px solid transparent;
+  color: #fd7b2c !important;
+  border: 1px solid transparent !important;
   background:
     linear-gradient(rgba(240,116,43,0.10), rgba(240,116,43,0.10)) padding-box,
-    linear-gradient(135deg, #7e553a, #f0742b, #338e0f) border-box;
-  text-shadow: 0 0 8px rgba(253,123,44,0.35);
+    linear-gradient(135deg, #7e553a, #f0742b, #338e0f) border-box !important;
+  text-shadow: 0 0 8px rgba(253,123,44,0.35) !important;
 }
 
 .evo-condition.is-kings-rock {
