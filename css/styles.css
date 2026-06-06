@@ -2296,6 +2296,9 @@ body {
 .evo-branches-pikachu .evo-branch-item {
   display: contents;
 }
+.evo-branches-pikachu .evo-stage {
+  align-items: flex-start;
+}
 
 /* Grid aplati 4 colonnes : [pokemon | spacer | flèche | portrait]
    Tous les portraits (Gigamax, Persian, Alola Persian, Berserkatt…) partagent la col 4. */
