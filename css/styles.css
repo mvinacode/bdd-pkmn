@@ -2015,6 +2015,14 @@ body {
   text-shadow: 0 0 8px rgba(251,209,0,0.45);
 }
 
+.evo-condition-item.is-galanoa-band::before {
+  background: linear-gradient(135deg, #7e553a, #f0742b, #338e0f);
+}
+.evo-condition-item.is-galanoa-band .evo-condition {
+  color: #fd7b2c !important;
+  text-shadow: 0 0 8px rgba(253,123,44,0.35);
+}
+
 /* Portrait racine (Pokémon source d'une chaîne avec branches multiples) */
 .evo-portrait--root .evo-img-wrap {
   width: 148px;
