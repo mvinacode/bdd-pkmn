@@ -236,12 +236,20 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
           ].join('');
           leafBranchHtml = `<div class="evo-branches evo-branches-special">${bs}</div>`;
         }
+        const allRegionalsClaim = regionals.length > 0 && regionals.every(r => r.evolution_into_number === nextNode.node.number);
         const regionalRows = regionals.map(r => {
+          const claimsLeaf   = r.evolution_into_number === nextNode.node.number;
           const matchingNext = nextRegionals.find(nr => nr.region === r.region);
           const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || condition;
           const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
-          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>'}`;
+          const targetCell   = claimsLeaf
+            ? `<div class="evo-stage">${leafPortrait}</div>`
+            : (matchingNext ? `<div class="evo-stage">${evoRegionalPortrait(matchingNext)}</div>` : '<div class="evo-stage"></div>');
+          return `<div class="evo-stage">${evoRegionalPortrait(r)}</div>${evoArrow(arrowCond, arrowItemImg)}${targetCell}`;
         }).join('');
+        if (allRegionalsClaim) {
+          return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div><div></div><div></div>${regionalRows}</div>${leafBranchHtml}`;
+        }
         return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}<div class="evo-stage">${leafPortrait}</div>${regionalRows}</div>${leafBranchHtml}`;
       }
       return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1, excludeRegionals)}`;
