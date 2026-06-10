@@ -2171,6 +2171,19 @@ body {
   background: linear-gradient(135deg, #111111, #888888, #111111);
 }
 
+/* Échange avec Peau Métal */
+.evo-condition-item.is-trade-metal-coat::before {
+  background: linear-gradient(135deg, #9b9b9b, #c6c9c9, #91b0b0) !important;
+}
+.evo-condition-item.is-trade-metal-coat .evo-condition {
+  color: #a0a0a0 !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-trade-metal-coat.evo-condition--unseen::before,
+.evo-condition-item.is-trade-metal-coat.evo-condition--seen::before {
+  background: linear-gradient(135deg, #9b9b9b, #c6c9c9, #91b0b0) !important;
+}
+
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
 /* (le dégradé vient des règles existantes, rien à surcharger) */
 

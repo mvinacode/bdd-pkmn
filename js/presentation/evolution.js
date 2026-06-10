@@ -25,6 +25,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isGalanoaBand = /(bracelet|couronne)\s+galanoa/i.test(condition);
     const isKingsRock   = /roche\s+royale/i.test(condition);
     const isTradeEvo    = /échange/i.test(condition) && !isKingsRock;
+    const isTradeMetalCoat = isTradeEvo && /peau\s*m[ée]tal/i.test(condition);
     const isStone      = !bidirectional && !isGigamax && !isGalanoaBand;
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -33,7 +34,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneSun   = isStone && /soleil/i.test(condition);
     const isStoneWater = isStone && /\beau\b/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo ? ' is-trade' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}</span>
     </div>`;
