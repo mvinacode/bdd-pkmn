@@ -98,12 +98,8 @@ export function renderCard(pokemon, icons = {}) {
   const baronStatus  = formStatuses.find(f => f.key === 'baron')?.status;
   const shinyStatus  = formStatuses.find(f => f.key === 'shiny')?.status;
   const strictOk     = !window._strictComplete || (!!catch_ && shinyStatus === 'owned');
-  const nonBaronForms = formStatuses.filter(f => f.key !== 'baron');
 
   const pokemonVMap  = store.variantMap[pokemon.number];
-  const hasMegaInGame = !pokemonVMap
-    ? true
-    : ['mega','mega_x','mega_y'].some(vt => vt in pokemonVMap) || !!(store.specialFormsMap[pokemon.number] && Object.keys(store.specialFormsMap[pokemon.number]).length);
 
   const genderMode = window._genderFormsMode || 'none';
   const allSeenOwned = Object.entries(seenFormsMap).every(([vt, f]) =>
@@ -182,19 +178,9 @@ export function renderCard(pokemon, icons = {}) {
       : baronStatus === 'owned' && allSeenOwned && (!window._requireAllFormsForComplete || (allVariantsOwned && genderGroupsOk)))
     && formStatuses.every(f => !f.status || f.status === 'owned');
 
-  const hasAnyGenderOwned = [...GENDER_VTS_FLAT].some(vt => seenFormsMap[vt]?.status === 'owned');
-  const hasAnyForm = nonBaronForms.some(f => !!f.status)
-    || (genderMode !== 'none' && hasAnyGenderOwned);
-
-  const isAllForms = !isComplete
-    && allSeenOwned && allVariantsOwned && genderGroupsOk && hasAnyForm
-    && nonBaronForms.every(f => !f.status || f.status === 'owned')
-    && (!hasMegaInGame || formStatuses.find(f => f.key === 'mega')?.status === 'owned');
-
   const card = document.createElement('article');
   card.className = 'poke-card poke-card--' + cardState
-    + (isComplete ? ' poke-card--complete' : '')
-    + (isAllForms ? ' poke-card--all-forms' : '');
+    + (isComplete ? ' poke-card--complete' : '');
   card.role = 'listitem';
   card.tabIndex = 0;
   card.dataset.number = pokemon.number;
@@ -211,14 +197,6 @@ export function renderCard(pokemon, icons = {}) {
     </div>`;
   })() : '';
 
-  const allFormsSparkles = (isAllForms && window._allFormsAnim === 'rainbow' && pokemon.can_be_baron === false) ? `
-    <span class="sparkle" style="top:4px;left:10px;color:#ff5050;--sparkle-delay:0.3s;--sparkle-size:0.8rem;--sparkle-dur:2.2s">✦</span>
-    <span class="sparkle" style="top:3px;right:10px;color:#ffcc00;--sparkle-delay:1s;--sparkle-size:0.6rem;--sparkle-dur:1.9s">✦</span>
-    <span class="sparkle" style="top:40%;right:3px;color:#44dd66;--sparkle-delay:1.7s;--sparkle-size:0.7rem;--sparkle-dur:2.5s">✦</span>
-    <span class="sparkle" style="bottom:22px;left:5px;color:#4488ff;--sparkle-delay:0.6s;--sparkle-size:0.65rem;--sparkle-dur:2.1s">✦</span>
-    <span class="sparkle" style="bottom:8px;right:12px;color:#cc44ff;--sparkle-delay:1.4s;--sparkle-size:0.75rem;--sparkle-dur:2.4s">✦</span>
-    <span class="sparkle" style="top:30%;left:4px;color:#ff8800;--sparkle-delay:2s;--sparkle-size:0.55rem;--sparkle-dur:2s">✦</span>` : '';
-
   const completionSparkles = isComplete ? `
     <span class="sparkle" style="top:3px;left:14px;color:#ff5050;--sparkle-delay:0s;--sparkle-size:0.85rem;--sparkle-dur:2.1s">✦</span>
     <span class="sparkle" style="top:2px;right:12px;color:#ffcc00;--sparkle-delay:0.7s;--sparkle-size:0.65rem;--sparkle-dur:1.8s">✦</span>
@@ -229,7 +207,6 @@ export function renderCard(pokemon, icons = {}) {
 
   card.innerHTML = `
     ${completionSparkles}
-    ${allFormsSparkles}
     ${catchBadgeHtml}
     <div class="poke-number">#${esc(padNumber(pokemon.number))}</div>
     <div class="poke-image-wrapper">

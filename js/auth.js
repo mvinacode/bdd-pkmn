@@ -22,10 +22,6 @@ export async function initAuth() {
   window._ownerUuid = session.user.id;
   const prefs = USER_PREFS[session.user.id] || {};
   window._genderFormsMode = prefs.genderFormsMode || 'none';
-  if (prefs.allFormsAnim) {
-    window._allFormsAnim = prefs.allFormsAnim;
-    document.body.dataset.allFormsAnim = prefs.allFormsAnim;
-  }
   window._strictComplete = prefs.strictComplete === true;
   window._requireAllFormsForComplete = prefs.requireAllFormsForComplete === true;
 
