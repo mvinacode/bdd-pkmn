@@ -8,9 +8,11 @@ import { openModal, closeModal, setModalCallbacks } from './presentation/modal.j
 import { bindDrawerEvents, openDrawerWithPokemon, setDrawerCallbacks } from './presentation/drawer.js?v=3';
 import { populateTypeFilters } from './presentation/filters.js';
 import { fetchPokemon, fetchCardIcons, getSupabaseClient } from './supabase-client.js?v=1';
+import { initScrollMemory, restoreScrollPosition, saveAnchor } from './application/scroll-memory.js?v=1';
 
 // Wiring callbacks (évite les dépendances circulaires entre modules de présentation)
-setCardCallbacks({ openModal });
+// La carte cliquée devient l'ancre de scroll restaurée au prochain chargement
+setCardCallbacks({ openModal: n => { saveAnchor(n); openModal(n); } });
 setModalCallbacks({ updateCardAfterCatch, openDrawerWithPokemon });
 setDrawerCallbacks({ openModal, updateCardAfterCatch });
 setCatchesCallbacks({ onCardRefresh: updateCardAfterCatch });
@@ -184,12 +186,14 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && !els.modal
 
 async function init() {
   bindDrawerEvents();
+  initScrollMemory();
   try {
     await Promise.all([loadCatchesMap(), populateTypeFilters()]);
   } catch (err) {
     console.error('[init]', err);
   }
-  loadPokemon(false);
+  await loadPokemon(false);
+  restoreScrollPosition(() => loadPokemon(true));
 }
 
 initAuth().then(ok => { if (ok) init(); });
