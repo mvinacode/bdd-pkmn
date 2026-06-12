@@ -106,6 +106,13 @@ export function renderCard(pokemon, icons = {}) {
     (genderMode === 'any' && GENDER_VTS_FLAT.has(vt)) ? true : f.status === 'owned'
   );
 
+  // Une capture shiny ne couvre la variante 'shiny' de base que si c'est un shiny
+  // de la forme normale — un shiny régional/méga/gigamax/baron a sa propre variante
+  const isBaseShinyCatch = c => !!c?.is_shiny
+    && !ALOLA_FORM_VT[c.form_label] && !GALAR_FORM_VT[c.form_label]
+    && !HISUI_FORM_VT[c.form_label] && !SPECIAL_FORM_VT[c.form_label]
+    && !/^(Méga|Gigamax|Baron)/.test(c.form_label || '');
+
   const catchCoveredVts = new Set([
     ALOLA_FORM_VT[catch_?.form_label],
     ALOLA_FORM_VT[recentShinyCatch?.form_label],
@@ -115,7 +122,7 @@ export function renderCard(pokemon, icons = {}) {
     HISUI_FORM_VT[recentShinyCatch?.form_label],
     SPECIAL_FORM_VT[catch_?.form_label],
     SPECIAL_FORM_VT[recentShinyCatch?.form_label],
-    ...(catch_?.is_shiny || recentShinyCatch ? ['shiny'] : []),
+    ...(isBaseShinyCatch(catch_) || isBaseShinyCatch(recentShinyCatch) ? ['shiny'] : []),
   ].filter(Boolean));
 
   const TRACKED_VT = new Set([
