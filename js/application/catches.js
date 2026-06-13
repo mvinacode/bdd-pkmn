@@ -3,7 +3,7 @@ import { getOwnerUuid } from '../utils.js';
 import {
   upsertSeen, deleteSeenForm, deleteAllSeenForPokemon,
   fetchCatches, fetchSeen, fetchVariantMap, fetchSpecialFormsForNumbers,
-  fetchRegionalBaronNumbers,
+  fetchRegionalBaronNumbers, fetchRegionalForms,
 } from '../supabase-client.js';
 import { getVariantStatus } from '../domain/completion.js';
 import { ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT } from '../domain/constants.js';
@@ -103,6 +103,18 @@ export async function loadCatchesMap() {
     ...Object.keys(store.seenMap).map(Number),
   ])];
   if (allNums.length) {
+    // Types des formes régionales : chargés en AWAIT (avant le 1er rendu de la
+    // grille) pour qu'une carte représentant une forme régionale capturée
+    // affiche d'emblée le bon type, sans dépendre d'un refresh asynchrone.
+    try {
+      const regionalForms = await fetchRegionalForms(allNums);
+      store.regionalFormsMap = {};
+      for (const f of (regionalForms || [])) {
+        if (!store.regionalFormsMap[f.pokemon_number]) store.regionalFormsMap[f.pokemon_number] = [];
+        store.regionalFormsMap[f.pokemon_number].push({ region: f.region, types: f.types });
+      }
+    } catch { /* non bloquant : on retombe sur les types de base */ }
+
     Promise.all([
       fetchVariantMap(allNums),
       fetchSpecialFormsForNumbers(allNums),

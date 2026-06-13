@@ -19,6 +19,19 @@ const SPECIAL_FORMS_ICONS = [
   { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
 ];
 
+// Quand la carte représente une forme régionale capturée (Alola/Galar/Hisui),
+// renvoie la liste de ses types (depuis store.regionalFormsMap) plutôt que ceux
+// de la forme de base. Retourne null si la forme affichée n'est pas régionale.
+function regionalTypesFor(pokemonNumber, formLabel) {
+  const vt = ALOLA_FORM_VT[formLabel] || GALAR_FORM_VT[formLabel] || HISUI_FORM_VT[formLabel];
+  if (!vt) return null;
+  const region = vt.split('_')[0]; // 'alolan' | 'galarian' | 'hisuian'
+  const form = (store.regionalFormsMap?.[pokemonNumber] || []).find(f => f.region === region);
+  if (!form?.types) return null;
+  const list = form.types.split(',').map(t => t.trim()).filter(Boolean);
+  return list.length ? list : null;
+}
+
 export function updateCardAfterCatch(pokemonNumber) {
   const grid = document.getElementById('pokemon-grid');
   if (!grid) return;
@@ -30,16 +43,21 @@ export function updateCardAfterCatch(pokemonNumber) {
 }
 
 export function renderCard(pokemon, icons = {}) {
-  const primaryType = pokemon.types?.[0] || '';
   const catch_  = store.catchByNumber[pokemon.number] || null;
   const isSeen  = store.seenSet.has(pokemon.number);
-  const types   = (pokemon.types || []).map(typeBadge).join('');
   const cardState = catch_ ? 'caught' : isSeen ? 'seen' : 'unseen';
 
   const seenForms    = !catch_ && store.seenMap[pokemon.number] ? Object.values(store.seenMap[pokemon.number]) : [];
   const seenIsShiny  = seenForms.length > 0 && seenForms.every(f => f.is_shiny);
   const recentShinyCatch = store.shinyCatchByNumber[pokemon.number] || null;
   const isShinyDisplay   = recentShinyCatch ? true : (catch_ ? catch_.is_shiny : seenIsShiny);
+
+  // Types & couleur d'accent alignés sur la forme réellement affichée : si c'est
+  // une forme régionale capturée, on prend ses types plutôt que ceux de base.
+  const displayFormLabel = isShinyDisplay ? recentShinyCatch?.form_label : catch_?.form_label;
+  const typeList    = regionalTypesFor(pokemon.number, displayFormLabel) || pokemon.types || [];
+  const primaryType = typeList[0] || '';
+  const types       = typeList.map(typeBadge).join('');
 
   let imgSrc;
   if (isShinyDisplay) {

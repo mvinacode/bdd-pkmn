@@ -11,6 +11,7 @@ export const store = {
   variantMap:       {},
   specialFormsMap:  {},
   regionalBaronMap: {},
+  regionalFormsMap: {},
 
   // Modal
   currentModalPokemonNumber: null,

@@ -10,7 +10,7 @@ import {
   normalizeVariantUrl, padNumber,
 } from '../domain/constants.js';
 import { getVariantStatus } from '../domain/completion.js';
-import { addToSeen } from '../application/catches.js';
+import { addToSeen } from '../application/catches.js?v=1';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
