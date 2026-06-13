@@ -254,6 +254,25 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
         }
         return `<div class="evo-chain-regional-grid"><div class="evo-stage">${portrait}</div>${evoArrow(condition, nextNode.node.evolution_item_image_url || null)}<div class="evo-stage">${leafPortrait}</div>${regionalRows}</div>${leafBranchHtml}`;
       }
+      // Cible unique dont les formes régionales évoluent aussi depuis ce Pokémon
+      // (ex. Noeunoeuf → Noadkoko / Noadkoko d'Alola) : racine étirée + une
+      // branche par cible, chacune avec sa propre pill de condition
+      const soleChild      = node.children[0];
+      const soleRegionals  = excludeRegionals ? [] : (regionalsByNumber[soleChild.node.number] || []);
+      const soleHasSpecials = (megasByNumber[soleChild.node.number] || []).length > 0
+        || (gigamaxByNumber[soleChild.node.number] || []).length > 0;
+      if (soleChild.children.length === 0 && !soleHasSpecials
+          && soleRegionals.length > 0 && soleRegionals.every(r => r.evolution_condition)) {
+        const leafIconUrl  = iconByNumber[soleChild.node.number] || null;
+        const leafPortrait = evoPortrait(soleChild.node, soleChild.node.number === currentNumber, leafIconUrl);
+        const branchesHtml = [
+          `<div class="evo-branch-item">${evoArrow(condition, soleChild.node.evolution_item_image_url || null)}<div class="evo-stage">${leafPortrait}</div></div>`,
+          ...soleRegionals.map(r =>
+            `<div class="evo-branch-item">${evoArrow(r.evolution_condition, r.evolution_item_image_url || null)}<div class="evo-stage">${evoRegionalPortrait(r)}</div></div>`
+          ),
+        ].join('');
+        return `<div class="evo-stage">${portrait}</div><div class="evo-branches evo-branches-aligned">${branchesHtml}</div>`;
+      }
       return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1, excludeRegionals)}`;
     }
 

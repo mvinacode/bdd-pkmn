@@ -2294,6 +2294,30 @@ body {
   align-items: flex-start;
 }
 
+/* Branches « cible unique + formes régionales » (ex. Osselait → Ossatueur /
+   Ossatueur d'Alola) : même grille que les branches méga/pikachu pour aligner
+   flèches et portraits, et pills étirées à largeur identique pour l'homogénéité */
+.evo-branches-aligned {
+  display: grid;
+  grid-template-columns: max-content auto;
+  row-gap: 6px;
+  align-items: center;
+}
+.evo-branches-aligned .evo-branch-item {
+  display: contents;
+}
+.evo-branches-aligned .evo-arrow {
+  width: 100%;
+}
+.evo-branches-aligned .evo-condition {
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+}
+.evo-branches-aligned .evo-stage {
+  align-items: flex-start;
+}
+
 /* Grid aplati 4 colonnes : [pokemon | spacer | flèche | portrait]
    Tous les portraits (Gigamax, Persian, Alola Persian, Berserkatt…) partagent la col 4. */
 .evo-chain-pikachu-regional {
