@@ -1727,6 +1727,16 @@ body {
   text-shadow: none;
 }
 
+/* Échange avec Écaille Draco (Hyporoi) */
+.evo-condition.is-trade-draco-scale {
+  color: #97d1e6;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #92cde0, #a8e8d8, #f0f0a8) border-box;
+  text-shadow: none;
+}
+
 .evo-condition.is-galanoa-band {
   color: #fd7b2c !important;
   border: 1px solid transparent !important;
@@ -2226,6 +2236,19 @@ body {
 .evo-condition-item.is-trade-protector.evo-condition--unseen::before,
 .evo-condition-item.is-trade-protector.evo-condition--seen::before {
   background: linear-gradient(135deg, #e07039, #513e40, #221f21) !important;
+}
+
+/* Échange avec Écaille Draco (Hyporoi) */
+.evo-condition-item.is-trade-draco-scale::before {
+  background: linear-gradient(135deg, #92cde0, #a8e8d8, #f0f0a8) !important;
+}
+.evo-condition-item.is-trade-draco-scale .evo-condition {
+  color: #97d1e6 !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-trade-draco-scale.evo-condition--unseen::before,
+.evo-condition-item.is-trade-draco-scale.evo-condition--seen::before {
+  background: linear-gradient(135deg, #92cde0, #a8e8d8, #f0f0a8) !important;
 }
 
 /* 1 Niv. + Jour + Avec Pierre Ovale (Leveinard) */

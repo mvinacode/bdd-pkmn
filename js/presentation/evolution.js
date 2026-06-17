@@ -27,6 +27,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isTradeEvo    = /échange/i.test(condition) && !isKingsRock;
     const isTradeMetalCoat = isTradeEvo && /peau\s*m[ée]tal/i.test(condition);
     const isTradeProtector = isTradeEvo && /protecteur/i.test(condition);
+    const isTradeDracoScale = isTradeEvo && /écaille\s+draco/i.test(condition);
     const isStone      = !bidirectional && !isGigamax && !isGalanoaBand;
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -36,7 +37,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneWater = isStone && /\beau\b/i.test(condition);
     const isOvalStone  = /pierre\s+ovale/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}</span>
     </div>`;
@@ -60,6 +61,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isKingsRock    = /roche\s+royale/i.test(condition);
     const isTradeEvo     = /échange/i.test(condition) && !isKingsRock;
     const isTradeProtector = isTradeEvo && /protecteur/i.test(condition);
+    const isTradeDracoScale = isTradeEvo && /écaille\s+draco/i.test(condition);
     const conditionInner = isRageMove
       ? esc(condition).replace(/Poing de Col[eè]re/i, '<span class="move-name">$&</span>')
       : isRolloutMove
@@ -67,7 +69,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
       : isAncientPowerMove
       ? esc(condition).replace(/Pouvoir Antique/i, '<span class="move-name">$&</span>')
       : esc(condition);
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCritical ? ' is-critical' : ''}">${conditionInner}</span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCritical ? ' is-critical' : ''}">${conditionInner}</span>`;
   }
   const arrowSvg = bidirectional
     ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
