@@ -1696,6 +1696,16 @@ body {
   text-shadow: none;
 }
 
+/* Échange avec Protecteur (Rhinastoc) */
+.evo-condition.is-trade-protector {
+  color: #e37f4d;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #e07039, #513e40, #221f21) border-box;
+  text-shadow: none;
+}
+
 .evo-condition.is-galanoa-band {
   color: #fd7b2c !important;
   border: 1px solid transparent !important;
@@ -1766,6 +1776,23 @@ body {
   line-height: 1.3;
 }
 .evo-condition.is-rage-move .move-name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.evo-condition.is-rollout-move {
+  color: #b0aa82;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #ffffff, #b0aa82) border-box;
+  text-shadow: 0 0 10px rgba(176, 170, 130, 0.4);
+  white-space: normal;
+  text-align: center;
+  max-width: 12rem;
+  line-height: 1.3;
+}
+.evo-condition.is-rollout-move .move-name {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -2163,6 +2190,19 @@ body {
 .evo-condition-item.is-trade-metal-coat.evo-condition--unseen::before,
 .evo-condition-item.is-trade-metal-coat.evo-condition--seen::before {
   background: linear-gradient(135deg, #9b9b9b, #c6c9c9, #91b0b0) !important;
+}
+
+/* Échange avec Protecteur (Rhinastoc) */
+.evo-condition-item.is-trade-protector::before {
+  background: linear-gradient(135deg, #e07039, #513e40, #221f21) !important;
+}
+.evo-condition-item.is-trade-protector .evo-condition {
+  color: #e37f4d !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-trade-protector.evo-condition--unseen::before,
+.evo-condition-item.is-trade-protector.evo-condition--seen::before {
+  background: linear-gradient(135deg, #e07039, #513e40, #221f21) !important;
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
