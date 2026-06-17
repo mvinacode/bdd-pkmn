@@ -1801,7 +1801,8 @@ body {
   text-underline-offset: 2px;
 }
 
-.evo-condition.is-rollout-move {
+.evo-condition.is-rollout-move,
+.evo-condition.is-ancient-power-move {
   color: #b0aa82;
   border: 1px solid transparent;
   background:
@@ -1813,7 +1814,8 @@ body {
   max-width: 12rem;
   line-height: 1.3;
 }
-.evo-condition.is-rollout-move .move-name {
+.evo-condition.is-rollout-move .move-name,
+.evo-condition.is-ancient-power-move .move-name {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
