@@ -159,8 +159,10 @@ let specialFormsMap = {}; // { [pokemon_number]: { [form_key]: { image_url, imag
 
 // Chaînes de fallback par variant_type pour trouver le bon sprite
 function variantFallbacks(vt) {
-  const base      = ['normal', 'male', 'female'];
-  const baseShiny = ['shiny', 'shiny_male', 'shiny_female', 'normal', 'male', 'female'];
+  // 'asexue'/'asexue_shiny' : icône de base des Pokémon asexués (le label
+  // « Asexué » est mappé sur 'normal', mais l'icône est stockée sous 'asexue').
+  const base      = ['normal', 'asexue', 'male', 'female'];
+  const baseShiny = ['shiny', 'asexue_shiny', 'shiny_male', 'shiny_female', 'normal', 'asexue', 'male', 'female'];
   const chains = {
     'alolan_shiny_male':   ['alolan_shiny_male',   'alolan_shiny', 'alolan'],
     'alolan_shiny_female': ['alolan_shiny_female',  'alolan_shiny', 'alolan'],
@@ -170,10 +172,10 @@ function variantFallbacks(vt) {
     'alolan':              ['alolan'],
     'shiny_male':          ['shiny_male',   'shiny'],
     'shiny_female':        ['shiny_female', 'shiny'],
-    'shiny':               ['shiny'],
+    'shiny':               ['shiny',  'asexue_shiny'],
     'male':                ['male',   'normal'],
     'female':              ['female', 'normal'],
-    'normal':              ['normal'],
+    'normal':              ['normal', 'asexue'],
     // Méga et Gigamax → sprite de base du Pokémon, pas le sprite spécial
     'mega':          base,      'shiny_mega':    baseShiny,
     'mega_x':        base,      'shiny_mega_x':  baseShiny,
