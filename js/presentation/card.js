@@ -195,12 +195,15 @@ export function renderCard(pokemon, icons = {}) {
   const hasHisuianForms = Object.keys(seenFormsMap).some(vt => vt.startsWith('hisuian'));
   const hisuiCanBeBaron = hasHisuianForms && !!store.regionalBaronMap[pokemon.number];
   const requiresBaronForComplete = pokemon.can_be_baron !== false || hisuiCanBeBaron;
+  // La carte premium exige le Baron Shiny en plus du Baron normal : le statut
+  // « baron » fusionne baron + shiny_baron, on vérifie donc le shiny séparément.
+  const shinyBaronOwned = seenFormsMap['shiny_baron']?.status === 'owned';
   // Garde : au moins une forme réellement possédée (évite la complétion vacuuse sur vide)
   const hasAnyOwnedStatus = !!catch_ || Object.values(seenFormsMap).some(f => f.status === 'owned');
   const isComplete = hasAnyOwnedStatus && strictOk
     && (!requiresBaronForComplete
       ? allSeenOwned && allVariantsOwned && genderGroupsOk
-      : baronStatus === 'owned' && allSeenOwned && (!window._requireAllFormsForComplete || (allVariantsOwned && genderGroupsOk)))
+      : baronStatus === 'owned' && shinyBaronOwned && allSeenOwned && (!window._requireAllFormsForComplete || (allVariantsOwned && genderGroupsOk)))
     && formStatuses.every(f => !f.status || f.status === 'owned');
 
   const card = document.createElement('article');
