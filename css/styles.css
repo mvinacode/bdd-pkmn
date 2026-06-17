@@ -1687,6 +1687,27 @@ body {
 }
 .evo-condition.is-stone-water::after { content: none; }
 
+/* 1 Niv. + Jour + Avec Pierre Ovale (Leveinard) */
+.evo-condition.is-oval-stone {
+  color: #d8e9f1;
+  background: rgba(255,255,255,0.06);
+  text-shadow: none;
+}
+.evo-condition.is-oval-stone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #d9eaf2, #d2e6f0, #a1a2b1);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-oval-stone::after { content: none; }
+
 .evo-condition.is-trade {
   color: #111111;
   border: 1px solid transparent;
@@ -2203,6 +2224,19 @@ body {
 .evo-condition-item.is-trade-protector.evo-condition--unseen::before,
 .evo-condition-item.is-trade-protector.evo-condition--seen::before {
   background: linear-gradient(135deg, #e07039, #513e40, #221f21) !important;
+}
+
+/* 1 Niv. + Jour + Avec Pierre Ovale (Leveinard) */
+.evo-condition-item.is-oval-stone::before {
+  background: linear-gradient(135deg, #d9eaf2, #d2e6f0, #a1a2b1) !important;
+}
+.evo-condition-item.is-oval-stone .evo-condition {
+  color: #d8e9f1 !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-oval-stone.evo-condition--unseen::before,
+.evo-condition-item.is-oval-stone.evo-condition--seen::before {
+  background: linear-gradient(135deg, #d9eaf2, #d2e6f0, #a1a2b1) !important;
 }
 
 /* Vu : dégradé couleur mais pas d'animation sur le portrait */
