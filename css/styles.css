@@ -1830,6 +1830,23 @@ body {
   text-underline-offset: 2px;
 }
 
+.evo-condition.is-copie-move {
+  color: #a0a2a0;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #a0a2a0, #d1d1d1, #eeefee) border-box;
+  text-shadow: 0 0 10px rgba(209, 209, 209, 0.4);
+  white-space: normal;
+  text-align: center;
+  max-width: 12rem;
+  line-height: 1.3;
+}
+.evo-condition.is-copie-move .move-name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .evo-condition.is-critical {
   color: #f0c040;
   border: 1px solid transparent;
