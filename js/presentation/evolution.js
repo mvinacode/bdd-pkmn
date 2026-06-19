@@ -186,6 +186,32 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
         const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
         return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div><div class="evo-branches-pikachu">${gigaBranches}${mainBranch}${regionalBranches}</div>`;
       }
+      // Cas asymétrique : l'enfant unique est terminal sous sa forme normale,
+      // mais une de ses formes régionales ré-évolue vers le petit-enfant
+      // (ex. Mime Jr → M. Mime [terminal] / M. Mime de Galar → M. Glaquette).
+      // On éclate en deux branches : la normale s'arrête à l'enfant, la régionale
+      // enchaîne forme régionale → petit-enfant avec leurs conditions propres.
+      {
+        const soleChild       = node.children[0];
+        const childRegionals  = regionalsByNumber[soleChild.node.number] || [];
+        const evolvingRegional = childRegionals.find(r =>
+          r.evolution_into_number && soleChild.children.some(gc => gc.node.number === r.evolution_into_number)
+        );
+        if (soleChild.children.length === 1 && evolvingRegional) {
+          const grandChild   = soleChild.children.find(gc => gc.node.number === evolvingRegional.evolution_into_number);
+          const childIconUrl = iconByNumber[soleChild.node.number] || null;
+          const childPortrait = evoPortrait(soleChild.node, soleChild.node.number === currentNumber, childIconUrl);
+          const gcIconUrl    = iconByNumber[grandChild.node.number] || null;
+          const gcPortrait   = evoPortrait(grandChild.node, grandChild.node.number === currentNumber, gcIconUrl);
+          const normalBranch = `<div class="evo-branch-item">${evoArrow(condition, soleChild.node.evolution_item_image_url || null)}<div class="evo-stage">${childPortrait}</div></div>`;
+          // Chaîne régionale (forme régionale → petit-enfant) regroupée dans une
+          // seule cellule pour que la grille « alignée » empile les deux pills de
+          // départ (col 1) à largeur identique l'une sous l'autre.
+          const regionalChain = `<div class="evo-inline-chain"><div class="evo-stage">${evoRegionalPortrait(evolvingRegional)}</div>${evoArrow(grandChild.node.evolution_condition || '', grandChild.node.evolution_item_image_url || null)}<div class="evo-stage">${gcPortrait}</div></div>`;
+          const regionalBranch = `<div class="evo-branch-item">${evoArrow(evolvingRegional.evolution_condition || '', evolvingRegional.evolution_item_image_url || null)}${regionalChain}</div>`;
+          return `<div class="evo-stage">${portrait}</div><div class="evo-branches evo-branches-aligned">${normalBranch}${regionalBranch}</div>`;
+        }
+      }
       if (regionals.length > 0) {
         const nextNode      = node.children[0];
         const nextRegionals = regionalsByNumber[nextNode.node.number] || [];

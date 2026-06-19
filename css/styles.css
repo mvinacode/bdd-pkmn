@@ -2432,6 +2432,13 @@ body {
 .evo-branches-aligned .evo-stage {
   align-items: flex-start;
 }
+/* Chaîne régionale imbriquée (forme régionale → petit-enfant) : ses pills gardent
+   leur largeur naturelle, sinon le width:100% ci-dessus étire la 2e pill (ex. Niv. 42)
+   sur toute la cellule de la grille. */
+.evo-branches-aligned .evo-inline-chain .evo-arrow,
+.evo-branches-aligned .evo-inline-chain .evo-condition {
+  width: auto;
+}
 
 /* Grid aplati 4 colonnes : [pokemon | spacer | flèche | portrait]
    Tous les portraits (Gigamax, Persian, Alola Persian, Berserkatt…) partagent la col 4. */
