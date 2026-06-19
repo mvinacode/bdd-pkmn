@@ -157,6 +157,20 @@ let allCatches     = [];
 let variantMap     = {}; // { [pokemon_number]: { [variant_type]: image_url } }
 let specialFormsMap = {}; // { [pokemon_number]: { [form_key]: { image_url, image_url_shiny, ... } } }
 
+// ── Sections pliables ──────────────────────────────────────────
+// Clés des sections repliées, persistées pour survivre aux re-renders
+// (déclenchés après chaque édition/suppression de capture).
+const COLLAPSE_STORE = 'journal-collapsed-sections';
+function loadCollapsed() {
+  try { return new Set(JSON.parse(localStorage.getItem(COLLAPSE_STORE)) || []); }
+  catch { return new Set(); }
+}
+function saveCollapsed() {
+  try { localStorage.setItem(COLLAPSE_STORE, JSON.stringify([...collapsedSections])); }
+  catch { /* localStorage indisponible : pliage non persisté, pas bloquant */ }
+}
+const collapsedSections = loadCollapsed();
+
 // Chaînes de fallback par variant_type pour trouver le bon sprite
 function variantFallbacks(vt) {
   // 'asexue'/'asexue_shiny' : icône de base des Pokémon asexués (le label
@@ -250,13 +264,15 @@ function renderSession(session) {
     </div>`;
 }
 
-function renderSection(title, sessions) {
+function renderSection(title, sessions, key) {
+  const collapsed = collapsedSections.has(key);
   return `
-    <section class="journal-section">
-      <div class="journal-section-header">
+    <section class="journal-section${collapsed ? ' is-collapsed' : ''}" data-section-key="${esc(key)}">
+      <button type="button" class="journal-section-header" aria-expanded="${collapsed ? 'false' : 'true'}">
+        <svg class="journal-section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
         <h3>${esc(title)}</h3>
         <span class="journal-section-count">${sessions.length} capture${sessions.length > 1 ? 's' : ''}</span>
-      </div>
+      </button>
       <div class="journal-section-entries">
         ${sessions.map(renderSession).join('')}
       </div>
@@ -274,7 +290,8 @@ function renderChrono(sessions) {
     .sort(([a], [b]) => b.localeCompare(a))
     .map(([key, items]) => renderSection(
       key === 'unknown' ? 'Date inconnue' : formatMonthYear(key + '-01'),
-      items
+      items,
+      'chrono:' + key
     )).join('');
 }
 
@@ -289,7 +306,7 @@ function renderByGame(sessions) {
   const named   = Object.entries(byGame).filter(([k]) => k !== NO_GAME).sort(([a], [b]) => a.localeCompare(b, 'fr'));
   const unnamed = Object.entries(byGame).filter(([k]) => k === NO_GAME);
   return [...named, ...unnamed]
-    .map(([game, items]) => renderSection(game, items))
+    .map(([game, items]) => renderSection(game, items, 'game:' + game))
     .join('');
 }
 
@@ -309,6 +326,27 @@ function render() {
   total.textContent = `${sessions.length} capture${sessions.length > 1 ? 's' : ''}`;
   content.className = currentView === 'game' ? 'journal-content view-game' : 'journal-content';
   content.innerHTML = currentView === 'chrono' ? renderChrono(sessions) : renderByGame(sessions);
+  updateToggleAllLabel();
+}
+
+// ── Pliage / dépliage des sections ─────────────────────────────
+
+function updateToggleAllLabel() {
+  const btn = $('toggle-all');
+  if (!btn) return;
+  const sections = document.querySelectorAll('.journal-section');
+  if (!sections.length) { btn.hidden = true; return; }
+  btn.hidden = false;
+  const allCollapsed = [...sections].every(s => s.classList.contains('is-collapsed'));
+  btn.textContent = allCollapsed ? 'Tout déplier' : 'Tout plier';
+}
+
+function setSectionCollapsed(section, collapsed) {
+  const key = section.dataset.sectionKey;
+  section.classList.toggle('is-collapsed', collapsed);
+  if (collapsed) collapsedSections.add(key); else collapsedSections.delete(key);
+  const header = section.querySelector('.journal-section-header');
+  if (header) header.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
 }
 
 // ── Entrées de formes (même logique que renderDrawerForms dans app.js) ────────
@@ -776,6 +814,27 @@ $('journal-content').addEventListener('click', e => {
   const sessionId = je.dataset.sessionId;
   const session   = groupBySession(allCatches).find(s => s.sessionId === sessionId);
   if (session) openEditModal(session);
+});
+
+// Plier / déplier une section au clic sur son en-tête
+$('journal-content').addEventListener('click', e => {
+  const header = e.target.closest('.journal-section-header');
+  if (!header) return;
+  const section = header.closest('.journal-section');
+  if (!section?.dataset.sectionKey) return;
+  setSectionCollapsed(section, !section.classList.contains('is-collapsed'));
+  saveCollapsed();
+  updateToggleAllLabel();
+});
+
+// Bouton global : tout plier / tout déplier (selon l'état courant)
+$('toggle-all').addEventListener('click', () => {
+  const sections = [...document.querySelectorAll('.journal-section')];
+  if (!sections.length) return;
+  const expand = sections.every(s => s.classList.contains('is-collapsed'));
+  for (const s of sections) setSectionCollapsed(s, !expand);
+  saveCollapsed();
+  updateToggleAllLabel();
 });
 
 // ── Initialisation ─────────────────────────────────────────────

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/styles.css?v=135">
   <link rel="stylesheet" href="css/types.css?v=47">
   <link rel="stylesheet" href="css/drawer.css?v=37">
-  <link rel="stylesheet" href="css/journal.css?v=10">
+  <link rel="stylesheet" href="css/journal.css?v=11">
   <link rel="preconnect" href="https://mymkrfqpluimluehorby.supabase.co">
   <link rel="preconnect" href="https://res.cloudinary.com">
   <link rel="preconnect" href="https://raw.githubusercontent.com">
@@ -47,7 +47,10 @@
         <button class="chip active" id="view-chrono">Chronologique</button>
         <button class="chip" id="view-game">Par jeu</button>
       </div>
-      <div id="journal-total" class="journal-total"></div>
+      <div class="journal-controls-right">
+        <button type="button" id="toggle-all" class="journal-toggle-all" hidden>Tout plier</button>
+        <div id="journal-total" class="journal-total"></div>
+      </div>
     </div>
 
     <div id="journal-loader" class="loader" hidden>
@@ -69,7 +72,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="js/journal.js?v=28"></script>
+  <script type="module" src="js/journal.js?v=29"></script>
 
 </body>
 </html>
