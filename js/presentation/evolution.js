@@ -36,8 +36,9 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneSun   = isStone && /soleil/i.test(condition);
     const isStoneWater = isStone && /\beau\b/i.test(condition);
     const isOvalStone  = /pierre\s+ovale/i.test(condition);
+    const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}</span>
     </div>`;

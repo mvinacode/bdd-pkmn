@@ -2137,6 +2137,19 @@ body {
   background: linear-gradient(135deg, #8ed1dd, #3a99b4, #8ed1dd);
 }
 
+/* Obsidienne (Insécateur → Hachécateur) */
+.evo-condition-item.is-obsidienne::before {
+  background: linear-gradient(135deg, #3a3031, #614553, #756878);
+}
+.evo-condition-item.is-obsidienne .evo-condition {
+  color: #614553;
+  text-shadow: none;
+}
+.evo-condition-item.is-obsidienne.evo-condition--unseen::before,
+.evo-condition-item.is-obsidienne.evo-condition--seen::before {
+  background: linear-gradient(135deg, #3a3031, #614553, #756878);
+}
+
 /* Pierre Lune */
 .evo-condition-item.is-stone-moon::before {
   background: linear-gradient(135deg, #8dad95, #748f7d, #8dad95);
