@@ -1831,12 +1831,11 @@ body {
 }
 
 .evo-condition.is-copie-move {
-  color: #a0a2a0;
+  color: #8d8f8d;
   border: 1px solid transparent;
   background:
     linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
-    linear-gradient(135deg, #a0a2a0, #d1d1d1, #eeefee) border-box;
-  text-shadow: 0 0 10px rgba(209, 209, 209, 0.4);
+    linear-gradient(135deg, #737573, #969696, #abacab) border-box;
   white-space: normal;
   text-align: center;
   max-width: 12rem;
