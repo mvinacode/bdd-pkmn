@@ -353,23 +353,18 @@ export async function openModal(number) {
     // « Apparition » : jeux où le Pokémon figure (colonne pokemon.games, tableau
     // de slugs). Affichés dans l'ordre canonique de GAMES ; slugs inconnus ignorés.
     // Rendu en menu flottant repliable, ancré sous le badge de génération.
-    // GAMES est ordonné du plus récent au plus ancien ; on inverse pour afficher
-    // le plus récent à droite (.reverse() agit sur la copie issue de filter()).
+    // GAMES est ordonné du plus récent au plus ancien : on garde cet ordre pour
+    // afficher le plus récent à gauche. Slugs inconnus ignorés.
     const gameSlugs       = Array.isArray(p.games) ? p.games : [];
-    const appearanceGames = GAMES.filter(g => gameSlugs.includes(g.slug)).reverse();
+    const appearanceGames = GAMES.filter(g => gameSlugs.includes(g.slug));
     const appearanceHtml  = appearanceGames.length ? `
       <div class="appearance">
-        <button type="button" class="appearance-toggle" aria-expanded="false" aria-haspopup="true">
-          <span>Apparition</span>
-          <svg class="appearance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-        <div class="appearance-panel" role="menu">
-          <div class="appearance-games">
-            ${appearanceGames.map(g => `
-              <span class="appearance-game" role="menuitem" title="${esc(g.name)}">
-                <img src="${esc(g.iconUrl)}" alt="${esc(g.name)}" width="40" height="40" loading="lazy">
-              </span>`).join('')}
-          </div>
+        <span class="appearance-label">Apparition</span>
+        <div class="appearance-games">
+          ${appearanceGames.map(g => `
+            <span class="appearance-game" title="${esc(g.name)}">
+              <img src="${esc(g.iconUrl)}" alt="${esc(g.name)}" width="40" height="40" loading="lazy">
+            </span>`).join('')}
         </div>
       </div>` : '';
 
@@ -388,28 +383,6 @@ export async function openModal(number) {
       ${evoHtml}
       ${variantsHtml}
     `;
-
-    // Menu flottant « Apparition » : replié par défaut, ferme au clic extérieur.
-    const appearanceEl = modalContent.querySelector('.appearance');
-    if (appearanceEl) {
-      const toggle = appearanceEl.querySelector('.appearance-toggle');
-      toggle.addEventListener('click', e => {
-        e.stopPropagation();
-        const willOpen = !appearanceEl.classList.contains('is-open');
-        appearanceEl.classList.toggle('is-open', willOpen);
-        toggle.setAttribute('aria-expanded', String(willOpen));
-        if (willOpen) {
-          // Listener auto-retiré dès qu'on clique en dehors du menu.
-          const onDocClick = ev => {
-            if (ev.target.closest('.appearance')) return;
-            appearanceEl.classList.remove('is-open');
-            toggle.setAttribute('aria-expanded', 'false');
-            document.removeEventListener('click', onDocClick);
-          };
-          setTimeout(() => document.addEventListener('click', onDocClick), 0);
-        }
-      });
-    }
 
     // Onglets illustrations
     modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(btn => {
