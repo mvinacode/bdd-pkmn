@@ -882,8 +882,9 @@ body {
 
 .modal-header-actions {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -2527,6 +2528,93 @@ body {
 .variants-col-wrap > h4 {
   color: var(--text-muted);
   text-align: center;
+}
+
+/* ── « Apparition » : menu flottant des jeux où le Pokémon figure ── */
+.appearance {
+  position: relative;
+}
+
+.appearance-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.appearance-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.appearance-chevron {
+  transition: transform 0.2s ease;
+}
+
+.appearance.is-open .appearance-chevron {
+  transform: rotate(180deg);
+}
+
+.appearance-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 30;
+  padding: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+.appearance.is-open .appearance-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.appearance-games {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  max-width: min(72vw, 540px);
+  overflow-x: auto;
+}
+
+.appearance-game {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.appearance-game:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+}
+
+.appearance-game img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 
 .variants-grid {

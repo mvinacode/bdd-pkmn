@@ -90,7 +90,7 @@ export async function fetchPokemonByNumber(number) {
     .from('pokemon')
     .select(`
       id, number, name_fr, name_en, generation,
-      image_url, shiny_artwork_url, description_fr, evolves_from_number, can_be_baron,
+      image_url, shiny_artwork_url, description_fr, evolves_from_number, can_be_baron, games,
       pokemon_types ( type_name, slot )
     `)
     .eq('number', number)

@@ -1,5 +1,5 @@
 import { store } from '../store.js';
-import { esc, spriteUrl } from '../utils.js';
+import { esc, spriteUrl, GAMES } from '../utils.js';
 import {
   MEGA_ICON_URL, GIGAMAX_ICON_URL, SHINY_ICON_URL, BARON_ICON_URL,
   VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT,
@@ -11,7 +11,7 @@ import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms,
-} from '../supabase-client.js?v=1';
+} from '../supabase-client.js?v=2';
 import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=193';
 
 // Callbacks injectés par app.js pour éviter circulaire
@@ -350,6 +350,29 @@ export async function openModal(number) {
         ${specialForms.map(renderFormIllusCol).join('')}
       </div>`;
 
+    // « Apparition » : jeux où le Pokémon figure (colonne pokemon.games, tableau
+    // de slugs). Affichés dans l'ordre canonique de GAMES ; slugs inconnus ignorés.
+    // Rendu en menu flottant repliable, ancré sous le badge de génération.
+    // GAMES est ordonné du plus récent au plus ancien ; on inverse pour afficher
+    // le plus récent à droite (.reverse() agit sur la copie issue de filter()).
+    const gameSlugs       = Array.isArray(p.games) ? p.games : [];
+    const appearanceGames = GAMES.filter(g => gameSlugs.includes(g.slug)).reverse();
+    const appearanceHtml  = appearanceGames.length ? `
+      <div class="appearance">
+        <button type="button" class="appearance-toggle" aria-expanded="false" aria-haspopup="true">
+          <span>Apparition</span>
+          <svg class="appearance-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="appearance-panel" role="menu">
+          <div class="appearance-games">
+            ${appearanceGames.map(g => `
+              <span class="appearance-game" role="menuitem" title="${esc(g.name)}">
+                <img src="${esc(g.iconUrl)}" alt="${esc(g.name)}" width="40" height="40" loading="lazy">
+              </span>`).join('')}
+          </div>
+        </div>
+      </div>` : '';
+
     modalContent.innerHTML = `
       <div class="modal-header">
         <div class="modal-header-main">
@@ -358,12 +381,35 @@ export async function openModal(number) {
         </div>
         <div class="modal-header-actions">
           <span class="gen-badge">Gén. ${esc(toRoman(p.generation))}</span>
+          ${appearanceHtml}
         </div>
       </div>
       ${illustrationsHtml}
       ${evoHtml}
       ${variantsHtml}
     `;
+
+    // Menu flottant « Apparition » : replié par défaut, ferme au clic extérieur.
+    const appearanceEl = modalContent.querySelector('.appearance');
+    if (appearanceEl) {
+      const toggle = appearanceEl.querySelector('.appearance-toggle');
+      toggle.addEventListener('click', e => {
+        e.stopPropagation();
+        const willOpen = !appearanceEl.classList.contains('is-open');
+        appearanceEl.classList.toggle('is-open', willOpen);
+        toggle.setAttribute('aria-expanded', String(willOpen));
+        if (willOpen) {
+          // Listener auto-retiré dès qu'on clique en dehors du menu.
+          const onDocClick = ev => {
+            if (ev.target.closest('.appearance')) return;
+            appearanceEl.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+            document.removeEventListener('click', onDocClick);
+          };
+          setTimeout(() => document.addEventListener('click', onDocClick), 0);
+        }
+      });
+    }
 
     // Onglets illustrations
     modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(btn => {
