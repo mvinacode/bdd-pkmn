@@ -2595,8 +2595,8 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 40;
-  width: 640px;
-  max-width: 92vw;
+  width: 780px;
+  max-width: 94vw;
   padding: 12px 14px;
   text-align: left;
   background: var(--bg-card);
@@ -2682,9 +2682,10 @@ body {
 .appearance-popover__method .method-img {
   display: inline-block;
   vertical-align: top;
-  height: 160px;          /* hauteur commune */
+  height: 240px;          /* hauteur commune */
   width: auto;            /* largeur libre => ratio préservé, pas de déformation */
   max-width: 100%;        /* garde-fou : une image très large ne déborde pas */
+  object-fit: contain;    /* si plafonnée en largeur, on évite la déformation */
   margin-top: 8px;
   border-radius: var(--radius-sm);
 }
