@@ -374,9 +374,9 @@ export async function openModal(number) {
           <div class="modal-number">#${esc(padNumber(p.number))}</div>
           <h2 class="modal-name" id="modal-poke-name">${esc(p.name_fr)}</h2>
         </div>
+        ${appearanceHtml}
         <div class="modal-header-actions">
           <span class="gen-badge">Gén. ${esc(toRoman(p.generation))}</span>
-          ${appearanceHtml}
         </div>
       </div>
       ${illustrationsHtml}
