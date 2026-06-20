@@ -1,16 +1,16 @@
 import { store } from '../store.js';
-import { esc, BALLS, ballUrl, spriteUrl } from '../utils.js';
+import { esc, spriteUrl } from '../utils.js';
 import {
   MEGA_ICON_URL, GIGAMAX_ICON_URL, SHINY_ICON_URL, BARON_ICON_URL,
   VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT,
-  padNumber, normalizeVariantUrl, formatCatchDate, getImageUrl, toRoman, typeBadge, debounce,
+  padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
 } from '../domain/constants.js';
 import { getVariantStatus } from '../domain/completion.js';
-import { cycleVariantStatus, removeFormFromSeen } from '../application/catches.js?v=1';
+import { cycleVariantStatus } from '../application/catches.js?v=1';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
-  fetchGigamaxVariantIcons, fetchRegionalForms, deleteCatch,
+  fetchGigamaxVariantIcons, fetchRegionalForms,
 } from '../supabase-client.js?v=1';
 import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=193';
 
@@ -128,73 +128,8 @@ export async function openModal(number) {
     }
     const iconByNumber = Object.fromEntries(iconRows.map(r => [r.pokemon_number, r.image_url]));
 
-    const captured  = !!store.catchByNumber[p.number];
-    const catch_    = store.catchByNumber[p.number] || null;
-    const ballEntry = catch_ ? BALLS.find(b => b.name === catch_.ball_name) : null;
-    const ballSrc   = ballEntry ? ballUrl(ballEntry.slug) : (catch_?.ball_image_url || '');
-    const seenForms = store.seenMap[p.number] ? Object.values(store.seenMap[p.number]) : [];
-
-    const sfMap = store.specialFormsMap;
-
-    const seenStatusHtml = seenForms.length ? `
-      <div class="collect-banner collect-banner--seen">
-        <div class="collect-banner__seen-inner">
-          <div class="collect-banner__seen-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="13" height="13"><circle cx="12" cy="12" r="3"/><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/></svg>
-            Vus dans ta collection
-          </div>
-          <div class="collect-banner__seen-chips">
-            ${seenForms.map(s => `
-              <div class="seen-pill-v2${s.is_shiny ? ' seen-pill-v2--shiny' : ''}">
-                <span class="seen-pill-v2__icon">${seenFormIcon(s.variant_type, sfMap)}</span>
-                ${s.caught_at ? `<span class="seen-pill-v2__date">${esc(formatCatchDate(s.caught_at))}</span>` : ''}
-                ${s.game ? `<span class="seen-pill-v2__game">${esc(s.game)}</span>` : ''}
-                <button class="seen-pill-v2__del modal-unsee-btn" data-pokemon-number="${p.number}" data-variant-type="${esc(s.variant_type)}" aria-label="Retirer des vus">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="9" height="9"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                </button>
-              </div>`).join('')}
-          </div>
-        </div>
-      </div>` : '';
-
-    const ownedForms = store.seenMap[p.number]
-      ? Object.values(store.seenMap[p.number]).filter(f => f.status === 'owned')
-      : [];
-    const captureIcons = ownedForms.length
-      ? ownedForms.map(f => seenFormIcon(f.variant_type, sfMap)).join('')
-      : (() => {
-          if (catch_?.is_shiny) return seenFormIcon('shiny', sfMap);
-          const fl = (catch_?.form_label || '').toLowerCase();
-          if (fl.includes('mâle') || fl.includes('male'))     return seenFormIcon('male', sfMap);
-          if (fl.includes('femelle') || fl.includes('female')) return seenFormIcon('female', sfMap);
-          return seenFormIcon('normal', sfMap);
-        })();
-
-    const capturePills = (ownedForms.length ? ownedForms : [{
-      variant_type: catch_?.is_shiny ? 'shiny' : 'normal',
-      is_shiny:     catch_?.is_shiny || false,
-      caught_at:    catch_?.caught_at || null,
-      game:         catch_?.game     || null,
-    }]).map(f => `
-      <div class="seen-pill-v2${f.is_shiny ? ' seen-pill-v2--shiny' : ''}">
-        <span class="seen-pill-v2__icon">${seenFormIcon(f.variant_type, sfMap)}</span>
-        ${f.caught_at ? `<span class="seen-pill-v2__date">${esc(formatCatchDate(f.caught_at))}</span>` : ''}
-        ${f.game ? `<span class="seen-pill-v2__game">${esc(f.game)}</span>` : ''}
-        <button class="seen-pill-v2__del modal-capture-del" data-pokemon-number="${p.number}" data-variant-type="${esc(f.variant_type)}" data-catch-id="${esc(catch_?.id ?? '')}" aria-label="Retirer cette capture">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="9" height="9"><path d="M18 6 6 18M6 6l12 12"/></svg>
-        </button>
-      </div>`).join('');
-
-    const collectStatusHtml = catch_ ? `
-      <div class="collect-banner">
-        <div class="collect-banner__ball">
-          <img src="${esc(ballSrc)}" width="42" height="42" alt="${esc(catch_.ball_name)}">
-        </div>
-        <div class="collect-banner__seen-inner">
-          <div class="collect-banner__seen-label">${esc(catch_.ball_name)}</div>
-          <div class="collect-banner__seen-chips">${capturePills}</div>
-        </div>
-      </div>` : seenStatusHtml;
+    // Capture utilisée plus bas par refreshArtworks (état des artworks).
+    const catch_ = store.catchByNumber[p.number] || null;
 
     const imgSrc  = p.image_url || getImageUrl(p.number);
     const types   = (p.types || []).map(typeBadge).join('');
@@ -415,14 +350,6 @@ export async function openModal(number) {
         ${specialForms.map(renderFormIllusCol).join('')}
       </div>`;
 
-    const existingBanner = modal.querySelector('.collect-banner');
-    if (existingBanner) existingBanner.remove();
-    if (collectStatusHtml) {
-      const bannerEl = document.createElement('div');
-      bannerEl.innerHTML = collectStatusHtml;
-      modal.insertBefore(bannerEl.firstElementChild, modalContent);
-    }
-
     modalContent.innerHTML = `
       <div class="modal-header">
         <div class="modal-header-main">
@@ -431,10 +358,6 @@ export async function openModal(number) {
         </div>
         <div class="modal-header-actions">
           <span class="gen-badge">Gén. ${esc(toRoman(p.generation))}</span>
-          <button class="modal-add-btn" id="modal-edit-btn" title="Modifier la collection">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-            Modifier
-          </button>
         </div>
       </div>
       ${illustrationsHtml}
@@ -478,48 +401,6 @@ export async function openModal(number) {
 
     const modalImg = modalContent.querySelector('.illus-col:first-child .modal-artwork');
     if (modalImg) modalImg.addEventListener('error', () => { modalImg.src = getImageUrl(p.number); });
-
-    modal.querySelectorAll('.modal-unsee-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!confirm('Retirer cette forme des vus ?')) return;
-        const num = parseInt(btn.dataset.pokemonNumber);
-        const vt  = btn.dataset.variantType;
-        removeFormFromSeen(num, vt);
-        _updateCardAfterCatch?.(num);
-        closeModal();
-      });
-    });
-
-    modal.querySelectorAll('.modal-capture-del').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        if (!confirm('Retirer cette capture ?')) return;
-        const num     = parseInt(btn.dataset.pokemonNumber);
-        const vt      = btn.dataset.variantType;
-        const catchId = btn.dataset.catchId;
-        await removeFormFromSeen(num, vt);
-        const stillOwned = store.seenMap[num] && Object.values(store.seenMap[num]).some(f => f.status === 'owned');
-        if (!stillOwned && catchId) {
-          const { error } = await deleteCatch(catchId);
-          if (error) { alert('Erreur lors de la suppression.'); return; }
-          delete store.catchByNumber[num];
-          delete store.shinyCatchByNumber[num];
-          const capturedCountEl = document.getElementById('captured-count');
-          if (capturedCountEl) capturedCountEl.textContent = Object.keys(store.catchByNumber).length;
-        } else if (!stillOwned) {
-          delete store.catchByNumber[num];
-          delete store.shinyCatchByNumber[num];
-          const capturedCountEl = document.getElementById('captured-count');
-          if (capturedCountEl) capturedCountEl.textContent = Object.keys(store.catchByNumber).length;
-        }
-        _updateCardAfterCatch?.(num);
-        closeModal();
-      });
-    });
-
-    document.getElementById('modal-edit-btn')?.addEventListener('click', () => {
-      closeModal();
-      _openDrawerWithPokemon?.(p.number);
-    });
 
     function formStatus(num, formType) {
       const seenVariants = store.seenMap[num];
@@ -689,12 +570,9 @@ export async function openModal(number) {
 
 export function closeModal() {
   const modalOverlay = document.getElementById('modal-overlay');
-  const modal        = document.getElementById('modal');
   const modalContent = document.getElementById('modal-content');
   store.currentModalPokemonNumber = null;
   if (modalOverlay) modalOverlay.hidden = true;
   document.body.style.overflow = '';
   if (modalContent) modalContent.innerHTML = '';
-  const banner = modal?.querySelector('.collect-banner');
-  if (banner) banner.remove();
 }
