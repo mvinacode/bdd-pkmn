@@ -290,7 +290,9 @@ function renderChrono(sessions) {
     .sort(([a], [b]) => b.localeCompare(a))
     .map(([key, items]) => renderSection(
       key === 'unknown' ? 'Date inconnue' : formatMonthYear(key + '-01'),
-      items,
+      // Tri par numéro de Pokédex décroissant ; à numéro égal, le tri stable
+      // conserve l'ordre d'ajout (date de capture).
+      items.slice().sort((a, b) => b.pokemon_number - a.pokemon_number),
       'chrono:' + key
     )).join('');
 }
