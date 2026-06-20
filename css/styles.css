@@ -2535,7 +2535,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   flex: 0 0 auto;
 }
 
@@ -2553,6 +2553,9 @@ body {
   gap: 8px;
   max-width: min(72vw, 540px);
   overflow-x: auto;
+  /* padding vertical : overflow-x:auto force le rognage vertical, ce qui
+     couperait le survol (translateY -2px) et le halo de l'icône active. */
+  padding: 4px 2px;
 }
 
 .appearance-game {
@@ -2592,8 +2595,8 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 40;
-  width: 260px;
-  max-width: 80vw;
+  width: 640px;
+  max-width: 92vw;
   padding: 12px 14px;
   text-align: left;
   background: var(--bg-card);
@@ -2660,6 +2663,30 @@ body {
 .appearance-popover__method--empty {
   font-style: italic;
   opacity: 0.7;
+}
+
+.appearance-popover__method .method-img-row {
+  display: block;
+  text-align: center;
+}
+
+/* Petite image inline ([icon]) : à côté du texte, discrète mais visible */
+.appearance-popover__method .method-icon {
+  height: 24px;
+  width: auto;
+  vertical-align: middle;
+  margin: 0 4px;
+  border-radius: 4px;
+}
+
+.appearance-popover__method .method-img {
+  display: inline-block;
+  vertical-align: top;
+  height: 160px;          /* hauteur commune */
+  width: auto;            /* largeur libre => ratio préservé, pas de déformation */
+  max-width: 100%;        /* garde-fou : une image très large ne déborde pas */
+  margin-top: 8px;
+  border-radius: var(--radius-sm);
 }
 
 .variants-grid {

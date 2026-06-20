@@ -80,10 +80,17 @@ function seenFormIcon(vt, sfMap = {}) {
 
 // Mini-formatage (type BBCode) du mode d'obtention. On échappe d'abord tout le
 // texte (anti-injection), puis on ne génère que nos propres balises sûres :
-// [b] gras, [i] italique, [u] souligné, [color=...] couleur. La couleur est
-// validée (hex #rgb/#rgba/#rrggbb/#rrggbbaa ou nom CSS alphabétique), sinon la
-// balise est ignorée et seul le texte reste.
+// [b] gras, [i] italique, [u] souligné, [color=...] couleur, et des images.
+// La couleur est validée (hex ou nom CSS alphabétique) et les images doivent
+// être des liens https vers un hôte autorisé pointant un vrai fichier image ;
+// sinon la balise est ignorée et seul le texte reste.
 const _CSS_COLOR_RE = /^(#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|[a-z]+)$/i;
+const _IMG_URL_RE   = /^https:\/\/(res\.cloudinary\.com|raw\.githubusercontent\.com)\/[\w\-./%,]+\.(?:png|jpe?g|gif|webp|svg)$/i;
+
+function _imgTag(url, cls = 'method-img') {
+  const u = url.trim();
+  return _IMG_URL_RE.test(u) ? `<img class="${cls}" src="${u}" alt="" loading="lazy">` : null;
+}
 
 function formatMethod(text) {
   let html = esc(text)
@@ -94,6 +101,24 @@ function formatMethod(text) {
     const c = color.trim();
     return _CSS_COLOR_RE.test(c) ? `<span style="color:${c}">${inner}</span>` : inner;
   });
+  // Petite image inline (à côté du texte) via [icon]URL[/icon]. Classe distincte
+  // de .method-img => non concernée par la mise en ligne/centrage des grandes.
+  html = html.replace(/\[icon\]([\s\S]*?)\[\/icon\]/gi, (_m, url) => _imgTag(url, 'method-icon') ?? url.trim());
+  // Image via balise explicite [img]URL[/img]…
+  html = html.replace(/\[img\]([\s\S]*?)\[\/img\]/gi, (_m, url) => _imgTag(url) ?? url.trim());
+  // …ou via un lien d'image collé directement (séparé par un espace ou un saut
+  // de ligne). Espace entre deux liens => même ligne ; saut de ligne => l'une
+  // sous l'autre (le séparateur est préservé via `pre`).
+  html = html.replace(/(^|\s)(https:\/\/\S+)(?=\s|$)/g, (m, pre, url) => {
+    const tag = _imgTag(url);
+    return tag ? pre + tag : m;
+  });
+  // Centre toute ligne composée uniquement d'images (une seule ou plusieurs
+  // côte à côte), sans affecter l'alignement du texte.
+  html = html.replace(
+    /(?:^|\n)[ \t]*((?:<img class="method-img"[^>]*>[ \t]*)+)(?=\n|$)/g,
+    (_m, imgs) => `<span class="method-img-row">${imgs.trim()}</span>`
+  );
   return html;
 }
 
