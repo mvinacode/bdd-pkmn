@@ -10,8 +10,8 @@ import { cycleVariantStatus } from '../application/catches.js?v=1';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
-  fetchGigamaxVariantIcons, fetchRegionalForms,
-} from '../supabase-client.js?v=2';
+  fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances,
+} from '../supabase-client.js?v=3';
 import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=193';
 
 // Callbacks injectés par app.js pour éviter circulaire
@@ -78,6 +78,25 @@ function seenFormIcon(vt, sfMap = {}) {
   }
 }
 
+// Mini-formatage (type BBCode) du mode d'obtention. On échappe d'abord tout le
+// texte (anti-injection), puis on ne génère que nos propres balises sûres :
+// [b] gras, [i] italique, [u] souligné, [color=...] couleur. La couleur est
+// validée (hex #rgb/#rgba/#rrggbb/#rrggbbaa ou nom CSS alphabétique), sinon la
+// balise est ignorée et seul le texte reste.
+const _CSS_COLOR_RE = /^(#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|[a-z]+)$/i;
+
+function formatMethod(text) {
+  let html = esc(text)
+    .replace(/\[b\]([\s\S]*?)\[\/b\]/gi, '<strong>$1</strong>')
+    .replace(/\[i\]([\s\S]*?)\[\/i\]/gi, '<em>$1</em>')
+    .replace(/\[u\]([\s\S]*?)\[\/u\]/gi, '<u>$1</u>');
+  html = html.replace(/\[color=([^\]]+)\]([\s\S]*?)\[\/color\]/gi, (_m, color, inner) => {
+    const c = color.trim();
+    return _CSS_COLOR_RE.test(c) ? `<span style="color:${c}">${inner}</span>` : inner;
+  });
+  return html;
+}
+
 export async function openModal(number) {
   const modalOverlay = document.getElementById('modal-overlay');
   const modal        = document.getElementById('modal');
@@ -90,13 +109,14 @@ export async function openModal(number) {
   modalContent.innerHTML = '<div class="modal-loading"><div class="pokeball-loader"><div class="pb-top"></div><div class="pb-middle"><div class="pb-btn"></div></div><div class="pb-bottom"></div></div></div>';
 
   try {
-    const [{ data: p }, , forms, variants, gigamax, specialFormsList] = await Promise.all([
+    const [{ data: p }, , forms, variants, gigamax, specialFormsList, appearances] = await Promise.all([
       fetchPokemonByNumber(number),
       fetchEvolutionChain({ number, evolves_from_number: null }).catch(() => null),
       fetchForms(number),
       fetchVariants(number),
       fetchGigamax(number),
       fetchSpecialFormsByNumber(number).catch(() => []),
+      fetchAppearances(number).catch(() => []),
     ]);
 
     if (!p) { closeModal(); return; }
@@ -350,21 +370,30 @@ export async function openModal(number) {
         ${specialForms.map(renderFormIllusCol).join('')}
       </div>`;
 
-    // « Apparition » : jeux où le Pokémon figure (colonne pokemon.games, tableau
-    // de slugs). Affichés dans l'ordre canonique de GAMES ; slugs inconnus ignorés.
-    // Rendu en menu flottant repliable, ancré sous le badge de génération.
-    // GAMES est ordonné du plus récent au plus ancien : on garde cet ordre pour
-    // afficher le plus récent à gauche. Slugs inconnus ignorés.
-    const gameSlugs       = Array.isArray(p.games) ? p.games : [];
-    const appearanceGames = GAMES.filter(g => gameSlugs.includes(g.slug));
+    // Apparitions : [{ game_slug, method }]. Méthodes indexées par slug ; jeux
+    // ordonnés via GAMES (récent → ancien, donc plus récent à gauche). Slugs
+    // inconnus ignorés. Clic sur une icône → popover avec le mode d'obtention.
+    const methodBySlug    = Object.fromEntries((appearances || []).map(a => [a.game_slug, a.method]));
+    const appearanceSlugs = new Set(Object.keys(methodBySlug));
+    const appearanceGames = GAMES.filter(g => appearanceSlugs.has(g.slug));
     const appearanceHtml  = appearanceGames.length ? `
       <div class="appearance">
         <span class="appearance-label">Apparition</span>
         <div class="appearance-games">
           ${appearanceGames.map(g => `
-            <span class="appearance-game" title="${esc(g.name)}">
+            <button type="button" class="appearance-game" data-slug="${esc(g.slug)}" title="${esc(g.name)}">
               <img src="${esc(g.iconUrl)}" alt="${esc(g.name)}" width="40" height="40" loading="lazy">
-            </span>`).join('')}
+            </button>`).join('')}
+        </div>
+        <div class="appearance-popover" hidden role="dialog" aria-label="Mode d'obtention">
+          <button type="button" class="appearance-popover__close" aria-label="Fermer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+          <div class="appearance-popover__head">
+            <img class="appearance-popover__icon" src="" alt="" width="26" height="26">
+            <span class="appearance-popover__title"></span>
+          </div>
+          <p class="appearance-popover__method"></p>
         </div>
       </div>` : '';
 
@@ -383,6 +412,52 @@ export async function openModal(number) {
       ${evoHtml}
       ${variantsHtml}
     `;
+
+    // Fenêtre flottante « Apparition » : clic sur une icône → mode d'obtention.
+    const appearanceEl = modalContent.querySelector('.appearance');
+    if (appearanceEl) {
+      const popover   = appearanceEl.querySelector('.appearance-popover');
+      const popIcon   = popover.querySelector('.appearance-popover__icon');
+      const popTitle  = popover.querySelector('.appearance-popover__title');
+      const popMethod = popover.querySelector('.appearance-popover__method');
+      let docCloser = null;
+
+      const closePopover = () => {
+        popover.hidden = true;
+        appearanceEl.querySelectorAll('.appearance-game.is-active').forEach(b => b.classList.remove('is-active'));
+        if (docCloser) { document.removeEventListener('click', docCloser); docCloser = null; }
+      };
+
+      appearanceEl.querySelectorAll('.appearance-game').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (btn.classList.contains('is-active')) { closePopover(); return; }
+          const game   = GAMES.find(g => g.slug === btn.dataset.slug);
+          const method = methodBySlug[btn.dataset.slug];
+          popIcon.src        = game?.iconUrl || '';
+          popIcon.alt        = game?.name || '';
+          popTitle.textContent  = game?.name || '';
+          if (method) {
+            popMethod.innerHTML = formatMethod(method);
+          } else {
+            popMethod.textContent = "Mode d'obtention non renseigné.";
+          }
+          popMethod.classList.toggle('appearance-popover__method--empty', !method);
+          appearanceEl.querySelectorAll('.appearance-game.is-active').forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          popover.hidden = false;
+          if (!docCloser) {
+            docCloser = ev => { if (!ev.target.closest('.appearance')) closePopover(); };
+            setTimeout(() => document.addEventListener('click', docCloser), 0);
+          }
+        });
+      });
+
+      popover.querySelector('.appearance-popover__close').addEventListener('click', e => {
+        e.stopPropagation();
+        closePopover();
+      });
+    }
 
     // Onglets illustrations
     modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(btn => {

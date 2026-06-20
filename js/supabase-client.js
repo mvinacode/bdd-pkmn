@@ -90,7 +90,7 @@ export async function fetchPokemonByNumber(number) {
     .from('pokemon')
     .select(`
       id, number, name_fr, name_en, generation,
-      image_url, shiny_artwork_url, description_fr, evolves_from_number, can_be_baron, games,
+      image_url, shiny_artwork_url, description_fr, evolves_from_number, can_be_baron,
       pokemon_types ( type_name, slot )
     `)
     .eq('number', number)
@@ -102,6 +102,27 @@ export async function fetchPokemonByNumber(number) {
   }
 
   return { data: normalizePokemon(data), error: null };
+}
+
+/**
+ * Apparitions d'un Pokémon par jeu (+ mode d'obtention).
+ * Renvoie un tableau [{ game_slug, method }] (vide en cas d'erreur).
+ */
+export async function fetchAppearances(number) {
+  const client = getSupabaseClient();
+  if (!client) return [];
+
+  const { data, error } = await client
+    .from('pokemon_appearances')
+    .select('game_slug, method')
+    .eq('pokemon_number', number);
+
+  if (error) {
+    console.error('[Supabase] Erreur fetchAppearances:', error.message);
+    return [];
+  }
+
+  return data || [];
 }
 
 /**

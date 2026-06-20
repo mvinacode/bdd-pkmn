@@ -2531,6 +2531,7 @@ body {
 
 /* ── « Apparition » : jeux où le Pokémon figure (affichage direct) ── */
 .appearance {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2562,8 +2563,9 @@ body {
   border-radius: var(--radius-sm);
   background: var(--bg-card-hover);
   border: 1px solid var(--border);
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .appearance-game:hover {
@@ -2571,11 +2573,93 @@ body {
   border-color: var(--border-hover);
 }
 
+.appearance-game.is-active {
+  border-color: var(--border-hover);
+  box-shadow: 0 0 0 2px var(--border-hover);
+}
+
 .appearance-game img {
   display: block;
   width: 34px;
   height: 34px;
   object-fit: contain;
+}
+
+/* Fenêtre flottante : mode d'obtention du jeu cliqué */
+.appearance-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  width: 260px;
+  max-width: 80vw;
+  padding: 12px 14px;
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.appearance-popover[hidden] {
+  display: none;
+}
+
+.appearance-popover__close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.appearance-popover__close:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+.appearance-popover__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-right: 22px;
+}
+
+.appearance-popover__icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.appearance-popover__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.appearance-popover__method {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+}
+
+.appearance-popover__method--empty {
+  font-style: italic;
+  opacity: 0.7;
 }
 
 .variants-grid {
