@@ -87,13 +87,21 @@ function seenFormIcon(vt, sfMap = {}) {
 const _CSS_COLOR_RE = /^(#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})|[a-z]+)$/i;
 const _IMG_URL_RE   = /^https:\/\/(res\.cloudinary\.com|raw\.githubusercontent\.com)\/[\w\-./%,]+\.(?:png|jpe?g|gif|webp|svg)$/i;
 
-function _imgTag(url, cls = 'method-img') {
+// `style` : déclarations CSS inline optionnelles, posées au cas par cas via les
+// variantes de balises (ex. [img native], [icon sharp]) pour surcharger le style
+// commun de la classe sans impacter les autres images/icônes.
+function _imgTag(url, cls = 'method-img', style = '') {
   const u = url.trim();
-  return _IMG_URL_RE.test(u) ? `<img class="${cls}" src="${u}" alt="" loading="lazy">` : null;
+  if (!_IMG_URL_RE.test(u)) return null;
+  const styleAttr = style ? ` style="${style}"` : '';
+  return `<img class="${cls}" src="${u}"${styleAttr} alt="" loading="lazy">`;
 }
 
 function formatMethod(text) {
-  let html = esc(text)
+  // Normalise les fins de ligne (CRLF/CR → LF) en amont : sinon un `\r` résiduel
+  // casse les regex multi-lignes ci-dessous (ex. le centrage des lignes d'images,
+  // dont le lookahead attend `\n` ou la fin de chaîne juste après les images).
+  let html = esc(text.replace(/\r\n?/g, '\n'))
     .replace(/\[b\]([\s\S]*?)\[\/b\]/gi, '<strong>$1</strong>')
     .replace(/\[i\]([\s\S]*?)\[\/i\]/gi, '<em>$1</em>')
     .replace(/\[u\]([\s\S]*?)\[\/u\]/gi, '<u>$1</u>');
@@ -103,9 +111,13 @@ function formatMethod(text) {
   });
   // Petite image inline (à côté du texte) via [icon]URL[/icon]. Classe distincte
   // de .method-img => non concernée par la mise en ligne/centrage des grandes.
-  html = html.replace(/\[icon\]([\s\S]*?)\[\/icon\]/gi, (_m, url) => _imgTag(url, 'method-icon') ?? url.trim());
-  // Image via balise explicite [img]URL[/img]…
-  html = html.replace(/\[img\]([\s\S]*?)\[\/img\]/gi, (_m, url) => _imgTag(url) ?? url.trim());
+  // [icon sharp]URL[/icon] retire l'arrondi (utile pour une icône fine/haute).
+  html = html.replace(/\[icon(\s+sharp)?\]([\s\S]*?)\[\/icon\]/gi,
+    (_m, sharp, url) => _imgTag(url, 'method-icon', sharp ? 'border-radius:0' : '') ?? url.trim());
+  // Image via balise explicite [img]URL[/img], ou [img native]URL[/img] pour
+  // forcer l'affichage à la taille réelle (pas d'agrandissement)…
+  html = html.replace(/\[img(\s+native)?\]([\s\S]*?)\[\/img\]/gi,
+    (_m, native, url) => _imgTag(url, 'method-img', native ? 'width:auto;height:auto;max-width:100%;border-radius:0' : '') ?? url.trim());
   // …ou via un lien d'image collé directement (séparé par un espace ou un saut
   // de ligne). Espace entre deux liens => même ligne ; saut de ligne => l'une
   // sous l'autre (le séparateur est préservé via `pre`).
