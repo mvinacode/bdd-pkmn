@@ -1737,6 +1737,26 @@ body {
   text-shadow: none;
 }
 
+/* Échange avec Électriseur (Élekable) */
+.evo-condition.is-trade-electriseur {
+  color: #f9f92c;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #f8f810, #848484, #e0d8b6) border-box;
+  text-shadow: none;
+}
+
+/* Échange avec Magmariseur (Maganon) */
+.evo-condition.is-trade-magmariseur {
+  color: #dc504b;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #dd5853, #888888, #ff821a, #fff120) border-box;
+  text-shadow: none;
+}
+
 .evo-condition.is-galanoa-band {
   color: #fd7b2c !important;
   border: 1px solid transparent !important;
@@ -2278,6 +2298,32 @@ body {
 .evo-condition-item.is-trade-draco-scale.evo-condition--unseen::before,
 .evo-condition-item.is-trade-draco-scale.evo-condition--seen::before {
   background: linear-gradient(135deg, #92cde0, #a8e8d8, #f0f0a8) !important;
+}
+
+/* Échange avec Électriseur (Élekable) */
+.evo-condition-item.is-trade-electriseur::before {
+  background: linear-gradient(135deg, #f8f810, #848484, #e0d8b6) !important;
+}
+.evo-condition-item.is-trade-electriseur .evo-condition {
+  color: #f9f92c !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-trade-electriseur.evo-condition--unseen::before,
+.evo-condition-item.is-trade-electriseur.evo-condition--seen::before {
+  background: linear-gradient(135deg, #f8f810, #848484, #e0d8b6) !important;
+}
+
+/* Échange avec Magmariseur (Maganon) */
+.evo-condition-item.is-trade-magmariseur::before {
+  background: linear-gradient(135deg, #dd5853, #888888, #ff821a, #fff120) !important;
+}
+.evo-condition-item.is-trade-magmariseur .evo-condition {
+  color: #dc504b !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-trade-magmariseur.evo-condition--unseen::before,
+.evo-condition-item.is-trade-magmariseur.evo-condition--seen::before {
+  background: linear-gradient(135deg, #dd5853, #888888, #ff821a, #fff120) !important;
 }
 
 /* 1 Niv. + Jour + Avec Pierre Ovale (Leveinard) */
