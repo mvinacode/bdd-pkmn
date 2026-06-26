@@ -48,6 +48,17 @@ export function getHisuianSprite(pokemonNumber, variantType) {
   return null;
 }
 
+export function getPaldeanSprite(pokemonNumber, variantType) {
+  const variants = store.variantMap[pokemonNumber] || {};
+  if (variants[variantType]) return variants[variantType];
+  // Shiny absent du variantMap => repli sur la forme non-shiny de la même race.
+  if (variantType.endsWith('_shiny')) {
+    const base = variantType.slice(0, -6);
+    if (variants[base]) return variants[base];
+  }
+  return null;
+}
+
 export function getSpecialFormSprite(pokemonNumber, variantType) {
   const isShiny = variantType.endsWith('_shiny');
   const formKey = isShiny ? variantType.slice(0, -6) : variantType;

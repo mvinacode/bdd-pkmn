@@ -6,13 +6,13 @@ import {
   padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
 } from '../domain/constants.js';
 import { getVariantStatus } from '../domain/completion.js';
-import { cycleVariantStatus } from '../application/catches.js?v=1';
+import { cycleVariantStatus } from '../application/catches.js?v=2';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
-  fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances,
-} from '../supabase-client.js?v=3';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=195';
+  fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances, fetchFormAppearances,
+} from '../supabase-client.js?v=6';
+import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=196';
 
 // Callbacks injectés par app.js pour éviter circulaire
 let _updateCardAfterCatch = null;
@@ -134,6 +134,87 @@ function formatMethod(text) {
   return html;
 }
 
+// Construit un bloc « Apparition » autonome (icônes de jeux + popover du mode
+// d'obtention) à partir d'apparitions [{ game_slug, method }]. Le mode est porté
+// par chaque bouton via data-method, ce qui rend le bloc indépendant (forme de
+// base dans l'en-tête, ou forme régionale/spéciale dans sa colonne d'illustration).
+// Renvoie '' s'il n'y a aucun jeu connu.
+function appearanceBlockHtml(appearances) {
+  const methodBySlug = Object.fromEntries((appearances || []).map(a => [a.game_slug, a.method]));
+  const slugs = new Set(Object.keys(methodBySlug));
+  const games = GAMES.filter(g => slugs.has(g.slug));
+  if (!games.length) return '';
+  return `
+    <div class="appearance">
+      <span class="appearance-label">Apparition</span>
+      <div class="appearance-games">
+        ${games.map(g => `
+          <button type="button" class="appearance-game" data-slug="${esc(g.slug)}" data-method="${esc(methodBySlug[g.slug] || '')}" title="${esc(g.name)}">
+            <img src="${esc(g.iconUrl)}" alt="${esc(g.name)}" width="40" height="40" loading="lazy">
+          </button>`).join('')}
+      </div>
+      <div class="appearance-popover" hidden role="dialog" aria-label="Mode d'obtention">
+        <button type="button" class="appearance-popover__close" aria-label="Fermer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="appearance-popover__head">
+          <img class="appearance-popover__icon" src="" alt="" width="26" height="26">
+          <span class="appearance-popover__title"></span>
+        </div>
+        <p class="appearance-popover__method"></p>
+      </div>
+    </div>`;
+}
+
+// Câble tous les blocs « Apparition » présents dans un conteneur. Chaque bloc gère
+// son propre popover (positionné relativement à .appearance) ; le mode d'obtention
+// est lu depuis data-method du bouton cliqué.
+function wireAppearanceBlocks(root) {
+  root.querySelectorAll('.appearance').forEach(appearanceEl => {
+    const popover   = appearanceEl.querySelector('.appearance-popover');
+    const popIcon   = popover.querySelector('.appearance-popover__icon');
+    const popTitle  = popover.querySelector('.appearance-popover__title');
+    const popMethod = popover.querySelector('.appearance-popover__method');
+    let docCloser = null;
+
+    const closePopover = () => {
+      popover.hidden = true;
+      appearanceEl.querySelectorAll('.appearance-game.is-active').forEach(b => b.classList.remove('is-active'));
+      if (docCloser) { document.removeEventListener('click', docCloser); docCloser = null; }
+    };
+
+    appearanceEl.querySelectorAll('.appearance-game').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (btn.classList.contains('is-active')) { closePopover(); return; }
+        const game   = GAMES.find(g => g.slug === btn.dataset.slug);
+        const method = btn.dataset.method;
+        popIcon.src          = game?.iconUrl || '';
+        popIcon.alt          = game?.name || '';
+        popTitle.textContent = game?.name || '';
+        if (method) {
+          popMethod.innerHTML = formatMethod(method);
+        } else {
+          popMethod.textContent = "Mode d'obtention non renseigné.";
+        }
+        popMethod.classList.toggle('appearance-popover__method--empty', !method);
+        appearanceEl.querySelectorAll('.appearance-game.is-active').forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        popover.hidden = false;
+        if (!docCloser) {
+          docCloser = ev => { if (!appearanceEl.contains(ev.target)) closePopover(); };
+          setTimeout(() => document.addEventListener('click', docCloser), 0);
+        }
+      });
+    });
+
+    popover.querySelector('.appearance-popover__close').addEventListener('click', e => {
+      e.stopPropagation();
+      closePopover();
+    });
+  });
+}
+
 export async function openModal(number) {
   const modalOverlay = document.getElementById('modal-overlay');
   const modal        = document.getElementById('modal');
@@ -146,7 +227,7 @@ export async function openModal(number) {
   modalContent.innerHTML = '<div class="modal-loading"><div class="pokeball-loader"><div class="pb-top"></div><div class="pb-middle"><div class="pb-btn"></div></div><div class="pb-bottom"></div></div></div>';
 
   try {
-    const [{ data: p }, , forms, variants, gigamax, specialFormsList, appearances] = await Promise.all([
+    const [{ data: p }, , forms, variants, gigamax, specialFormsList, appearances, formAppearances] = await Promise.all([
       fetchPokemonByNumber(number),
       fetchEvolutionChain({ number, evolves_from_number: null }).catch(() => null),
       fetchForms(number),
@@ -154,6 +235,7 @@ export async function openModal(number) {
       fetchGigamax(number),
       fetchSpecialFormsByNumber(number).catch(() => []),
       fetchAppearances(number).catch(() => []),
+      fetchFormAppearances(number).catch(() => ({})),
     ]);
 
     if (!p) { closeModal(); return; }
@@ -177,6 +259,14 @@ export async function openModal(number) {
       if (!regionalsByNumber[r.pokemon_number]) regionalsByNumber[r.pokemon_number] = [];
       regionalsByNumber[r.pokemon_number].push(r);
     }
+    // Ordre canonique des races de Paldéa (ex. Tauros), appliqué partout — chaîne
+    // d'évolution incluse : Combative → Flamboyante → Aquatique.
+    const PALDEAN_REGION_ORDER = ['paldean_combat', 'paldean_blaze', 'paldean_aqua'];
+    for (const num in regionalsByNumber) {
+      regionalsByNumber[num].sort((a, b) =>
+        (PALDEAN_REGION_ORDER.indexOf(a.region) + 1 || 99) - (PALDEAN_REGION_ORDER.indexOf(b.region) + 1 || 99)
+      );
+    }
     const gigamaxSpriteMap = Object.fromEntries(gigamaxIconRows.map(r => [r.pokemon_number, r.image_url]));
     const gigamaxByNumber  = {};
     for (const g of gigamaxChainRows) {
@@ -195,7 +285,8 @@ export async function openModal(number) {
     function variantCard(v) {
       const status  = getVariantStatus(p.number, v.variant_type);
       const meta    = VARIANT_STATUS_META[status];
-      const isShiny = ['shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','troizepy_shiny'].includes(v.variant_type);
+      const isShiny = ['shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','troizepy_shiny'].includes(v.variant_type)
+        || /^paldean_[a-z]+_shiny$/.test(v.variant_type);
       const sparkles = isShiny ? `
         <span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
         <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
@@ -269,6 +360,17 @@ export async function openModal(number) {
     const hisuianVariants  = variants.filter(v => ['hisuian', 'hisuian_shiny', 'hisuian_male', 'hisuian_shiny_male', 'hisuian_female', 'hisuian_shiny_female'].includes(v.variant_type));
     const troizepyVariants = variants.filter(v => ['troizepy', 'troizepy_shiny'].includes(v.variant_type));
 
+    // Famille « Paldéa » (Tauros) : plusieurs formes régionales paldean_* (Race
+    // Combative/Flamboyante/Aquatique), chacune avec ses variants normal/shiny, son
+    // onglet et ses localisations propres. Ordre canonique = ordre des jeux.
+    const paldeanLabel = r => {
+      const race = (r.name || '').match(/\(([^)]+)\)/)?.[1];
+      return race ? `Forme Paldea ${race}` : r.region;
+    };
+    // regionalsByNumber est déjà trié (cf. PALDEAN_REGION_ORDER) : le filtre conserve l'ordre.
+    const paldeanRegionals = (regionalsByNumber[p.number] || []).filter(r => (r.region || '').startsWith('paldean'));
+    const isPaldeanFamily = paldeanRegionals.length > 0;
+
     const neutralBadge = `<span class="gender-badge male">${MODAL_MALE_SVG}</span><span class="gender-badge female">${MODAL_FEMALE_SVG}</span>`;
     const maleBadge    = `<span class="gender-badge male">${MODAL_MALE_SVG}</span>`;
     const femaleBadge  = `<span class="gender-badge female">${MODAL_FEMALE_SVG}</span>`;
@@ -304,8 +406,21 @@ export async function openModal(number) {
       return rowX + rowY;
     })() : '';
 
+    // Onglets « Formes » par race de Paldéa (variant_type = region et region_shiny).
+    // Tauros est exclusivement mâle => badge mâle sur chaque race.
+    const paldeanFormTabs = paldeanRegionals.map(r => {
+      const raceVariants = variants.filter(v => v.variant_type === r.region || v.variant_type === `${r.region}_shiny`);
+      return {
+        id: r.region,
+        label: paldeanLabel(r),
+        html: `<div class="variants-rows-wrapper">${variantRow(maleBadge, raceVariants)}</div>`,
+        show: !!raceVariants.length,
+      };
+    });
+
     const formTabList = [
       { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: !!(neutralVariants.length || asexueVariants.length || maleVariants.length || femaleVariants.length) },
+      ...paldeanFormTabs,
       ...sfSortedGroups.map(grp => ({
         id: grp, label: grp,
         html: `<div class="variants-grid variants-grid--2col">${sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]).join('')}</div>`,
@@ -334,7 +449,7 @@ export async function openModal(number) {
     const regionals  = regionalsByNumber[p.number] || [];
     const specialForms = [
       ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true,  isRegional: false, isSpecialForm: false, formKey: null, formIcon: MEGA_ICON_URL })),
-      ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true,  isSpecialForm: false, formKey: null, formIcon: '' })),
+      ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true,  isSpecialForm: false, formKey: r.region, raceLabel: (r.region || '').startsWith('paldean') ? paldeanLabel(r) : null, formIcon: '' })),
       ...specialFormsList.map(sf => ({ name: sf.form_label_fr, artwork_url: sf.artwork_url || '', shiny_artwork_url: sf.artwork_url_shiny || '', description_fr: sf.description_fr || null, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: true, formKey: sf.form_key, formIcon: '', formGroup: sf.form_group || null })),
       ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: false, formKey: null, formIcon: GIGAMAX_ICON_URL })),
     ];
@@ -363,7 +478,7 @@ export async function openModal(number) {
 
     function getFormCategory(f) {
       if (f.isMega)        return 'Méga-Évolution';
-      if (f.isRegional)    return 'Formes régionales';
+      if (f.isRegional)    return f.raceLabel || 'Formes régionales';   // races Paldéa => un onglet chacune
       if (f.isSpecialForm) return f.formGroup || 'Formes spéciales';
       return 'Gigamax';
     }
@@ -373,7 +488,8 @@ export async function openModal(number) {
       if (!formsByCategory[cat]) formsByCategory[cat] = [];
       formsByCategory[cat].push(f);
     }
-    const CATEGORY_ORDER = ['Pikachu Cosplayeur', 'Pikachu Casquette', 'Pikachu Partenaire', 'Spéciales', 'Méga-Évolution', 'Formes régionales', 'Gigamax'];
+    const paldeanCatLabels = paldeanRegionals.map(paldeanLabel);   // dans l'ordre canonique des races
+    const CATEGORY_ORDER = ['Pikachu Cosplayeur', 'Pikachu Casquette', 'Pikachu Partenaire', 'Spéciales', ...paldeanCatLabels, 'Méga-Évolution', 'Formes régionales', 'Gigamax'];
     const illusCategories = [
       ...CATEGORY_ORDER.filter(c => formsByCategory[c]),
       ...Object.keys(formsByCategory).filter(c => CATEGORY_ORDER.indexOf(c) === -1).sort((a, b) => a.localeCompare(b, 'fr')),
@@ -385,7 +501,8 @@ export async function openModal(number) {
         f.name, f.artwork_url || '', f.description_fr,
         f.isRegional ? 'is-regional' : f.isMega ? 'is-mega' : f.isSpecialForm ? 'is-special-form' : 'is-gigamax',
         f.types || '', f.shiny_artwork_url || '', f.formIcon || '',
-        f.isSpecialForm && f.formKey ? `data-sf-key="${esc(f.formKey)}"` : ''
+        f.isSpecialForm && f.formKey ? `data-sf-key="${esc(f.formKey)}"`
+          : f.isRegional && f.formKey ? `data-region="${esc(f.formKey)}"` : ''
       );
     }
 
@@ -407,32 +524,14 @@ export async function openModal(number) {
         ${specialForms.map(renderFormIllusCol).join('')}
       </div>`;
 
-    // Apparitions : [{ game_slug, method }]. Méthodes indexées par slug ; jeux
-    // ordonnés via GAMES (récent → ancien, donc plus récent à gauche). Slugs
-    // inconnus ignorés. Clic sur une icône → popover avec le mode d'obtention.
-    const methodBySlug    = Object.fromEntries((appearances || []).map(a => [a.game_slug, a.method]));
-    const appearanceSlugs = new Set(Object.keys(methodBySlug));
-    const appearanceGames = GAMES.filter(g => appearanceSlugs.has(g.slug));
-    const appearanceHtml  = appearanceGames.length ? `
-      <div class="appearance">
-        <span class="appearance-label">Apparition</span>
-        <div class="appearance-games">
-          ${appearanceGames.map(g => `
-            <button type="button" class="appearance-game" data-slug="${esc(g.slug)}" title="${esc(g.name)}">
-              <img src="${esc(g.iconUrl)}" alt="${esc(g.name)}" width="40" height="40" loading="lazy">
-            </button>`).join('')}
-        </div>
-        <div class="appearance-popover" hidden role="dialog" aria-label="Mode d'obtention">
-          <button type="button" class="appearance-popover__close" aria-label="Fermer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><path d="M18 6 6 18M6 6l12 12"/></svg>
-          </button>
-          <div class="appearance-popover__head">
-            <img class="appearance-popover__icon" src="" alt="" width="26" height="26">
-            <span class="appearance-popover__title"></span>
-          </div>
-          <p class="appearance-popover__method"></p>
-        </div>
-      </div>` : '';
+    // Apparitions indexées par onglet d'illustration : 'base' => forme de base,
+    // libellé de race (= data-tab) => localisations de cette forme Paldéa. Le bloc
+    // de l'en-tête (.appearance-slot) est reconstruit à chaque changement d'onglet.
+    const appearancesByTab = { base: appearances };
+    if (isPaldeanFamily) {
+      for (const r of paldeanRegionals) appearancesByTab[paldeanLabel(r)] = formAppearances[r.region] || [];
+    }
+    const appearanceHtml = appearanceBlockHtml(appearances);
 
     modalContent.innerHTML = `
       <div class="modal-header">
@@ -440,7 +539,7 @@ export async function openModal(number) {
           <div class="modal-number">#${esc(padNumber(p.number))}</div>
           <h2 class="modal-name" id="modal-poke-name">${esc(p.name_fr)}</h2>
         </div>
-        ${appearanceHtml}
+        <div class="appearance-slot">${appearanceHtml}</div>
         <div class="modal-header-actions">
           <span class="gen-badge">Gén. ${esc(toRoman(p.generation))}</span>
         </div>
@@ -450,53 +549,18 @@ export async function openModal(number) {
       ${variantsHtml}
     `;
 
-    // Fenêtre flottante « Apparition » : clic sur une icône → mode d'obtention.
-    const appearanceEl = modalContent.querySelector('.appearance');
-    if (appearanceEl) {
-      const popover   = appearanceEl.querySelector('.appearance-popover');
-      const popIcon   = popover.querySelector('.appearance-popover__icon');
-      const popTitle  = popover.querySelector('.appearance-popover__title');
-      const popMethod = popover.querySelector('.appearance-popover__method');
-      let docCloser = null;
+    // Fenêtres flottantes « Apparition » : base (en-tête) + chaque forme. Clic sur
+    // une icône → popover du mode d'obtention. Chaque bloc est indépendant.
+    wireAppearanceBlocks(modalContent);
 
-      const closePopover = () => {
-        popover.hidden = true;
-        appearanceEl.querySelectorAll('.appearance-game.is-active').forEach(b => b.classList.remove('is-active'));
-        if (docCloser) { document.removeEventListener('click', docCloser); docCloser = null; }
-      };
-
-      appearanceEl.querySelectorAll('.appearance-game').forEach(btn => {
-        btn.addEventListener('click', e => {
-          e.stopPropagation();
-          if (btn.classList.contains('is-active')) { closePopover(); return; }
-          const game   = GAMES.find(g => g.slug === btn.dataset.slug);
-          const method = methodBySlug[btn.dataset.slug];
-          popIcon.src        = game?.iconUrl || '';
-          popIcon.alt        = game?.name || '';
-          popTitle.textContent  = game?.name || '';
-          if (method) {
-            popMethod.innerHTML = formatMethod(method);
-          } else {
-            popMethod.textContent = "Mode d'obtention non renseigné.";
-          }
-          popMethod.classList.toggle('appearance-popover__method--empty', !method);
-          appearanceEl.querySelectorAll('.appearance-game.is-active').forEach(b => b.classList.remove('is-active'));
-          btn.classList.add('is-active');
-          popover.hidden = false;
-          if (!docCloser) {
-            docCloser = ev => { if (!ev.target.closest('.appearance')) closePopover(); };
-            setTimeout(() => document.addEventListener('click', docCloser), 0);
-          }
-        });
-      });
-
-      popover.querySelector('.appearance-popover__close').addEventListener('click', e => {
-        e.stopPropagation();
-        closePopover();
-      });
+    // Onglets illustrations. Pour la famille Paldéa, le bloc « Apparition » de
+    // l'en-tête est reconstruit selon la forme (onglet) sélectionnée.
+    function setAppearanceForTab(tab) {
+      const slot = modalContent.querySelector('.appearance-slot');
+      if (!slot) return;
+      slot.innerHTML = appearanceBlockHtml(appearancesByTab[tab] || appearancesByTab.base || []);
+      wireAppearanceBlocks(slot);
     }
-
-    // Onglets illustrations
     modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const tab = btn.dataset.tab;
@@ -507,6 +571,7 @@ export async function openModal(number) {
         modalContent.querySelectorAll('.illus-tab-panel').forEach(panel =>
           panel.classList.toggle('active', panel.dataset.panel === tab)
         );
+        if (isPaldeanFamily) setAppearanceForTab(tab);
       });
     });
 
@@ -609,10 +674,15 @@ export async function openModal(number) {
           ownedShiny = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'owned');
           seenShinyF = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'seen');
         } else if (isRegional) {
-          ownedNorm  = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) && !vt.includes('shiny') && d.status === 'owned');
-          seenNorm   = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) && !vt.includes('shiny') && d.status === 'seen');
-          ownedShiny = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) &&  vt.includes('shiny') && d.status === 'owned');
-          seenShinyF = entries.some(([vt, d]) => (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian')) &&  vt.includes('shiny') && d.status === 'seen');
+          // Chaque colonne régionale porte sa région (data-region). On révèle donc la
+          // bonne race (ex. paldean_combat) ; repli sur l'ancien comportement groupé
+          // Alola/Galar/Hisui si l'attribut manque.
+          const region = col?.dataset.region;
+          const matchReg = vt => region ? vt.startsWith(region) : (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'));
+          ownedNorm  = entries.some(([vt, d]) => matchReg(vt) && !vt.includes('shiny') && d.status === 'owned');
+          seenNorm   = entries.some(([vt, d]) => matchReg(vt) && !vt.includes('shiny') && d.status === 'seen');
+          ownedShiny = entries.some(([vt, d]) => matchReg(vt) &&  vt.includes('shiny') && d.status === 'owned');
+          seenShinyF = entries.some(([vt, d]) => matchReg(vt) &&  vt.includes('shiny') && d.status === 'seen');
         } else if (col?.classList.contains('is-special-form')) {
           const sfKey = col.dataset.sfKey;
           if (sfKey) {

@@ -3,7 +3,7 @@ import {
   fetchCatches, fetchVariantMap, fetchSpecialFormsForNumbers,
   fetchVariants, fetchMegaEvolutions, insertCatch, deleteCatch,
   updateCatchesBySession, deleteCatchesBySession,
-  deleteSeenByVariantType, upsertSeen,
+  deleteSeenByVariantType, upsertSeen, fetchEvolutionLinks,
 } from './supabase-client.js';
 import { initAuth } from './auth.js';
 
@@ -157,6 +157,27 @@ let allCatches     = [];
 let variantMap     = {}; // { [pokemon_number]: { [variant_type]: image_url } }
 let specialFormsMap = {}; // { [pokemon_number]: { [form_key]: { image_url, image_url_shiny, ... } } }
 
+// Ordre par chaîne d'évolution (pour le tri chrono à date égale). Par défaut neutre
+// (racine = soi-même, profondeur 0) tant que les liens ne sont pas chargés.
+let evoOrder = { root: n => n, depth: () => 0 };
+
+// Construit les fonctions root/depth depuis les liens d'évolution (number → parent).
+function buildEvoOrder(links) {
+  const parent = {};
+  for (const l of links) parent[l.number] = l.evolves_from_number ?? null;
+  const rootCache = {}, depthCache = {};
+  const compute = num => {
+    let cur = num, depth = 0;
+    const seen = new Set();
+    while (parent[cur] != null && !seen.has(cur)) { seen.add(cur); cur = parent[cur]; depth++; }
+    rootCache[num] = cur; depthCache[num] = depth;
+  };
+  return {
+    root:  num => { if (!(num in rootCache))  compute(num); return rootCache[num]; },
+    depth: num => { if (!(num in depthCache)) compute(num); return depthCache[num]; },
+  };
+}
+
 // ── Sections pliables ──────────────────────────────────────────
 // Clés des sections repliées, persistées pour survivre aux re-renders
 // (déclenchés après chaque édition/suppression de capture).
@@ -290,9 +311,19 @@ function renderChrono(sessions) {
     .sort(([a], [b]) => b.localeCompare(a))
     .map(([key, items]) => renderSection(
       key === 'unknown' ? 'Date inconnue' : formatMonthYear(key + '-01'),
-      // Tri par numéro de Pokédex décroissant ; à numéro égal, le tri stable
-      // conserve l'ordre d'ajout (date de capture).
-      items.slice().sort((a, b) => b.pokemon_number - a.pokemon_number),
+      // 1) date décroissante (jour le plus récent en haut) ;
+      // 2) à date égale : chaîne d'évolution, SENS INVERSÉ — familles toujours par
+      //    numéro de la forme de base (racine), mais au sein d'une famille l'évolution
+      //    passe AVANT sa pré-évolution (profondeur décroissante ; ex. Mélofée avant Mélo).
+      items.slice().sort((a, b) => {
+        const da = a.caught_at || '', db = b.caught_at || '';
+        if (da !== db) return db.localeCompare(da);
+        const ra = evoOrder.root(a.pokemon_number), rb = evoOrder.root(b.pokemon_number);
+        if (ra !== rb) return ra - rb;
+        const pa = evoOrder.depth(a.pokemon_number), pb = evoOrder.depth(b.pokemon_number);
+        if (pa !== pb) return pb - pa;
+        return b.pokemon_number - a.pokemon_number;
+      }),
       'chrono:' + key
     )).join('');
 }
@@ -850,10 +881,14 @@ async function init() {
     const { data } = await fetchCatches(getOwnerUuid());
     allCatches = data || [];
     const nums = [...new Set(allCatches.map(c => c.pokemon_number))];
-    [variantMap, specialFormsMap] = await Promise.all([
+    const [vm, sf, evoLinks] = await Promise.all([
       fetchVariantMap(nums),
       fetchSpecialFormsForNumbers(nums),
+      fetchEvolutionLinks(),
     ]);
+    variantMap = vm;
+    specialFormsMap = sf;
+    evoOrder = buildEvoOrder(evoLinks);
   } catch (e) {
     console.error('[journal]', e);
   } finally {

@@ -157,7 +157,7 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
 
     if (node.children.length === 0) {
       const stageClass   = allBranches.length > 1 ? 'evo-stage evo-stage-branching' : 'evo-stage';
-      const regionalsHtml = regionals.length ? `<div class="evo-regionals">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
+      const regionalsHtml = regionals.length ? `<div class="evo-regionals${regionals.length > 1 ? ' evo-regionals--stacked' : ''}">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
       return `<div class="${stageClass}">${portrait}${regionalsHtml}</div>${megaHtml}`;
     }
 
@@ -363,7 +363,7 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
       return `<div class="evo-dual-root-grid"><div class="evo-stage evo-stage--root-stretch" style="grid-row:1/span ${normalCount};grid-column:1">${rootPortrait}</div>${normalCells}${regionalSections}</div>`;
     }
 
-    const regionalsHtml = regionals.length ? `<div class="evo-regionals">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
+    const regionalsHtml = regionals.length ? `<div class="evo-regionals${regionals.length > 1 ? ' evo-regionals--stacked' : ''}">${regionals.map(evoRegionalPortrait).join('')}</div>` : '';
     const branches = node.children.map(c => {
       const condition = c.node.evolution_condition || '';
       return `<div class="evo-branch-item">${evoArrow(condition, c.node.evolution_item_image_url || null)}${renderNode(c, depth + 1)}</div>`;

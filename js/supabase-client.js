@@ -105,7 +105,8 @@ export async function fetchPokemonByNumber(number) {
 }
 
 /**
- * Apparitions d'un Pokémon par jeu (+ mode d'obtention).
+ * Apparitions de la forme de BASE d'un Pokémon par jeu (+ mode d'obtention).
+ * `form_key IS NULL` => forme de base uniquement (les formes ont leurs propres lignes).
  * Renvoie un tableau [{ game_slug, method }] (vide en cas d'erreur).
  */
 export async function fetchAppearances(number) {
@@ -115,7 +116,8 @@ export async function fetchAppearances(number) {
   const { data, error } = await client
     .from('pokemon_appearances')
     .select('game_slug, method')
-    .eq('pokemon_number', number);
+    .eq('pokemon_number', number)
+    .is('form_key', null);
 
   if (error) {
     console.error('[Supabase] Erreur fetchAppearances:', error.message);
@@ -123,6 +125,32 @@ export async function fetchAppearances(number) {
   }
 
   return data || [];
+}
+
+/**
+ * Apparitions des FORMES spéciales/régionales d'un Pokémon (form_key non NULL).
+ * Renvoie { [form_key]: [{ game_slug, method }] } ({} en cas d'erreur).
+ */
+export async function fetchFormAppearances(number) {
+  const client = getSupabaseClient();
+  if (!client) return {};
+
+  const { data, error } = await client
+    .from('pokemon_appearances')
+    .select('game_slug, method, form_key')
+    .eq('pokemon_number', number)
+    .not('form_key', 'is', null);
+
+  if (error) {
+    console.error('[Supabase] Erreur fetchFormAppearances:', error.message);
+    return {};
+  }
+
+  const map = {};
+  for (const r of data || []) {
+    (map[r.form_key] ||= []).push({ game_slug: r.game_slug, method: r.method });
+  }
+  return map;
 }
 
 /**
@@ -216,6 +244,21 @@ async function _fetchVariantsByType(variantType, pokemonNumbers) {
 export async function fetchAlolanVariantsForNumbers(pokemonNumbers)   { return _fetchVariantsByType('alolan',   pokemonNumbers); }
 export async function fetchGalarianVariantsForNumbers(pokemonNumbers) { return _fetchVariantsByType('galarian', pokemonNumbers); }
 export async function fetchHisuianVariantsForNumbers(pokemonNumbers)  { return _fetchVariantsByType('hisuian',  pokemonNumbers); }
+
+/**
+ * Formes régionales « Paldéa » (plusieurs races par Pokémon, ex. Tauros) pour le
+ * drawer de capture. Renvoie [{ pokemon_number, region, name, image_url }].
+ */
+export async function fetchPaldeanFormsForNumbers(pokemonNumbers) {
+  const client = getSupabaseClient();
+  if (!client || !pokemonNumbers.length) return [];
+  const { data } = await client
+    .from('pokemon_regional_forms')
+    .select('pokemon_number, region, name, image_url')
+    .like('region', 'paldean%')
+    .in('pokemon_number', pokemonNumbers);
+  return data || [];
+}
 
 /**
  * Retourne les numéros de Pokémon dont au moins une forme régionale a can_be_baron = true.
@@ -498,6 +541,18 @@ export async function fetchSpecialFormsByNumber(pokemonNumber) {
     .select('form_key, form_label_fr, image_url, image_url_shiny, artwork_url, artwork_url_shiny, form_group, sort_order, description_fr')
     .eq('pokemon_number', pokemonNumber)
     .order('sort_order', { ascending: true });
+  return data || [];
+}
+
+/**
+ * Liens d'évolution de tous les Pokémon (number → evolves_from_number).
+ * Sert au journal pour ordonner par chaîne d'évolution. [{ number, evolves_from_number }].
+ */
+export async function fetchEvolutionLinks() {
+  const client = getSupabaseClient();
+  if (!client) return [];
+  const { data, error } = await client.from('pokemon').select('number, evolves_from_number');
+  if (error) { console.error('[Supabase] Erreur fetchEvolutionLinks:', error.message); return []; }
   return data || [];
 }
 

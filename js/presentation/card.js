@@ -2,11 +2,11 @@ import { store } from '../store.js';
 import { esc, BALLS, ballUrl, spriteUrl } from '../utils.js';
 import {
   SHINY_ICON_URL, BARON_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL,
-  ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT,
+  ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEAN_FORM_VT,
   GENDER_GROUPS, GENDER_VTS_FLAT,
   padNumber, normalizeVariantUrl, formatCatchDateShort, typeBadge,
 } from '../domain/constants.js';
-import { getAlolanSprite, getGalarianSprite, getHisuianSprite, getSpecialFormSprite } from '../domain/sprites.js';
+import { getAlolanSprite, getGalarianSprite, getHisuianSprite, getPaldeanSprite, getSpecialFormSprite } from '../domain/sprites.js';
 
 // Callback injecté par app.js pour éviter dépendance circulaire card ↔ modal
 let _openModal = null;
@@ -64,6 +64,7 @@ export function renderCard(pokemon, icons = {}) {
     const alolaVt   = ALOLA_FORM_VT[recentShinyCatch?.form_label];
     const galarVt   = GALAR_FORM_VT[recentShinyCatch?.form_label];
     const hisuiVt   = HISUI_FORM_VT[recentShinyCatch?.form_label];
+    const paldeanVt = PALDEAN_FORM_VT[recentShinyCatch?.form_label];
     const specialVt = SPECIAL_FORM_VT[recentShinyCatch?.form_label];
     if (alolaVt) {
       const url = getAlolanSprite(pokemon.number, alolaVt);
@@ -74,6 +75,9 @@ export function renderCard(pokemon, icons = {}) {
     } else if (hisuiVt) {
       const url = getHisuianSprite(pokemon.number, hisuiVt);
       imgSrc = url ? normalizeVariantUrl(url) : spriteUrl(pokemon.number, true);
+    } else if (paldeanVt) {
+      const url = getPaldeanSprite(pokemon.number, paldeanVt);
+      imgSrc = url ? normalizeVariantUrl(url) : (recentShinyCatch?.sprite_url || catch_?.sprite_url || spriteUrl(pokemon.number, true));
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || spriteUrl(pokemon.number, true);
     } else {
@@ -85,6 +89,7 @@ export function renderCard(pokemon, icons = {}) {
     const alolaVt   = ALOLA_FORM_VT[catch_?.form_label];
     const galarVt   = GALAR_FORM_VT[catch_?.form_label];
     const hisuiVt   = HISUI_FORM_VT[catch_?.form_label];
+    const paldeanVt = PALDEAN_FORM_VT[catch_?.form_label];
     const specialVt = SPECIAL_FORM_VT[catch_?.form_label];
     if (alolaVt) {
       const url = getAlolanSprite(pokemon.number, alolaVt);
@@ -95,6 +100,10 @@ export function renderCard(pokemon, icons = {}) {
     } else if (hisuiVt) {
       const url = getHisuianSprite(pokemon.number, hisuiVt);
       imgSrc = url ? normalizeVariantUrl(url) : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
+    } else if (paldeanVt) {
+      // Race de Paldéa : on veut le sprite de la race, jamais le sprite normal (icons.normal).
+      const url = getPaldeanSprite(pokemon.number, paldeanVt);
+      imgSrc = url ? normalizeVariantUrl(url) : (catch_?.sprite_url || spriteUrl(pokemon.number, false));
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || catch_?.sprite_url || spriteUrl(pokemon.number, false);
     } else {

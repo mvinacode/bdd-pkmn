@@ -82,7 +82,12 @@ export async function loadCatchesMap() {
   store.catchByNumber = {};
   store.shinyCatchByNumber = {};
   for (const c of (catchRes.data || [])) {
-    if (!store.catchByNumber[c.pokemon_number]) store.catchByNumber[c.pokemon_number] = c;
+    // Carte = la capture la plus récemment AJOUTÉE (created_at), pas le plus grand
+    // caught_at : c'est « le dernier Pokémon ajouté » qu'on veut voir (sprite + ball + date).
+    const prevCatch = store.catchByNumber[c.pokemon_number];
+    if (!prevCatch || new Date(c.created_at) > new Date(prevCatch.created_at)) {
+      store.catchByNumber[c.pokemon_number] = c;
+    }
     if (c.is_shiny) {
       const prev = store.shinyCatchByNumber[c.pokemon_number];
       if (!prev || new Date(c.created_at) > new Date(prev.created_at)) {

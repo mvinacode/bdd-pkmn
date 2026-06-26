@@ -91,6 +91,17 @@ export const HISUI_FORM_VT = {
   'Hisui Asexué':       'hisuian',
 };
 
+// Races de Paldéa (Tauros, exclusivement mâle). Clé = form_label enregistré par le
+// drawer (« {Race} Mâle [Shiny] ») => variant_type.
+export const PALDEAN_FORM_VT = {
+  'Race Combative Mâle Shiny':   'paldean_combat_shiny',
+  'Race Combative Mâle':         'paldean_combat',
+  'Race Flamboyante Mâle Shiny': 'paldean_blaze_shiny',
+  'Race Flamboyante Mâle':       'paldean_blaze',
+  'Race Aquatique Mâle Shiny':   'paldean_aqua_shiny',
+  'Race Aquatique Mâle':         'paldean_aqua',
+};
+
 export const VARIANT_STATUS_META = {
   '':      { label: 'Non vu',  cls: '' },
   'seen':  { label: 'Vu',      cls: 'status-seen' },

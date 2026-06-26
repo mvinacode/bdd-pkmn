@@ -10,13 +10,16 @@ import {
   normalizeVariantUrl, padNumber,
 } from '../domain/constants.js';
 import { getVariantStatus } from '../domain/completion.js';
-import { addToSeen } from '../application/catches.js?v=1';
+import { addToSeen } from '../application/catches.js?v=2';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
-  fetchHisuianVariantsForNumbers, fetchSpecialFormsForNumbers,
+  fetchHisuianVariantsForNumbers, fetchPaldeanFormsForNumbers, fetchSpecialFormsForNumbers,
   insertCatch, fetchVariantMap,
-} from '../supabase-client.js?v=3';
+} from '../supabase-client.js?v=6';
+
+// Libellé court d'une race de Paldéa à partir du nom complet : « … (Race Combative) » => « Race Combative ».
+const paldeanRaceLabel = race => (race?.name || '').match(/\(([^)]+)\)/)?.[1] || race?.region || '';
 
 // Callbacks injectés par app.js (évite circulaire drawer ↔ modal)
 let _openModal = null;
@@ -218,6 +221,36 @@ export function renderDrawerFormsAlolan(variants, sprite)   { renderDrawerFormsR
 export function renderDrawerFormsGalarian(variants, sprite) { renderDrawerFormsRegional(variants, sprite, 'galarian'); }
 export function renderDrawerFormsHisuian(variants, sprite)  { renderDrawerFormsRegional(variants, sprite, 'hisuian'); }
 
+// Formes « Paldéa » (race de Tauros). Tauros est exclusivement mâle => Mâle + Mâle Shiny.
+// race = { region, name, image_url } ; variant_type = region et region_shiny.
+export function renderDrawerFormsPaldean(race, variants) {
+  const field = $('form-selector-field');
+  const grid  = $('form-grid');
+  if (!field || !grid) return;
+
+  const p         = race.region;
+  const raceLabel = paldeanRaceLabel(race);
+  const vBase     = variants.find(v => v.variant_type === p);
+  const vShiny    = variants.find(v => v.variant_type === `${p}_shiny`);
+  const base      = vBase?.image_url  || race.image_url || null;
+  const baseShiny = vShiny?.image_url || base;
+
+  const entries = [
+    { label: `${raceLabel} Mâle`,       displayLabel: 'Mâle',       variant_type: p,            iconHtml: ICON_MALE_LG,                  sprite: base      },
+    { label: `${raceLabel} Mâle Shiny`, displayLabel: 'Mâle Shiny', variant_type: `${p}_shiny`, iconHtml: ICON_MALE_SM + ICON_SHINY_SM,  sprite: baseShiny },
+  ];
+
+  grid.innerHTML = entries.map((e, i) => `
+    <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
+      <div class="form-opt-icon">${e.iconHtml}</div>
+      <span>${esc(e.displayLabel)}</span>
+    </button>`).join('');
+
+  store.drawerForms = [];
+  _bindFormGrid(grid, entries);
+  field.hidden = false;
+}
+
 export function renderDrawerFormsSpecial(specialForm) {
   const field = $('form-selector-field');
   const grid  = $('form-grid');
@@ -266,6 +299,8 @@ export function selectDrawerForm(v) {
       src = normalizeVariantUrl(store.drawerPokemon.galarianSprite);
     else if (store.drawerPokemon.isHisuian && store.drawerPokemon.hisuianSprite)
       src = normalizeVariantUrl(store.drawerPokemon.hisuianSprite);
+    else if (store.drawerPokemon.isPaldean && v.sprite)
+      src = normalizeVariantUrl(v.sprite);
     else if (store.drawerPokemon.isSpecial && v.sprite)
       src = normalizeVariantUrl(v.sprite);
     else if (store.drawerShiny)
@@ -347,11 +382,12 @@ export function bindDrawerEvents() {
         if (!data?.length) { dropdown.hidden = true; return; }
 
         const nums = data.map(p => p.number);
-        const [allIcons, alolanRows, galarianRows, hisuianRows, specialFormsData] = await Promise.all([
+        const [allIcons, alolanRows, galarianRows, hisuianRows, paldeanRows, specialFormsData] = await Promise.all([
           fetchCardIcons(nums).catch(() => []),
           fetchAlolanVariantsForNumbers(nums).catch(() => []),
           fetchGalarianVariantsForNumbers(nums).catch(() => []),
           fetchHisuianVariantsForNumbers(nums).catch(() => []),
+          fetchPaldeanFormsForNumbers(nums).catch(() => []),
           fetchSpecialFormsForNumbers(nums).catch(() => ({})),
         ]);
         const iconMap = {};
@@ -365,28 +401,34 @@ export function bindDrawerEvents() {
         const alolanSpriteMap    = Object.fromEntries(alolanRows.map(r => [r.pokemon_number, r.image_url]));
         const galarianSpriteMap  = Object.fromEntries(galarianRows.map(r => [r.pokemon_number, r.image_url]));
         const hisuianSpriteMap   = Object.fromEntries(hisuianRows.map(r => [r.pokemon_number, r.image_url]));
+        const paldeanByNumber    = {};
+        for (const r of paldeanRows) (paldeanByNumber[r.pokemon_number] ||= []).push(r);
 
         const items = [];
         for (const p of data) {
-          items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: null });
-          if (alolanSpriteMap[p.number])   items.push({ p, isAlola: true,  isGalar: false, isHisui: false, specialForm: null });
-          if (galarianSpriteMap[p.number]) items.push({ p, isAlola: false, isGalar: true,  isHisui: false, specialForm: null });
-          if (hisuianSpriteMap[p.number])  items.push({ p, isAlola: false, isGalar: false, isHisui: true,  specialForm: null });
+          items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: null, paldean: null });
+          if (alolanSpriteMap[p.number])   items.push({ p, isAlola: true,  isGalar: false, isHisui: false, specialForm: null, paldean: null });
+          if (galarianSpriteMap[p.number]) items.push({ p, isAlola: false, isGalar: true,  isHisui: false, specialForm: null, paldean: null });
+          if (hisuianSpriteMap[p.number])  items.push({ p, isAlola: false, isGalar: false, isHisui: true,  specialForm: null, paldean: null });
+          for (const race of (paldeanByNumber[p.number] || []))
+            items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: null, paldean: race });
           for (const form of Object.values(specialFormsData[p.number] || {}))
-            items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: form });
+            items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: form, paldean: null });
         }
 
-        dropdown.innerHTML = items.map(({ p, isAlola, isGalar, isHisui, specialForm }) => {
+        dropdown.innerHTML = items.map(({ p, isAlola, isGalar, isHisui, specialForm, paldean }) => {
           const ico         = iconMap[p.number];
           const alolaSprite = alolanSpriteMap[p.number]  || null;
           const galarSprite = galarianSpriteMap[p.number] || null;
           const hisuiSprite = hisuianSpriteMap[p.number] || null;
-          const src = isAlola ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(p.number, false))
+          const src = paldean ? (paldean.image_url ? normalizeVariantUrl(paldean.image_url) : spriteUrl(p.number, false))
+            : isAlola ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(p.number, false))
             : isGalar ? (galarSprite ? normalizeVariantUrl(galarSprite) : spriteUrl(p.number, false))
             : isHisui ? (hisuiSprite ? normalizeVariantUrl(hisuiSprite) : spriteUrl(p.number, false))
             : specialForm ? (specialForm.image_url ? normalizeVariantUrl(specialForm.image_url) : spriteUrl(p.number, false))
             : (ico?.normal ? normalizeVariantUrl(ico.normal) : spriteUrl(p.number, false));
-          const displayName = isAlola ? `${p.name_fr} · Alola`
+          const displayName = paldean ? `${p.name_fr} · ${paldeanRaceLabel(paldean)}`
+            : isAlola ? `${p.name_fr} · Alola`
             : isGalar ? `${p.name_fr} · Galar`
             : isHisui ? `${p.name_fr} · Hisui`
             : specialForm ? `${p.name_fr} · ${specialForm.form_label_fr}`
@@ -400,6 +442,9 @@ export function bindDrawerEvents() {
             data-galar-sprite="${esc(galarSprite || '')}"
             data-is-hisui="${isHisui ? '1' : '0'}"
             data-hisui-sprite="${esc(hisuiSprite || '')}"
+            data-paldean-region="${esc(paldean?.region || '')}"
+            data-paldean-name="${esc(paldean?.name || '')}"
+            data-paldean-sprite="${esc(paldean?.image_url || '')}"
             data-special-form-key="${esc(specialForm?.form_key || '')}"
             data-special-form-label="${esc(specialForm?.form_label_fr || '')}">
             <img src="${esc(src)}" width="28" height="28" alt="" style="image-rendering:pixelated">
@@ -418,6 +463,9 @@ export function bindDrawerEvents() {
             const galarSprite    = btn.dataset.galarSprite || null;
             const isHisui        = btn.dataset.isHisui === '1';
             const hisuiSprite    = btn.dataset.hisuiSprite || null;
+            const paldeanRegion  = btn.dataset.paldeanRegion || null;
+            const paldeanName    = btn.dataset.paldeanName   || null;
+            const paldeanSprite  = btn.dataset.paldeanSprite || null;
             const specialFormKey = btn.dataset.specialFormKey || null;
             const specialFormLbl = btn.dataset.specialFormLabel || null;
             const ico            = iconMap[num] || {};
@@ -428,16 +476,19 @@ export function bindDrawerEvents() {
               isAlolan: isAlola, alolanSprite: alolaSprite,
               isGalarian: isGalar, galarianSprite: galarSprite,
               isHisuian: isHisui, hisuianSprite: hisuiSprite,
+              isPaldean: !!paldeanRegion, paldeanRegion, paldeanName, paldeanSprite,
               isSpecial: !!specialFormKey, specialFormKey, specialFormLabel: specialFormLbl,
             };
 
-            const displayName = isAlola ? `${name} · Alola`
+            const displayName = paldeanRegion ? `${name} · ${paldeanRaceLabel({ name: paldeanName, region: paldeanRegion })}`
+              : isAlola ? `${name} · Alola`
               : isGalar ? `${name} · Galar`
               : isHisui ? `${name} · Hisui`
               : specialFormKey ? `${name} · ${specialFormLbl}`
               : name;
             const sfData = specialFormKey ? specialFormsData[num]?.[specialFormKey] : null;
-            const src = isAlola ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(num, false))
+            const src = paldeanRegion ? (paldeanSprite ? normalizeVariantUrl(paldeanSprite) : spriteUrl(num, false))
+              : isAlola ? (alolaSprite ? normalizeVariantUrl(alolaSprite) : spriteUrl(num, false))
               : isGalar ? (galarSprite ? normalizeVariantUrl(galarSprite) : spriteUrl(num, false))
               : isHisui ? (hisuiSprite ? normalizeVariantUrl(hisuiSprite) : spriteUrl(num, false))
               : sfData?.image_url ? normalizeVariantUrl(sfData.image_url)
@@ -457,7 +508,10 @@ export function bindDrawerEvents() {
             sel.hidden = false;
 
             store.drawerForm = null;
-            if (isAlola) {
+            if (paldeanRegion) {
+              const variantData = await fetchVariants(num).catch(() => []);
+              renderDrawerFormsPaldean({ region: paldeanRegion, name: paldeanName, image_url: paldeanSprite }, variantData);
+            } else if (isAlola) {
               const variantData = await fetchVariants(num).catch(() => []);
               renderDrawerFormsAlolan(variantData, alolaSprite);
             } else if (isGalar) {
@@ -508,6 +562,8 @@ export async function saveCatchFromMain() {
     saveBtn.textContent = 'Sauvegarde…';
     const savedSeenNum = store.drawerPokemon.number;
     const savedSeenVts = formsToMark.map(f => f.variant_type || '');
+    const savedPaldeanTab = store.drawerPokemon.isPaldean
+      ? `Forme Paldea ${paldeanRaceLabel({ name: store.drawerPokemon.paldeanName, region: store.drawerPokemon.paldeanRegion })}` : null;
     const date = $('catch-date').value || new Date().toISOString().slice(0, 10);
     const game = store.drawerGame?.name || $('catch-game')?.value.trim() || null;
     try {
@@ -533,6 +589,7 @@ export async function saveCatchFromMain() {
       const modalOverlay = document.getElementById('modal-overlay');
       if (!modalOverlay?.hidden && store.currentModalPokemonNumber === savedSeenNum) {
         if (savedSeenVts.some(vt => vt.includes('mega'))) store.pendingIllusTab = 'Méga-Évolution';
+        else if (savedPaldeanTab && savedSeenVts.some(vt => vt.startsWith('paldean'))) store.pendingIllusTab = savedPaldeanTab;
         else if (savedSeenVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'))) store.pendingIllusTab = 'Formes régionales';
         else if (savedSeenVts.some(vt => vt.includes('gigamax'))) store.pendingIllusTab = 'Gigamax';
         _openModal?.(savedSeenNum);
@@ -606,6 +663,8 @@ export async function saveCatchFromMain() {
 
   const savedCatchNum = store.drawerPokemon.number;
   const savedCatchVts = formsToCapture.map(f => f.variant_type || '');
+  const savedCatchPaldeanTab = store.drawerPokemon.isPaldean
+    ? `Forme Paldea ${paldeanRaceLabel({ name: store.drawerPokemon.paldeanName, region: store.drawerPokemon.paldeanRegion })}` : null;
   store.catchByNumber[store.drawerPokemon.number] = lastData;
   if (lastData?.is_shiny) store.shinyCatchByNumber[store.drawerPokemon.number] = lastData;
   if (!store.variantMap[store.drawerPokemon.number])
@@ -621,6 +680,7 @@ export async function saveCatchFromMain() {
   const modalOverlay = document.getElementById('modal-overlay');
   if (!modalOverlay?.hidden && store.currentModalPokemonNumber === savedCatchNum) {
     if (savedCatchVts.some(vt => vt.includes('mega'))) store.pendingIllusTab = 'Méga-Évolution';
+    else if (savedCatchPaldeanTab && savedCatchVts.some(vt => vt.startsWith('paldean'))) store.pendingIllusTab = savedCatchPaldeanTab;
     else if (savedCatchVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'))) store.pendingIllusTab = 'Formes régionales';
     else if (savedCatchVts.some(vt => vt.includes('gigamax'))) store.pendingIllusTab = 'Gigamax';
     _openModal?.(savedCatchNum);
