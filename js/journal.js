@@ -224,13 +224,30 @@ function variantFallbacks(vt) {
   return chains[vt] || [vt];
 }
 
+// Détecte la région d'une session via le préfixe de n'importe quel libellé de forme.
+function sessionRegion(session) {
+  for (const f of session.forms) {
+    if (f.form_label?.startsWith('Alola')) return 'alolan';
+    if (f.form_label?.startsWith('Galar')) return 'galarian';
+    if (f.form_label?.startsWith('Hisui')) return 'hisuian';
+  }
+  return null;
+}
+
 // Calcule le meilleur sprite pour une session depuis pokemon_variants + specialFormsMap
 function getSessionSprite(session) {
   const variants = variantMap[session.pokemon_number] || {};
   // Choisir la forme représentative : non-shiny en priorité (sinon shiny)
   const form = session.forms.find(f => !f.is_shiny) || session.forms[0];
   if (!form) return null;
-  const vt = formLabelToVariantType(form.form_label);
+  let vt = formLabelToVariantType(form.form_label);
+  // Les barons régionaux (« Alola Baron »…) sont mappés sur le variant_type générique
+  // 'baron' → sans région, on retomberait sur le sprite de la forme normale. On force
+  // alors le variant_type sur la base régionale pour retrouver le bon sprite.
+  const region = sessionRegion(session);
+  if (region && (!vt || !vt.startsWith(region))) {
+    vt = form.is_shiny ? `${region}_shiny` : region;
+  }
   if (vt) {
     // Cherche dans pokemon_variants d'abord
     for (const fvt of variantFallbacks(vt)) {
@@ -756,14 +773,7 @@ async function loadModalFormGrid(session) {
   };
 
   // Détecte la région par le préfixe du form_label (couvre aussi "Alola Baron", "Galar Baron", etc.)
-  const region = (() => {
-    for (const f of session.forms) {
-      if (f.form_label?.startsWith('Alola')) return 'alolan';
-      if (f.form_label?.startsWith('Galar')) return 'galarian';
-      if (f.form_label?.startsWith('Hisui')) return 'hisuian';
-    }
-    return null;
-  })();
+  const region = sessionRegion(session);
   const specialFormKey = region ? null : (() => {
     for (const f of session.forms) {
       const vt = formLabelToVariantType(f.form_label);
