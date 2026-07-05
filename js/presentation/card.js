@@ -163,6 +163,9 @@ export function renderCard(pokemon, icons = {}) {
     'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
     'gigamax','shiny_gigamax',
     'troizepy','troizepy_shiny',
+    // Races de Paldéa (Tauros) : paldean_* dynamiques par Pokémon (normal + shiny).
+    // Sans elles, la carte « complète » s'activait sans les shiny des races.
+    ...(pokemonVMap ? Object.keys(pokemonVMap).filter(vt => vt.startsWith('paldean')) : []),
     ...(genderMode === 'all' ? [...GENDER_VTS_FLAT].filter(vt => !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('hisuian')) : []),
   ]);
 

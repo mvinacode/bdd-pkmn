@@ -285,7 +285,7 @@ export async function openModal(number) {
     function variantCard(v) {
       const status  = getVariantStatus(p.number, v.variant_type);
       const meta    = VARIANT_STATUS_META[status];
-      const isShiny = ['shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','troizepy_shiny'].includes(v.variant_type)
+      const isShiny = ['shiny','asexue_shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','troizepy_shiny'].includes(v.variant_type)
         || /^paldean_[a-z]+_shiny$/.test(v.variant_type);
       const sparkles = isShiny ? `
         <span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
