@@ -294,7 +294,7 @@ export async function openModal(number) {
         <span class="sparkle" style="bottom:18px;left:-9px;--sparkle-delay:0.8s;--sparkle-size:0.7rem;--sparkle-dur:2s">✦</span>
         <span class="sparkle" style="bottom:-7px;left:38px;--sparkle-delay:1.5s;--sparkle-size:0.85rem;--sparkle-dur:2.3s">✦</span>` : '';
       return `
-        <div class="variant-card" data-type="${esc(v.variant_type)}" data-status="${status}">
+        <div class="variant-card${isShiny ? ' variant-card--shiny' : ''}" data-type="${esc(v.variant_type)}" data-status="${status}">
           ${sparkles}
           <div class="variant-img-wrap">
             <img src="${esc(normalizeVariantUrl(v.image_url))}" alt="${esc(v.label)}" loading="lazy">
