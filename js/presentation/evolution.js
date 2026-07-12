@@ -19,8 +19,17 @@ export function evoPortrait(node, isCurrent, iconUrl = null, extraClass = '') {
     </button>`;
 }
 
-export function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, isGigamax = false) {
+export function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, isGigamax = false, orientation = 'right') {
   let conditionHtml = '';
+  // Une URL d'image collée à la fin du texte de condition (ex. « Bonheur, jour,
+  // sans capacité https://.../fee.png ») est extraite pour être rendue comme
+  // petite icône après le texte, plutôt qu'affichée en URL brute.
+  let inlineIcon = '';
+  const urlMatch = condition.match(/https?:\/\/\S+?\.(?:png|jpe?g|svg|webp|gif)/i);
+  if (urlMatch) {
+    inlineIcon = `<img src="${esc(urlMatch[0])}" alt="" class="evo-condition-icon" loading="lazy">`;
+    condition = condition.replace(urlMatch[0], '').replace(/[\s,]+$/, '').trim();
+  }
   if (itemImageUrl) {
     const isGalanoaBand = /(bracelet|couronne)\s+galanoa/i.test(condition);
     const isKingsRock   = /roche\s+royale/i.test(condition);
@@ -30,6 +39,8 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isTradeDracoScale = isTradeEvo && /écaille\s+draco/i.test(condition);
     const isTradeElectriseur = isTradeEvo && /électriseur/i.test(condition);
     const isTradeMagmariseur = isTradeEvo && /magmariseur/i.test(condition);
+    const isTradeAmeliorator = isTradeEvo && /am[ée]liorat/i.test(condition);
+    const isTradeCdDouteux = isTradeEvo && /douteux/i.test(condition);
     const isStone      = !bidirectional && !isGigamax && !isGalanoaBand;
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -40,12 +51,13 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isOvalStone  = /pierre\s+ovale/i.test(condition);
     const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
-      <span class="evo-condition ${textClass}">${esc(condition)}</span>
+      <span class="evo-condition ${textClass}">${esc(condition)}${inlineIcon}</span>
     </div>`;
   } else if (condition) {
     const isNight     = condition.toLowerCase().includes('nuit');
+    const isDay       = condition.toLowerCase().includes('jour');
     const isHappiness = condition.toLowerCase().includes('bonheur');
     const isRageMove  = /poing de col[eè]re/i.test(condition);
     const isRolloutMove = /roulade/i.test(condition);
@@ -77,12 +89,22 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
       : isCopieMove
       ? esc(condition).replace(/Copie/i, '<span class="move-name">$&</span>')
       : esc(condition);
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCritical ? ' is-critical' : ''}">${conditionInner}</span>`;
+    // Passe « sans capacité » à la ligne (virgule conservée) pour garder la pill compacte
+    const conditionDisplay = conditionInner.replace(/,\s*(sans\s+capacit[ée]s?)/i, ',<br>$1');
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCritical ? ' is-critical' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
+  } else if (inlineIcon) {
+    // Condition réduite à sa seule icône (aucun texte restant après extraction)
+    conditionHtml = `<span class="evo-condition">${inlineIcon}</span>`;
   }
+  const isDown = orientation === 'down';
   const arrowSvg = bidirectional
-    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`
+    ? (isDown
+      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7l4-4 4 4M8 17l4 4 4-4M12 3v18"/></svg>`
+      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8l4 4-4 4M7 8l-4 4 4 4M3 12h18"/></svg>`)
+    : isDown
+    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6"/></svg>`
     : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
-  return `<div class="evo-arrow" aria-hidden="true">${conditionHtml}${arrowSvg}</div>`;
+  return `<div class="evo-arrow${isDown ? ' evo-arrow--down' : ''}" aria-hidden="true">${conditionHtml}${arrowSvg}</div>`;
 }
 
 export function evoGigamaxPortrait(gigamax) {
@@ -322,6 +344,41 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
       return `<div class="evo-stage">${portrait}</div>${evoArrow(condition, node.children[0].node.evolution_item_image_url || null)}${renderNode(node.children[0], depth + 1, excludeRegionals)}`;
     }
 
+    // Beaucoup d'évolitions terminales (ex. Évoli → ses évolitions) : disposition
+    // en éventail — le Pokémon de base centré au-dessus, ses cibles réparties en
+    // grille horizontale qui s'enroule, chacune avec sa propre flèche/pill. Un
+    // éventuel Gigamax de la base y figure comme branche bidirectionnelle.
+    const fanChildrenSimple = node.children.every(c =>
+      c.children.length === 0
+      && (megasByNumber[c.node.number] || []).length === 0
+      && (gigamaxByNumber[c.node.number] || []).length === 0
+      && (regionalsByNumber[c.node.number] || []).length === 0
+    );
+    if (node.children.length >= 4 && fanChildrenSimple && regionals.length === 0) {
+      // Grille : rangée 1 = base (étirée sur les N colonnes d'évolitions) + Gigamax
+      // éventuel dans une colonne supplémentaire à droite ; rangée 2 = les évolitions,
+      // une par colonne. La base occupe donc exactement la largeur des évolitions et
+      // grandit à chaque évolition ajoutée.
+      const cols    = node.children.length;
+      const hasGiga = gigamaxesBranch.length > 0;
+      const baseCell = `<div class="evo-fan-base" style="grid-column:1/span ${cols};grid-row:1;"><div class="evo-stage">${portrait}</div></div>`;
+      const gigaCell = gigamaxesBranch.map(g =>
+        `<div class="evo-fan-giga" style="grid-column:${cols + 1};grid-row:1;">${evoArrow(g.condition_label || g.name, g.item_image_url || null, true, true)}${evoGigamaxPortrait(g)}</div>`
+      ).join('');
+      // Rangée 2 = flèches + pills (même rangée de grille → même hauteur pour
+      // toutes) ; rangée 3 = portraits.
+      const arrowCells = node.children.map((c, i) =>
+        `<div class="evo-fan-arrow" style="grid-column:${i + 1};grid-row:2;">${evoArrow(c.node.evolution_condition || '', c.node.evolution_item_image_url || null, false, false, 'down')}</div>`
+      ).join('');
+      const portraitCells = node.children.map((c, i) => {
+        const cIconUrl  = iconByNumber[c.node.number] || null;
+        const cPortrait = evoPortrait(c.node, c.node.number === currentNumber, cIconUrl);
+        return `<div class="evo-fan-portrait" style="grid-column:${i + 1};grid-row:3;"><div class="evo-stage">${cPortrait}</div></div>`;
+      }).join('');
+      const templateCols = `repeat(${cols}, auto)${hasGiga ? ' auto' : ''}`;
+      return `<div class="evo-fan-grid" style="grid-template-columns:${templateCols};">${baseCell}${gigaCell}${arrowCells}${portraitCells}</div>`;
+    }
+
     // Multi-branches + formes régionales sans Gigamax : grille unifiée 3 colonnes
     if (regionals.length > 0 && gigamaxesBranch.length === 0) {
       const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl);
@@ -421,6 +478,7 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
       const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl, 'evo-portrait--root');
       return `<div class="evo-stage evo-stage--root-stretch">${rootPortrait}</div>${pikaBranches}`;
     }
+
     return `<div class="evo-stage">${portrait}${regionalsHtml}</div><div class="evo-branches">${branches}</div>`;
   }
 

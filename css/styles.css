@@ -1455,7 +1455,9 @@ body {
 .evo-chain {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* `safe` : centré quand le contenu tient, mais aligné à gauche (donc
+     scrollable, sans coupe) dès qu'il déborde de la largeur disponible */
+  justify-content: safe center;
   flex-wrap: nowrap;
   gap: 4px;
   overflow-x: auto;
@@ -1818,6 +1820,85 @@ body {
   right: -2px;
   font-size: 0.8rem;
   line-height: 1;
+}
+
+/* Condition « Bonheur, jour » (ex. Mentali) : bordure dégradée rose→jaune
+   (même épaisseur 1px que les autres pills) + cœur et soleil en décoration */
+.evo-condition.is-happiness.is-day {
+  --grad-day: linear-gradient(135deg, #ff2e8f 0%, #ffd54f 100%);
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.06);
+}
+/* Texte en dégradé rose→jaune (sur un span interne pour garder le fond de pill) */
+.evo-condition.is-happiness.is-day .evo-cond-body {
+  background: var(--grad-day);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* Bordure en dégradé rose→jaune (1px, même épaisseur que les autres) */
+.evo-condition.is-happiness.is-day::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: var(--grad-day);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-happiness.is-day::after {
+  content: '❤️☀️';
+  letter-spacing: -0.22em;
+}
+
+/* Condition « Bonheur, nuit » (ex. Noctali) : bordure ET texte en dégradé
+   rose→bleu nuit (fond identique aux autres) + cœur et lune en décoration */
+.evo-condition.is-happiness.is-night {
+  --grad-night: linear-gradient(135deg, #ff2e8f 0%, #232c96 100%);
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.06);
+}
+.evo-condition.is-happiness.is-night .evo-cond-body {
+  background: var(--grad-night);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.evo-condition.is-happiness.is-night::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: var(--grad-night);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-happiness.is-night::after {
+  content: '❤️🌙';
+  letter-spacing: -0.22em;
+}
+
+/* Mentali & Noctali : le badge de type passe sous « sans capacité » (ligne
+   propre, centrée) et la pill est élargie pour ne pas paraître comprimée entre
+   les pills « Pierre … » voisines (qui tiennent sur une seule ligne large) */
+.evo-condition.is-happiness.is-day,
+.evo-condition.is-happiness.is-night {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.evo-condition.is-happiness .evo-condition-icon {
+  display: block;
+  margin: 3px auto 0;
 }
 
 .evo-condition.is-rage-move {
@@ -2332,6 +2413,32 @@ body {
   background: linear-gradient(135deg, #dd5853, #888888, #ff821a, #fff120) !important;
 }
 
+/* Échange avec Améliorator (Porygon → Porygon2) */
+.evo-condition-item.is-trade-ameliorator::before {
+  background: linear-gradient(135deg, #797b5e, #f0efeb, #f9df5a) !important;
+}
+.evo-condition-item.is-trade-ameliorator .evo-condition {
+  color: #e7e6e0 !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-trade-ameliorator.evo-condition--unseen::before,
+.evo-condition-item.is-trade-ameliorator.evo-condition--seen::before {
+  background: linear-gradient(135deg, #797b5e, #f0efeb, #f9df5a) !important;
+}
+
+/* Échange avec CD Douteux (Porygon2 → Porygon-Z) */
+.evo-condition-item.is-trade-cd-douteux::before {
+  background: linear-gradient(135deg, #8b627b, #ecbfc8, #e104db) !important;
+}
+.evo-condition-item.is-trade-cd-douteux .evo-condition {
+  color: #e0b9dc !important;
+  text-shadow: none !important;
+}
+.evo-condition-item.is-trade-cd-douteux.evo-condition--unseen::before,
+.evo-condition-item.is-trade-cd-douteux.evo-condition--seen::before {
+  background: linear-gradient(135deg, #8b627b, #ecbfc8, #e104db) !important;
+}
+
 /* 1 Niv. + Jour + Avec Pierre Ovale (Leveinard) */
 .evo-condition-item.is-oval-stone::before {
   background: linear-gradient(135deg, #d9eaf2, #d2e6f0, #a1a2b1) !important;
@@ -2427,6 +2534,77 @@ body {
   flex-direction: column;
   gap: 6px;
   align-items: flex-start;
+}
+
+/* Éventail (ex. Évoli → ses évolitions) : grille — rangée 1 = base étirée sur
+   les N colonnes d'évolitions (+ Gigamax dans une colonne à droite),
+   rangée 2 = flèches/pills, rangée 3 = portraits. */
+.evo-fan-grid {
+  display: grid;
+  justify-items: center;
+  align-items: stretch;
+  column-gap: 4px;
+  row-gap: 8px;
+}
+/* La base occupe toute la largeur des évolitions et grandit à chaque ajout */
+.evo-fan-base {
+  width: 100%;
+  align-self: center;
+}
+.evo-fan-base .evo-stage,
+.evo-fan-base .evo-portrait {
+  width: 100%;
+}
+/* Gigamax à droite de la base, sur la rangée du haut */
+.evo-fan-giga {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  align-self: center;
+}
+/* Rangée des flèches : toutes les cellules ont la hauteur de la plus haute
+   (Mentali, 2 lignes) ; la pill remplit l'espace au-dessus de la flèche, donc
+   toutes les pills prennent la même hauteur automatiquement. */
+.evo-fan-arrow {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.evo-fan-arrow .evo-arrow {
+  flex: 1;
+}
+.evo-fan-arrow .evo-condition,
+.evo-fan-arrow .evo-condition-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+}
+/* Pills d'objet (Pierre Eau…) : icône + texte côte à côte, centrés */
+.evo-fan-arrow .evo-condition-item {
+  flex-direction: row;
+}
+/* Pas de retour à la ligne mot-par-mot : seul le <br> (avant « sans capacité »)
+   coupe la ligne, sinon le span se réduisait au mot le plus long
+   (« BONHEUR, / JOUR, / SANS / CAPACITÉ ») */
+.evo-fan-arrow .evo-cond-body {
+  white-space: nowrap;
+}
+.evo-fan-portrait {
+  align-self: start;
+}
+.evo-arrow--down {
+  padding: 4px 0;
+}
+/* Icône collée à la fin du texte de condition (ex. type/objet requis) */
+.evo-condition-icon {
+  height: 1.15em;
+  width: auto;
+  vertical-align: -0.22em;
+  margin-left: 5px;
 }
 
 .evo-branch-item {
