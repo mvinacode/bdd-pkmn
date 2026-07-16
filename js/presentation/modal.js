@@ -285,7 +285,7 @@ export async function openModal(number) {
     function variantCard(v) {
       const status  = getVariantStatus(p.number, v.variant_type);
       const meta    = VARIANT_STATUS_META[status];
-      const isShiny = ['shiny','asexue_shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','troizepy_shiny'].includes(v.variant_type)
+      const isShiny = ['shiny','asexue_shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','alolan_asexue_shiny','galarian_shiny','galarian_shiny_male','galarian_shiny_female','galarian_asexue_shiny','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','hisuian_asexue_shiny','troizepy_shiny'].includes(v.variant_type)
         || /^paldean_[a-z]+_shiny$/.test(v.variant_type);
       const sparkles = isShiny ? `
         <span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
@@ -339,10 +339,12 @@ export async function openModal(number) {
 
     function regionalVariantRows(prefix, allVariants) {
       const neutral = allVariants.filter(v => [prefix, `${prefix}_shiny`].includes(v.variant_type));
+      const asexue  = allVariants.filter(v => [`${prefix}_asexue`, `${prefix}_asexue_shiny`].includes(v.variant_type));
       const male    = allVariants.filter(v => [`${prefix}_male`, `${prefix}_shiny_male`].includes(v.variant_type));
       const female  = allVariants.filter(v => [`${prefix}_female`, `${prefix}_shiny_female`].includes(v.variant_type));
       return [
         variantRow(neutralBadge, neutral),
+        variantRow(asexueBadge,  asexue),
         variantRow(maleBadge,    male),
         variantRow(femaleBadge,  female),
       ].join('');
@@ -355,9 +357,9 @@ export async function openModal(number) {
     const megaVariants     = variants.filter(v => ['mega', 'shiny_mega', 'mega_x', 'shiny_mega_x'].includes(v.variant_type));
     const megaYVariants    = variants.filter(v => ['mega_y', 'shiny_mega_y'].includes(v.variant_type));
     const gigamaxVariants  = variants.filter(v => ['gigamax', 'shiny_gigamax'].includes(v.variant_type));
-    const alolanVariants   = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
-    const galarianVariants = variants.filter(v => ['galarian', 'galarian_shiny', 'galarian_male', 'galarian_shiny_male', 'galarian_female', 'galarian_shiny_female'].includes(v.variant_type));
-    const hisuianVariants  = variants.filter(v => ['hisuian', 'hisuian_shiny', 'hisuian_male', 'hisuian_shiny_male', 'hisuian_female', 'hisuian_shiny_female'].includes(v.variant_type));
+    const alolanVariants   = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_asexue', 'alolan_asexue_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
+    const galarianVariants = variants.filter(v => ['galarian', 'galarian_shiny', 'galarian_asexue', 'galarian_asexue_shiny', 'galarian_male', 'galarian_shiny_male', 'galarian_female', 'galarian_shiny_female'].includes(v.variant_type));
+    const hisuianVariants  = variants.filter(v => ['hisuian', 'hisuian_shiny', 'hisuian_asexue', 'hisuian_asexue_shiny', 'hisuian_male', 'hisuian_shiny_male', 'hisuian_female', 'hisuian_shiny_female'].includes(v.variant_type));
     const troizepyVariants = variants.filter(v => ['troizepy', 'troizepy_shiny'].includes(v.variant_type));
 
     // Famille « Paldéa » (Tauros) : plusieurs formes régionales paldean_* (Race

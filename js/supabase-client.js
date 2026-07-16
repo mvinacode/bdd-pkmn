@@ -233,12 +233,20 @@ export async function fetchVariantIcons(pokemonNumbers) {
 async function _fetchVariantsByType(variantType, pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
+  // La forme régionale peut être neutre (`galarian`) ou asexuée (`galarian_asexue`,
+  // ex. Artikodin de Galar) : on récupère les deux pour que le résultat régional
+  // apparaisse dans la recherche. On préfère la forme neutre si les deux existent.
   const { data } = await client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .eq('variant_type', variantType)
+    .in('variant_type', [variantType, `${variantType}_asexue`])
     .in('pokemon_number', pokemonNumbers);
-  return data || [];
+  if (!data) return [];
+  const byNumber = {};
+  for (const r of data) {
+    if (!byNumber[r.pokemon_number] || r.variant_type === variantType) byNumber[r.pokemon_number] = r;
+  }
+  return Object.values(byNumber);
 }
 
 export async function fetchAlolanVariantsForNumbers(pokemonNumbers)   { return _fetchVariantsByType('alolan',   pokemonNumbers); }

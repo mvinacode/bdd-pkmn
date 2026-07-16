@@ -154,11 +154,11 @@ export function renderCard(pokemon, icons = {}) {
 
   const TRACKED_VT = new Set([
     'shiny','asexue','asexue_shiny',
-    'alolan','alolan_shiny',
+    'alolan','alolan_shiny','alolan_asexue','alolan_asexue_shiny',
     ...(genderMode !== 'any' ? ['alolan_male','alolan_female','alolan_shiny_male','alolan_shiny_female'] : []),
-    'galarian','galarian_shiny',
+    'galarian','galarian_shiny','galarian_asexue','galarian_asexue_shiny',
     ...(genderMode !== 'any' ? ['galarian_male','galarian_female','galarian_shiny_male','galarian_shiny_female'] : []),
-    'hisuian','hisuian_shiny',
+    'hisuian','hisuian_shiny','hisuian_asexue','hisuian_asexue_shiny',
     ...(genderMode !== 'any' ? ['hisuian_male','hisuian_female','hisuian_shiny_male','hisuian_shiny_female'] : []),
     'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
     'gigamax','shiny_gigamax',

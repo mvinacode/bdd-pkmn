@@ -5,10 +5,10 @@ export function getAlolanSprite(pokemonNumber, variantType) {
   const chains = {
     'alolan_shiny_male':   ['alolan_shiny_male',   'alolan_shiny', 'alolan'],
     'alolan_shiny_female': ['alolan_shiny_female',  'alolan_shiny', 'alolan'],
-    'alolan_shiny':        ['alolan_shiny',          'alolan'],
+    'alolan_shiny':        ['alolan_shiny', 'alolan_asexue_shiny', 'alolan', 'alolan_asexue'],
     'alolan_male':         ['alolan_male',            'alolan'],
     'alolan_female':       ['alolan_female',          'alolan'],
-    'alolan':              ['alolan'],
+    'alolan':              ['alolan', 'alolan_asexue'],
   };
   for (const fvt of (chains[variantType] || [variantType])) {
     if (variants[fvt]) return variants[fvt];
@@ -21,10 +21,10 @@ export function getGalarianSprite(pokemonNumber, variantType) {
   const chains = {
     'galarian_shiny_male':   ['galarian_shiny_male',   'galarian_shiny', 'galarian'],
     'galarian_shiny_female': ['galarian_shiny_female',  'galarian_shiny', 'galarian'],
-    'galarian_shiny':        ['galarian_shiny',          'galarian'],
+    'galarian_shiny':        ['galarian_shiny', 'galarian_asexue_shiny', 'galarian', 'galarian_asexue'],
     'galarian_male':         ['galarian_male',            'galarian'],
     'galarian_female':       ['galarian_female',          'galarian'],
-    'galarian':              ['galarian'],
+    'galarian':              ['galarian', 'galarian_asexue'],
   };
   for (const fvt of (chains[variantType] || [variantType])) {
     if (variants[fvt]) return variants[fvt];
@@ -37,10 +37,10 @@ export function getHisuianSprite(pokemonNumber, variantType) {
   const chains = {
     'hisuian_shiny_male':   ['hisuian_shiny_male',   'hisuian_shiny', 'hisuian'],
     'hisuian_shiny_female': ['hisuian_shiny_female',  'hisuian_shiny', 'hisuian'],
-    'hisuian_shiny':        ['hisuian_shiny',          'hisuian'],
+    'hisuian_shiny':        ['hisuian_shiny', 'hisuian_asexue_shiny', 'hisuian', 'hisuian_asexue'],
     'hisuian_male':         ['hisuian_male',            'hisuian'],
     'hisuian_female':       ['hisuian_female',          'hisuian'],
-    'hisuian':              ['hisuian'],
+    'hisuian':              ['hisuian', 'hisuian_asexue'],
   };
   for (const fvt of (chains[variantType] || [variantType])) {
     if (variants[fvt]) return variants[fvt];

@@ -3183,7 +3183,9 @@ body {
 .variant-card[data-type="alolan_shiny_female"],
 .variant-card[data-type="galarian_shiny"],
 .variant-card[data-type="galarian_shiny_male"],
-.variant-card[data-type="galarian_shiny_female"] {
+.variant-card[data-type="galarian_shiny_female"],
+.variant-card[data-type="alolan_asexue_shiny"],
+.variant-card[data-type="galarian_asexue_shiny"] {
   border-color: rgba(253,216,53,0.25);
 }
 .variant-card[data-type="shiny"] .variant-label,
@@ -3194,7 +3196,9 @@ body {
 .variant-card[data-type="alolan_shiny_female"] .variant-label,
 .variant-card[data-type="galarian_shiny"] .variant-label,
 .variant-card[data-type="galarian_shiny_male"] .variant-label,
-.variant-card[data-type="galarian_shiny_female"] .variant-label {
+.variant-card[data-type="galarian_shiny_female"] .variant-label,
+.variant-card[data-type="alolan_asexue_shiny"] .variant-label,
+.variant-card[data-type="galarian_asexue_shiny"] .variant-label {
   color: var(--yellow);
   font-weight: 700;
 }

@@ -191,6 +191,10 @@ export function renderDrawerFormsRegional(variants, sprite, regionId) {
   const vShinyFem  = variants.find(v => v.variant_type === `${p}_shiny_female`);
   const vBase      = variants.find(v => v.variant_type === p);
   const vShiny     = variants.find(v => v.variant_type === `${p}_shiny`);
+  // Forme régionale asexuée (ex. Artikodin de Galar : galarian_asexue) : si elle
+  // existe, l'option « Asexué » enregistre ce type dédié plutôt que le neutre.
+  const vAsexue      = variants.find(v => v.variant_type === `${p}_asexue`);
+  const vAsexueShiny = variants.find(v => v.variant_type === `${p}_asexue_shiny`);
 
   const base      = vBase?.image_url  || sprite || null;
   const baseShiny = vShiny?.image_url || base;
@@ -200,8 +204,8 @@ export function renderDrawerFormsRegional(variants, sprite, regionId) {
     { label: `${regionLabel} Mâle Shiny`,    displayLabel: 'Mâle Shiny',    variant_type: `${p}_shiny_male`,   iconHtml: ICON_MALE_SM + ICON_SHINY_SM,   sprite: vShinyMale?.image_url || baseShiny },
     { label: `${regionLabel} Femelle`,       displayLabel: 'Femelle',       variant_type: `${p}_female`,       iconHtml: ICON_FEMALE_LG,                 sprite: vFemale?.image_url    || base      },
     { label: `${regionLabel} Femelle Shiny`, displayLabel: 'Femelle Shiny', variant_type: `${p}_shiny_female`, iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM, sprite: vShinyFem?.image_url  || baseShiny },
-    { label: `${regionLabel} Asexué`,       displayLabel: 'Asexué',       variant_type: p,                   iconHtml: ICON_UNISEX_LG,                 sprite: base      },
-    { label: `${regionLabel} Asexué Shiny`, displayLabel: 'Asexué Shiny', variant_type: `${p}_shiny`,        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: baseShiny },
+    { label: `${regionLabel} Asexué`,       displayLabel: 'Asexué',       variant_type: vAsexue ? `${p}_asexue` : p,                   iconHtml: ICON_UNISEX_LG,                 sprite: vAsexue?.image_url      || base      },
+    { label: `${regionLabel} Asexué Shiny`, displayLabel: 'Asexué Shiny', variant_type: vAsexue ? `${p}_asexue_shiny` : `${p}_shiny`, iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: vAsexueShiny?.image_url || baseShiny },
     { label: `${regionLabel} Baron`,         displayLabel: 'Baron',         variant_type: 'baron',             iconHtml: ICON_BARON_LG,                  sprite: base      },
     { label: `${regionLabel} Baron Shiny`,   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',       iconHtml: ICON_BARON_XS + ICON_SHINY_SM,  sprite: baseShiny },
   ];
