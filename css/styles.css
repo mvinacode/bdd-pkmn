@@ -1695,6 +1695,27 @@ body {
 }
 .evo-condition.is-stone-water::after { content: none; }
 
+/* Pierre Éclat (Togetic → Togekiss) */
+.evo-condition.is-stone-shiny {
+  color: #f8d808;
+  background: rgba(248, 216, 8, 0.08);
+  text-shadow: 0 0 8px rgba(248, 216, 8, 0.45);
+}
+.evo-condition.is-stone-shiny::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #647045, #789d50, #fafdd6, #ffffff);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.evo-condition.is-stone-shiny::after { content: none; }
+
 /* 1 Niv. + Jour + Avec Pierre Ovale (Leveinard) */
 .evo-condition.is-oval-stone {
   color: #d8e9f1;
@@ -2333,6 +2354,19 @@ body {
 .evo-condition-item.is-stone-water.evo-condition--unseen::before,
 .evo-condition-item.is-stone-water.evo-condition--seen::before {
   background: linear-gradient(135deg, #433690, #967ef7, #6d96c8, #4b4bbe, #bcdefc, #ffffff);
+}
+
+/* Pierre Éclat (Togetic → Togekiss) */
+.evo-condition-item.is-stone-shiny::before {
+  background: linear-gradient(135deg, #647045, #789d50, #fafdd6, #ffffff);
+}
+.evo-condition-item.is-stone-shiny .evo-condition {
+  color: #f8d808;
+  text-shadow: 0 0 8px rgba(248, 216, 8, 0.45);
+}
+.evo-condition-item.is-stone-shiny.evo-condition--unseen::before,
+.evo-condition-item.is-stone-shiny.evo-condition--seen::before {
+  background: linear-gradient(135deg, #647045, #789d50, #fafdd6, #ffffff);
 }
 
 /* Échange */
