@@ -247,6 +247,12 @@ body {
   max-width: 1600px;
   margin: 0 auto;
   min-height: calc(100vh - 64px);
+  transition: grid-template-columns 0.3s ease;
+}
+
+/* Sidebar masquée : la colonne se referme, la grille prend toute la place */
+.layout.sidebar-collapsed {
+  grid-template-columns: 0 1fr;
 }
 
 /* ============================================================
@@ -255,13 +261,66 @@ body {
 .sidebar {
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border);
-  padding: 24px 16px;
   position: sticky;
   top: 64px;
   height: calc(100vh - 64px);
+  overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+}
+
+/* Panneau interne à largeur fixe : glisse vers la gauche quand on masque */
+.sidebar-content {
+  width: 220px;
+  padding: 24px 16px;
+  transition: transform 0.3s ease;
+}
+
+.layout.sidebar-collapsed .sidebar-content {
+  transform: translateX(-100%);
+}
+
+/* Languette accrochée au bord de la sidebar */
+.sidebar-toggle {
+  position: fixed;
+  top: 50%;
+  left: var(--sidebar-edge, 220px);
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  z-index: 30;
+  transition: left 0.3s ease, background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.sidebar-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: var(--bg-card);
+}
+
+.sidebar-toggle svg {
+  transition: transform 0.3s ease;
+}
+
+/* Chevron pointe vers la droite (= « ouvrir ») quand la sidebar est masquée */
+.sidebar-toggle.is-collapsed svg {
+  transform: rotate(180deg);
+}
+
+/* Coupe les transitions le temps d'appliquer l'état initial (pas de flash) */
+.layout.no-anim,
+.layout.no-anim * {
+  transition: none !important;
 }
 
 .filter-section {
@@ -3428,18 +3487,29 @@ body {
   .layout {
     grid-template-columns: 180px 1fr;
   }
+  .sidebar-content { width: 180px; }
 }
 
 @media (max-width: 768px) {
-  .layout {
+  .layout,
+  .layout.sidebar-collapsed {
     grid-template-columns: 1fr;
   }
+
+  /* Pas de masquage sur mobile : la sidebar est déjà pleine largeur en haut */
+  .sidebar-toggle { display: none; }
+  .layout.sidebar-collapsed .sidebar-content { transform: none; }
 
   .sidebar {
     position: static;
     height: auto;
     border-right: none;
     border-bottom: 1px solid var(--border);
+    overflow: visible;
+  }
+
+  .sidebar-content {
+    width: auto;
     padding: 16px;
   }
 

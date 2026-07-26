@@ -182,6 +182,49 @@ els.modalClose.addEventListener('click', closeModal);
 els.modalOverlay.addEventListener('click', e => { if (e.target === els.modalOverlay) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !els.modalOverlay.hidden) closeModal(); });
 
+// ── Sidebar : masquer / afficher les filtres ──────────────────
+
+(() => {
+  const layout  = document.querySelector('.layout');
+  const sidebar = $('sidebar');
+  const toggle  = $('sidebar-toggle');
+  const content = sidebar?.querySelector('.sidebar-content');
+  if (!layout || !sidebar || !toggle || !content) return;
+
+  const STORAGE_KEY = 'sidebarCollapsed';
+
+  // Place la languette sur le bord droit de la sidebar (ou au bord gauche
+  // de la grille quand elle est masquée), en tenant compte du centrage.
+  const positionToggle = collapsed => {
+    const layoutLeft = layout.getBoundingClientRect().left;
+    const edge = collapsed ? layoutLeft : layoutLeft + content.offsetWidth;
+    toggle.style.setProperty('--sidebar-edge', `${edge}px`);
+  };
+
+  const apply = (collapsed, animate = true) => {
+    if (!animate) layout.classList.add('no-anim');
+    layout.classList.toggle('sidebar-collapsed', collapsed);
+    toggle.classList.toggle('is-collapsed', collapsed);
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+    const label = collapsed ? 'Afficher les filtres' : 'Masquer les filtres';
+    toggle.setAttribute('aria-label', label);
+    toggle.title = label;
+    positionToggle(collapsed);
+    if (!animate) { void layout.offsetWidth; layout.classList.remove('no-anim'); }
+  };
+
+  let collapsed = localStorage.getItem(STORAGE_KEY) === '1';
+  apply(collapsed, false);
+
+  toggle.addEventListener('click', () => {
+    collapsed = !collapsed;
+    localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
+    apply(collapsed);
+  });
+
+  window.addEventListener('resize', () => positionToggle(collapsed));
+})();
+
 // ── Init ──────────────────────────────────────────────────────
 
 async function init() {

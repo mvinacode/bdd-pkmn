@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <title>PokéDex — Base de données</title>
   <link rel="icon" type="image/png" href="https://res.cloudinary.com/dkgfa4apm/image/upload/v1779138950/poke_ball_gdlzec.png">
-  <link rel="stylesheet" href="css/styles.css?v=180">
+  <link rel="stylesheet" href="css/styles.css?v=181">
   <link rel="stylesheet" href="css/types.css?v=47">
   <link rel="stylesheet" href="css/drawer.css?v=37">
   <link rel="preconnect" href="https://mymkrfqpluimluehorby.supabase.co">
@@ -79,7 +79,8 @@
   <div class="layout">
 
     <!-- SIDEBAR FILTRES -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
+     <div class="sidebar-content">
 
       <div class="filter-section">
         <h3 class="filter-title">Génération</h3>
@@ -124,7 +125,15 @@
         <button class="btn-reset" id="reset-filters">Réinitialiser</button>
       </div>
 
+     </div><!-- /.sidebar-content -->
     </aside>
+
+    <!-- Languette pour masquer/afficher la sidebar -->
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Masquer les filtres" aria-expanded="true" title="Masquer les filtres">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16" aria-hidden="true">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
 
     <!-- GRILLE PRINCIPALE -->
     <main class="main-content">
@@ -217,7 +226,7 @@
 
   <!-- Supabase SDK via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script type="module" src="js/app.js?v=250"></script>
+  <script type="module" src="js/app.js?v=251"></script>
 
 </body>
 </html>
