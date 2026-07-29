@@ -2,10 +2,10 @@ import { store } from '../store.js';
 import { esc, BALLS, ballUrl, spriteUrl } from '../utils.js';
 import {
   SHINY_ICON_URL, BARON_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL,
-  ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEAN_FORM_VT,
+  ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEAN_FORM_VT, PALDEA_FORM_VT,
   GENDER_GROUPS, GENDER_VTS_FLAT,
   padNumber, normalizeVariantUrl, formatCatchDateShort, typeBadge,
-} from '../domain/constants.js';
+} from '../domain/constants.js?v=1';
 import { getAlolanSprite, getGalarianSprite, getHisuianSprite, getPaldeanSprite, getSpecialFormSprite } from '../domain/sprites.js';
 
 // Callback injecté par app.js pour éviter dépendance circulaire card ↔ modal
@@ -13,7 +13,7 @@ let _openModal = null;
 export function setCardCallbacks({ openModal }) { _openModal = openModal; }
 
 const SPECIAL_FORMS_ICONS = [
-  { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','asexue_shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female'] },
+  { key: 'shiny',   icon: SHINY_ICON_URL,   variants: ['shiny','asexue_shiny','shiny_male','shiny_female','alolan_shiny','alolan_shiny_male','alolan_shiny_female','galarian_shiny','galarian_shiny_male','galarian_shiny_female','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','paldean_shiny','paldean_shiny_male','paldean_shiny_female'] },
   { key: 'baron',   icon: BARON_ICON_URL,   variants: ['baron', 'shiny_baron'] },
   { key: 'mega',    icon: MEGA_ICON_URL,    variants: ['mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y'] },
   { key: 'gigamax', icon: GIGAMAX_ICON_URL, variants: ['gigamax','shiny_gigamax'] },
@@ -23,9 +23,9 @@ const SPECIAL_FORMS_ICONS = [
 // renvoie la liste de ses types (depuis store.regionalFormsMap) plutôt que ceux
 // de la forme de base. Retourne null si la forme affichée n'est pas régionale.
 function regionalTypesFor(pokemonNumber, formLabel) {
-  const vt = ALOLA_FORM_VT[formLabel] || GALAR_FORM_VT[formLabel] || HISUI_FORM_VT[formLabel];
+  const vt = ALOLA_FORM_VT[formLabel] || GALAR_FORM_VT[formLabel] || HISUI_FORM_VT[formLabel] || PALDEA_FORM_VT[formLabel];
   if (!vt) return null;
-  const region = vt.split('_')[0]; // 'alolan' | 'galarian' | 'hisuian'
+  const region = vt.split('_')[0]; // 'alolan' | 'galarian' | 'hisuian' | 'paldean'
   const form = (store.regionalFormsMap?.[pokemonNumber] || []).find(f => f.region === region);
   if (!form?.types) return null;
   const list = form.types.split(',').map(t => t.trim()).filter(Boolean);
@@ -65,6 +65,7 @@ export function renderCard(pokemon, icons = {}) {
     const galarVt   = GALAR_FORM_VT[recentShinyCatch?.form_label];
     const hisuiVt   = HISUI_FORM_VT[recentShinyCatch?.form_label];
     const paldeanVt = PALDEAN_FORM_VT[recentShinyCatch?.form_label];
+    const paldeaRegVt = PALDEA_FORM_VT[recentShinyCatch?.form_label];
     const specialVt = SPECIAL_FORM_VT[recentShinyCatch?.form_label];
     if (alolaVt) {
       const url = getAlolanSprite(pokemon.number, alolaVt);
@@ -75,8 +76,8 @@ export function renderCard(pokemon, icons = {}) {
     } else if (hisuiVt) {
       const url = getHisuianSprite(pokemon.number, hisuiVt);
       imgSrc = url ? normalizeVariantUrl(url) : spriteUrl(pokemon.number, true);
-    } else if (paldeanVt) {
-      const url = getPaldeanSprite(pokemon.number, paldeanVt);
+    } else if (paldeanVt || paldeaRegVt) {
+      const url = getPaldeanSprite(pokemon.number, paldeanVt || paldeaRegVt);
       imgSrc = url ? normalizeVariantUrl(url) : (recentShinyCatch?.sprite_url || catch_?.sprite_url || spriteUrl(pokemon.number, true));
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || spriteUrl(pokemon.number, true);
@@ -90,6 +91,7 @@ export function renderCard(pokemon, icons = {}) {
     const galarVt   = GALAR_FORM_VT[catch_?.form_label];
     const hisuiVt   = HISUI_FORM_VT[catch_?.form_label];
     const paldeanVt = PALDEAN_FORM_VT[catch_?.form_label];
+    const paldeaRegVt = PALDEA_FORM_VT[catch_?.form_label];
     const specialVt = SPECIAL_FORM_VT[catch_?.form_label];
     if (alolaVt) {
       const url = getAlolanSprite(pokemon.number, alolaVt);
@@ -100,9 +102,10 @@ export function renderCard(pokemon, icons = {}) {
     } else if (hisuiVt) {
       const url = getHisuianSprite(pokemon.number, hisuiVt);
       imgSrc = url ? normalizeVariantUrl(url) : (icons.normal ? normalizeVariantUrl(icons.normal) : (catch_?.sprite_url || spriteUrl(pokemon.number, false)));
-    } else if (paldeanVt) {
-      // Race de Paldéa : on veut le sprite de la race, jamais le sprite normal (icons.normal).
-      const url = getPaldeanSprite(pokemon.number, paldeanVt);
+    } else if (paldeanVt || paldeaRegVt) {
+      // Race de Paldea (Tauros) ou forme régionale Paldea genrée (Axoloto) : on veut
+      // le sprite de la forme Paldea, jamais le sprite normal (icons.normal).
+      const url = getPaldeanSprite(pokemon.number, paldeanVt || paldeaRegVt);
       imgSrc = url ? normalizeVariantUrl(url) : (catch_?.sprite_url || spriteUrl(pokemon.number, false));
     } else if (specialVt) {
       imgSrc = getSpecialFormSprite(pokemon.number, specialVt) || catch_?.sprite_url || spriteUrl(pokemon.number, false);
@@ -137,7 +140,7 @@ export function renderCard(pokemon, icons = {}) {
   // de la forme normale — un shiny régional/méga/gigamax/baron a sa propre variante
   const isBaseShinyCatch = c => !!c?.is_shiny
     && !ALOLA_FORM_VT[c.form_label] && !GALAR_FORM_VT[c.form_label]
-    && !HISUI_FORM_VT[c.form_label] && !SPECIAL_FORM_VT[c.form_label]
+    && !HISUI_FORM_VT[c.form_label] && !PALDEA_FORM_VT[c.form_label] && !SPECIAL_FORM_VT[c.form_label]
     && !/^(Méga|Gigamax|Baron)/.test(c.form_label || '');
 
   const catchCoveredVts = new Set([
@@ -147,6 +150,8 @@ export function renderCard(pokemon, icons = {}) {
     GALAR_FORM_VT[recentShinyCatch?.form_label],
     HISUI_FORM_VT[catch_?.form_label],
     HISUI_FORM_VT[recentShinyCatch?.form_label],
+    PALDEA_FORM_VT[catch_?.form_label],
+    PALDEA_FORM_VT[recentShinyCatch?.form_label],
     SPECIAL_FORM_VT[catch_?.form_label],
     SPECIAL_FORM_VT[recentShinyCatch?.form_label],
     ...(isBaseShinyCatch(catch_) || isBaseShinyCatch(recentShinyCatch) ? ['shiny'] : []),
@@ -163,9 +168,11 @@ export function renderCard(pokemon, icons = {}) {
     'mega','mega_x','mega_y','shiny_mega','shiny_mega_x','shiny_mega_y',
     'gigamax','shiny_gigamax',
     'troizepy','troizepy_shiny',
-    // Races de Paldéa (Tauros) : paldean_* dynamiques par Pokémon (normal + shiny).
-    // Sans elles, la carte « complète » s'activait sans les shiny des races.
-    ...(pokemonVMap ? Object.keys(pokemonVMap).filter(vt => vt.startsWith('paldean')) : []),
+    // Formes Paldea (paldean_*) dynamiques par Pokémon. Races de Tauros (normal +
+    // shiny) toujours requises ; formes régionales genrées (Axoloto : paldean_male…)
+    // exclues en mode 'any' comme Galar/Hisui (couvertes alors par genderGroupsOk).
+    ...(pokemonVMap ? Object.keys(pokemonVMap).filter(vt =>
+        vt.startsWith('paldean') && (genderMode !== 'any' || !/^paldean_(shiny_)?(male|female)$/.test(vt))) : []),
     ...(genderMode === 'all' ? [...GENDER_VTS_FLAT].filter(vt => !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('hisuian')) : []),
   ]);
 

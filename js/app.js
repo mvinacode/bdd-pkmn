@@ -1,13 +1,13 @@
 import { CONFIG, getPokemonImageUrl, isSupabaseConfigured } from './config.js';
 import { initAuth } from './auth.js';
 import { store } from './store.js';
-import { debounce } from './domain/constants.js';
+import { debounce } from './domain/constants.js?v=1';
 import { loadCatchesMap, setCatchesCallbacks } from './application/catches.js?v=2';
-import { renderGrid, updateCardAfterCatch, setCardCallbacks } from './presentation/card.js?v=7';
-import { openModal, closeModal, setModalCallbacks } from './presentation/modal.js?v=236';
-import { bindDrawerEvents, openDrawerWithPokemon, setDrawerCallbacks } from './presentation/drawer.js?v=10';
+import { renderGrid, updateCardAfterCatch, setCardCallbacks } from './presentation/card.js?v=8';
+import { openModal, closeModal, setModalCallbacks } from './presentation/modal.js?v=238';
+import { bindDrawerEvents, openDrawerWithPokemon, setDrawerCallbacks } from './presentation/drawer.js?v=11';
 import { populateTypeFilters } from './presentation/filters.js';
-import { fetchPokemon, fetchCardIcons, getSupabaseClient } from './supabase-client.js?v=6';
+import { fetchPokemon, fetchCardIcons, getSupabaseClient } from './supabase-client.js?v=7';
 import { initScrollMemory, restoreScrollPosition, saveAnchor } from './application/scroll-memory.js?v=1';
 
 // Wiring callbacks (évite les dépendances circulaires entre modules de présentation)

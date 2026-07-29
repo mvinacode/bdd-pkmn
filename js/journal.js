@@ -74,6 +74,14 @@ function formLabelToIcons(label, isShiny) {
   if (label === 'Hisui Asexué Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>` + _SHINY_ICO;
   if (label === 'Hisui')               return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>`;
   if (label === 'Hisui Shiny')         return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>` + _SHINY_ICO;
+  if (label === 'Paldea Mâle')          return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + _MALE_ICO;
+  if (label === 'Paldea Mâle Shiny')    return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + _MALE_ICO + _SHINY_ICO;
+  if (label === 'Paldea Femelle')       return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + _FEMALE_ICO;
+  if (label === 'Paldea Femelle Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + _FEMALE_ICO + _SHINY_ICO;
+  if (label === 'Paldea Asexué')       return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>`;
+  if (label === 'Paldea Asexué Shiny') return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>` + _SHINY_ICO;
+  if (label === 'Paldea')               return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>`;
+  if (label === 'Paldea Shiny')         return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>` + _SHINY_ICO;
   if (label.startsWith('Méga'))      return _MEGA_ICO    + (label.includes('Shiny') ? _SHINY_ICO : '');
   if (label.startsWith('Gigamax'))   return _GIGAMAX_ICO + (label.includes('Shiny') ? _SHINY_ICO : '');
   if (label === 'Pichu Troizépi')       return _FEMALE_ICO + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
@@ -105,6 +113,11 @@ function formLabelToVariantType(label) {
     'Hisui Mâle':         'hisuian_male',      'Hisui Mâle Shiny':       'hisuian_shiny_male',
     'Hisui Femelle':      'hisuian_female',    'Hisui Femelle Shiny':    'hisuian_shiny_female',
     'Hisui Baron':        'baron',             'Hisui Baron Shiny':      'shiny_baron',
+    'Paldea':             'paldean',           'Paldea Shiny':           'paldean_shiny',
+    'Paldea Asexué':     'paldean',           'Paldea Asexué Shiny':   'paldean_shiny',
+    'Paldea Mâle':        'paldean_male',      'Paldea Mâle Shiny':      'paldean_shiny_male',
+    'Paldea Femelle':     'paldean_female',    'Paldea Femelle Shiny':   'paldean_shiny_female',
+    'Paldea Baron':       'baron',             'Paldea Baron Shiny':     'shiny_baron',
     'Méga-Évolution':       'mega',       'Méga-Évolution Shiny':       'shiny_mega',
     'Méga-Évo. X':          'mega_x',     'Méga-Évo. X Shiny':          'shiny_mega_x',
     'Méga-Évo. Y':          'mega_y',     'Méga-Évo. Y Shiny':          'shiny_mega_y',
@@ -205,6 +218,12 @@ function variantFallbacks(vt) {
     'alolan_male':         ['alolan_male',           'alolan'],
     'alolan_female':       ['alolan_female',         'alolan'],
     'alolan':              ['alolan'],
+    'paldean_shiny_male':   ['paldean_shiny_male',   'paldean_shiny', 'paldean'],
+    'paldean_shiny_female': ['paldean_shiny_female',  'paldean_shiny', 'paldean'],
+    'paldean_shiny':        ['paldean_shiny',          'paldean'],
+    'paldean_male':         ['paldean_male',           'paldean'],
+    'paldean_female':       ['paldean_female',         'paldean'],
+    'paldean':              ['paldean'],
     'shiny_male':          ['shiny_male',   'shiny'],
     'shiny_female':        ['shiny_female', 'shiny'],
     'shiny':               ['shiny',  'asexue_shiny'],
@@ -230,6 +249,7 @@ function sessionRegion(session) {
     if (f.form_label?.startsWith('Alola')) return 'alolan';
     if (f.form_label?.startsWith('Galar')) return 'galarian';
     if (f.form_label?.startsWith('Hisui')) return 'hisuian';
+    if (f.form_label?.startsWith('Paldea')) return 'paldean';
   }
   return null;
 }
@@ -464,7 +484,7 @@ function buildFormEntriesRegional(variants, iconMap, regionId) {
   const BAR28 = `<img src="${_BARON_URL}" width="28" height="28" alt="">`;
   const BAR22 = `<img src="${_BARON_URL}" width="22" height="22" alt="">`;
 
-  const regionLabel = { alolan: 'Alola', galarian: 'Galar', hisuian: 'Hisui' }[regionId];
+  const regionLabel = { alolan: 'Alola', galarian: 'Galar', hisuian: 'Hisui', paldean: 'Paldea' }[regionId];
   const p = regionId;
 
   const vMale      = variants.find(v => v.variant_type === `${p}_male`);

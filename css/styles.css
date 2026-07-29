@@ -1549,7 +1549,7 @@ body {
   margin-top: 6px;
 }
 
-/* Plusieurs formes régionales (ex. races de Paldéa de Tauros) : empilées verticalement */
+/* Plusieurs formes régionales (ex. races de Paldea de Tauros) : empilées verticalement */
 .evo-regionals--stacked {
   flex-direction: column;
   align-items: center;
@@ -2017,7 +2017,8 @@ body {
   text-underline-offset: 2px;
 }
 
-.evo-condition.is-copie-move {
+.evo-condition.is-copie-move,
+.evo-condition.is-coup-double-move {
   color: #8d8f8d;
   border: 1px solid transparent;
   background:
@@ -2028,7 +2029,8 @@ body {
   max-width: 12rem;
   line-height: 1.3;
 }
-.evo-condition.is-copie-move .move-name {
+.evo-condition.is-copie-move .move-name,
+.evo-condition.is-coup-double-move .move-name {
   text-decoration: underline;
   text-underline-offset: 2px;
 }

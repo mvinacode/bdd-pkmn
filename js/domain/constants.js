@@ -91,7 +91,7 @@ export const HISUI_FORM_VT = {
   'Hisui Asexué':       'hisuian',
 };
 
-// Races de Paldéa (Tauros, exclusivement mâle). Clé = form_label enregistré par le
+// Races de Paldea (Tauros, exclusivement mâle). Clé = form_label enregistré par le
 // drawer (« {Race} Mâle [Shiny] ») => variant_type.
 export const PALDEAN_FORM_VT = {
   'Race Combative Mâle Shiny':   'paldean_combat_shiny',
@@ -100,6 +100,20 @@ export const PALDEAN_FORM_VT = {
   'Race Flamboyante Mâle':       'paldean_blaze',
   'Race Aquatique Mâle Shiny':   'paldean_aqua_shiny',
   'Race Aquatique Mâle':         'paldean_aqua',
+};
+
+// Forme régionale « Paldea » classique et GENRÉE (M/F), ex. Axoloto de Paldea
+// (region = 'paldean' exactement, pas une race de Tauros). Se comporte comme
+// Alola/Galar/Hisui. Clé = form_label enregistré par le drawer => variant_type.
+export const PALDEA_FORM_VT = {
+  'Paldea Mâle Shiny':    'paldean_shiny_male',
+  'Paldea Femelle Shiny': 'paldean_shiny_female',
+  'Paldea Shiny':         'paldean_shiny',
+  'Paldea Asexué Shiny':  'paldean_shiny',
+  'Paldea Mâle':          'paldean_male',
+  'Paldea Femelle':       'paldean_female',
+  'Paldea':               'paldean',
+  'Paldea Asexué':        'paldean',
 };
 
 export const VARIANT_STATUS_META = {
@@ -117,6 +131,8 @@ export const GENDER_GROUPS = [
   ['galarian_shiny_male', 'galarian_shiny_female'],
   ['hisuian_male', 'hisuian_female'],
   ['hisuian_shiny_male', 'hisuian_shiny_female'],
+  ['paldean_male', 'paldean_female'],
+  ['paldean_shiny_male', 'paldean_shiny_female'],
 ];
 export const GENDER_VTS_FLAT = new Set(GENDER_GROUPS.flat());
 

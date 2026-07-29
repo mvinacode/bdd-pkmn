@@ -37,5 +37,13 @@ export function getVariantStatus(pokemonNumber, variantType) {
     return seen['hisuian_shiny_male']?.status || seen['hisuian_shiny_female']?.status || '';
   if (variantType === 'hisuian_shiny_male' || variantType === 'hisuian_shiny_female')
     return seen['hisuian_shiny']?.status || '';
+  if (variantType === 'paldean')
+    return seen['paldean_male']?.status || seen['paldean_female']?.status || '';
+  if (variantType === 'paldean_male' || variantType === 'paldean_female')
+    return seen['paldean']?.status || '';
+  if (variantType === 'paldean_shiny')
+    return seen['paldean_shiny_male']?.status || seen['paldean_shiny_female']?.status || '';
+  if (variantType === 'paldean_shiny_male' || variantType === 'paldean_shiny_female')
+    return seen['paldean_shiny']?.status || '';
   return '';
 }

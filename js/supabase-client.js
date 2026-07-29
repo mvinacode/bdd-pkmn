@@ -254,7 +254,7 @@ export async function fetchGalarianVariantsForNumbers(pokemonNumbers) { return _
 export async function fetchHisuianVariantsForNumbers(pokemonNumbers)  { return _fetchVariantsByType('hisuian',  pokemonNumbers); }
 
 /**
- * Formes régionales « Paldéa » (plusieurs races par Pokémon, ex. Tauros) pour le
+ * Formes régionales « Paldea » (plusieurs races par Pokémon, ex. Tauros) pour le
  * drawer de capture. Renvoie [{ pokemon_number, region, name, image_url }].
  */
 export async function fetchPaldeanFormsForNumbers(pokemonNumbers) {

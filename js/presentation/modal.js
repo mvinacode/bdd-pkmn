@@ -2,17 +2,17 @@ import { store } from '../store.js';
 import { esc, spriteUrl, GAMES } from '../utils.js';
 import {
   MEGA_ICON_URL, GIGAMAX_ICON_URL, SHINY_ICON_URL, BARON_ICON_URL,
-  VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT,
+  VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEA_FORM_VT,
   padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
-} from '../domain/constants.js';
-import { getVariantStatus } from '../domain/completion.js';
+} from '../domain/constants.js?v=1';
+import { getVariantStatus } from '../domain/completion.js?v=1';
 import { cycleVariantStatus } from '../application/catches.js?v=2';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances, fetchFormAppearances,
-} from '../supabase-client.js?v=6';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=206';
+} from '../supabase-client.js?v=7';
+import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=207';
 
 // Callbacks injectés par app.js pour éviter circulaire
 let _updateCardAfterCatch = null;
@@ -68,6 +68,12 @@ function seenFormIcon(vt, sfMap = {}) {
     case 'hisuian_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + male + shiny;
     case 'hisuian_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + female;
     case 'hisuian_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + female + shiny;
+    case 'paldean':              return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>`;
+    case 'paldean_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>` + shiny;
+    case 'paldean_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + male;
+    case 'paldean_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + male + shiny;
+    case 'paldean_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + female;
+    case 'paldean_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + female + shiny;
     case 'troizepy':       return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
     case 'troizepy_shiny': return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>` + shiny;
     default: {
@@ -259,7 +265,7 @@ export async function openModal(number) {
       if (!regionalsByNumber[r.pokemon_number]) regionalsByNumber[r.pokemon_number] = [];
       regionalsByNumber[r.pokemon_number].push(r);
     }
-    // Ordre canonique des races de Paldéa (ex. Tauros), appliqué partout — chaîne
+    // Ordre canonique des races de Paldea (ex. Tauros), appliqué partout — chaîne
     // d'évolution incluse : Combative → Flamboyante → Aquatique.
     const PALDEAN_REGION_ORDER = ['paldean_combat', 'paldean_blaze', 'paldean_aqua'];
     for (const num in regionalsByNumber) {
@@ -286,7 +292,7 @@ export async function openModal(number) {
       const status  = getVariantStatus(p.number, v.variant_type);
       const meta    = VARIANT_STATUS_META[status];
       const isShiny = ['shiny','asexue_shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','alolan_asexue_shiny','galarian_shiny','galarian_shiny_male','galarian_shiny_female','galarian_asexue_shiny','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','hisuian_asexue_shiny','troizepy_shiny'].includes(v.variant_type)
-        || /^paldean_[a-z]+_shiny$/.test(v.variant_type);
+        || (v.variant_type.startsWith('paldean') && v.variant_type.includes('shiny'));
       const sparkles = isShiny ? `
         <span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
         <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
@@ -360,9 +366,13 @@ export async function openModal(number) {
     const alolanVariants   = variants.filter(v => ['alolan', 'alolan_shiny', 'alolan_asexue', 'alolan_asexue_shiny', 'alolan_male', 'alolan_shiny_male', 'alolan_female', 'alolan_shiny_female'].includes(v.variant_type));
     const galarianVariants = variants.filter(v => ['galarian', 'galarian_shiny', 'galarian_asexue', 'galarian_asexue_shiny', 'galarian_male', 'galarian_shiny_male', 'galarian_female', 'galarian_shiny_female'].includes(v.variant_type));
     const hisuianVariants  = variants.filter(v => ['hisuian', 'hisuian_shiny', 'hisuian_asexue', 'hisuian_asexue_shiny', 'hisuian_male', 'hisuian_shiny_male', 'hisuian_female', 'hisuian_shiny_female'].includes(v.variant_type));
+    // Forme régionale « Paldea » classique et genrée (Axoloto) : region == 'paldean'
+    // exactement, d'où des variant_type sans suffixe de race. À NE PAS confondre avec
+    // les races de Tauros (paldean_combat/blaze/aqua), gérées à part via paldeanRegionals.
+    const paldeaVariants   = variants.filter(v => ['paldean', 'paldean_shiny', 'paldean_asexue', 'paldean_asexue_shiny', 'paldean_male', 'paldean_shiny_male', 'paldean_female', 'paldean_shiny_female'].includes(v.variant_type));
     const troizepyVariants = variants.filter(v => ['troizepy', 'troizepy_shiny'].includes(v.variant_type));
 
-    // Famille « Paldéa » (Tauros) : plusieurs formes régionales paldean_* (Race
+    // Famille « Paldea » (Tauros) : plusieurs formes régionales paldean_* (Race
     // Combative/Flamboyante/Aquatique), chacune avec ses variants normal/shiny, son
     // onglet et ses localisations propres. Ordre canonique = ordre des jeux.
     const paldeanLabel = r => {
@@ -370,7 +380,10 @@ export async function openModal(number) {
       return race ? `Forme Paldea ${race}` : r.region;
     };
     // regionalsByNumber est déjà trié (cf. PALDEAN_REGION_ORDER) : le filtre conserve l'ordre.
-    const paldeanRegionals = (regionalsByNumber[p.number] || []).filter(r => (r.region || '').startsWith('paldean'));
+    // Seules les RACES de Tauros (paldean_combat/blaze/aqua) — region 'paldean_…' avec
+    // suffixe — sont des « familles Paldea ». La forme régionale simple 'paldean'
+    // (Axoloto) est exclue ici : elle est traitée comme Alola/Galar/Hisui (onglet M/F).
+    const paldeanRegionals = (regionalsByNumber[p.number] || []).filter(r => (r.region || '').startsWith('paldean_'));
     const isPaldeanFamily = paldeanRegionals.length > 0;
 
     const neutralBadge = `<span class="gender-badge male">${MODAL_MALE_SVG}</span><span class="gender-badge female">${MODAL_FEMALE_SVG}</span>`;
@@ -408,7 +421,7 @@ export async function openModal(number) {
       return rowX + rowY;
     })() : '';
 
-    // Onglets « Formes » par race de Paldéa (variant_type = region et region_shiny).
+    // Onglets « Formes » par race de Paldea (variant_type = region et region_shiny).
     // Tauros est exclusivement mâle => badge mâle sur chaque race.
     const paldeanFormTabs = paldeanRegionals.map(r => {
       const raceVariants = variants.filter(v => v.variant_type === r.region || v.variant_type === `${r.region}_shiny`);
@@ -432,6 +445,7 @@ export async function openModal(number) {
       { id: 'alola',    label: "Forme d'Alola",     html: `<div class="variants-rows-wrapper">${regionalVariantRows('alolan',   alolanVariants)}</div>`,   show: !!alolanVariants.length },
       { id: 'galar',    label: 'Forme de Galar',    html: `<div class="variants-rows-wrapper">${regionalVariantRows('galarian', galarianVariants)}</div>`, show: !!galarianVariants.length },
       { id: 'hisui',    label: "Forme d'Hisui",     html: `<div class="variants-rows-wrapper">${regionalVariantRows('hisuian',  hisuianVariants)}</div>`,  show: !!hisuianVariants.length },
+      { id: 'paldea',   label: 'Forme de Paldea',   html: `<div class="variants-rows-wrapper">${regionalVariantRows('paldean',  paldeaVariants)}</div>`,   show: !!paldeaVariants.length },
       { id: 'troizepy', label: 'Pichu Troizépi',    html: `<div class="variants-rows-wrapper">${variantRow(femaleBadge, troizepyVariants)}</div>`, show: !!troizepyVariants.length },
       { id: 'gigamax',  label: 'Gigamax',            html: `<div class="variants-rows-wrapper"><div class="variants-grid">${gigamaxVariants.map(variantCard).join('')}</div></div>`, show: !!gigamaxVariants.length },
     ].filter(t => t.show);
@@ -451,7 +465,7 @@ export async function openModal(number) {
     const regionals  = regionalsByNumber[p.number] || [];
     const specialForms = [
       ...megas.map(m => ({ name: m.name, artwork_url: m.artwork_url, shiny_artwork_url: m.shiny_artwork_url || '', description_fr: m.description_fr, types: m.types || '', isMega: true,  isRegional: false, isSpecialForm: false, formKey: null, formIcon: MEGA_ICON_URL })),
-      ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true,  isSpecialForm: false, formKey: r.region, raceLabel: (r.region || '').startsWith('paldean') ? paldeanLabel(r) : null, formIcon: '' })),
+      ...regionals.map(r => ({ name: r.name, artwork_url: r.artwork_url, shiny_artwork_url: r.shiny_artwork_url || '', description_fr: r.description_fr, types: r.types || '', isMega: false, isRegional: true,  isSpecialForm: false, formKey: r.region, raceLabel: (r.region || '').startsWith('paldean_') ? paldeanLabel(r) : null, formIcon: '' })),
       ...specialFormsList.map(sf => ({ name: sf.form_label_fr, artwork_url: sf.artwork_url || '', shiny_artwork_url: sf.artwork_url_shiny || '', description_fr: sf.description_fr || null, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: true, formKey: sf.form_key, formIcon: '', formGroup: sf.form_group || null })),
       ...gigamax.map(g => ({ name: g.name, artwork_url: g.artwork_url, shiny_artwork_url: g.shiny_artwork_url || '', description_fr: g.description_fr, types: (p.types || []).join(','), isMega: false, isRegional: false, isSpecialForm: false, formKey: null, formIcon: GIGAMAX_ICON_URL })),
     ];
@@ -480,7 +494,7 @@ export async function openModal(number) {
 
     function getFormCategory(f) {
       if (f.isMega)        return 'Méga-Évolution';
-      if (f.isRegional)    return f.raceLabel || 'Formes régionales';   // races Paldéa => un onglet chacune
+      if (f.isRegional)    return f.raceLabel || 'Formes régionales';   // races Paldea => un onglet chacune
       if (f.isSpecialForm) return f.formGroup || 'Formes spéciales';
       return 'Gigamax';
     }
@@ -527,7 +541,7 @@ export async function openModal(number) {
       </div>`;
 
     // Apparitions indexées par onglet d'illustration : 'base' => forme de base,
-    // libellé de race (= data-tab) => localisations de cette forme Paldéa. Le bloc
+    // libellé de race (= data-tab) => localisations de cette forme Paldea. Le bloc
     // de l'en-tête (.appearance-slot) est reconstruit à chaque changement d'onglet.
     const appearancesByTab = { base: appearances };
     if (isPaldeanFamily) {
@@ -555,7 +569,7 @@ export async function openModal(number) {
     // une icône → popover du mode d'obtention. Chaque bloc est indépendant.
     wireAppearanceBlocks(modalContent);
 
-    // Onglets illustrations. Pour la famille Paldéa, le bloc « Apparition » de
+    // Onglets illustrations. Pour la famille Paldea, le bloc « Apparition » de
     // l'en-tête est reconstruit selon la forme (onglet) sélectionnée.
     function setAppearanceForTab(tab) {
       const slot = modalContent.querySelector('.appearance-slot');
@@ -645,11 +659,11 @@ export async function openModal(number) {
     function refreshArtworks() {
       const forms   = store.seenMap[p.number] || {};
       const entries = Object.entries(forms);
-      const isBaseCatch  = catch_ && !ALOLA_FORM_VT[catch_.form_label] && !GALAR_FORM_VT[catch_.form_label] && !SPECIAL_FORM_VT[catch_.form_label] && !/^(Méga|Gigamax|Baron)/.test(catch_.form_label || '');
-      const captNormal = (isBaseCatch && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'owned');
-      const captShiny  = (isBaseCatch &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'owned');
-      const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'seen');
-      const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && d.status === 'seen');
+      const isBaseCatch  = catch_ && !ALOLA_FORM_VT[catch_.form_label] && !GALAR_FORM_VT[catch_.form_label] && !PALDEA_FORM_VT[catch_.form_label] && !SPECIAL_FORM_VT[catch_.form_label] && !/^(Méga|Gigamax|Baron)/.test(catch_.form_label || '');
+      const captNormal = (isBaseCatch && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'owned');
+      const captShiny  = (isBaseCatch &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'owned');
+      const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'seen');
+      const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'seen');
 
       function applyImg(img, owned, seen) {
         if (!img) return;

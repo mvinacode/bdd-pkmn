@@ -8,18 +8,25 @@ import {
   MALE_SVG, FEMALE_SVG,
   SHINY_ICON_URL, BARON_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL,
   normalizeVariantUrl, padNumber,
-} from '../domain/constants.js';
-import { getVariantStatus } from '../domain/completion.js';
+} from '../domain/constants.js?v=1';
+import { getVariantStatus } from '../domain/completion.js?v=1';
 import { addToSeen } from '../application/catches.js?v=2';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
   fetchHisuianVariantsForNumbers, fetchPaldeanFormsForNumbers, fetchSpecialFormsForNumbers,
   insertCatch, fetchVariantMap,
-} from '../supabase-client.js?v=6';
+} from '../supabase-client.js?v=7';
 
-// Libellé court d'une race de Paldéa à partir du nom complet : « … (Race Combative) » => « Race Combative ».
-const paldeanRaceLabel = race => (race?.name || '').match(/\(([^)]+)\)/)?.[1] || race?.region || '';
+// Libellé court d'une forme de Paldea à partir du nom complet : « … (Race Combative) »
+// => « Race Combative ». Pour la forme régionale simple (region === 'paldean', ex.
+// Axoloto), pas de parenthèse => « Paldea ».
+const paldeanRaceLabel = race => {
+  const m = (race?.name || '').match(/\(([^)]+)\)/)?.[1];
+  if (m) return m;
+  if (race?.region === 'paldean') return 'Paldea';
+  return race?.region || '';
+};
 
 // Callbacks injectés par app.js (évite circulaire drawer ↔ modal)
 let _openModal = null;
@@ -182,7 +189,7 @@ export function renderDrawerFormsRegional(variants, sprite, regionId) {
   const grid  = $('form-grid');
   if (!field || !grid) return;
 
-  const regionLabel = { alolan: 'Alola', galarian: 'Galar', hisuian: 'Hisui' }[regionId] || regionId;
+  const regionLabel = { alolan: 'Alola', galarian: 'Galar', hisuian: 'Hisui', paldean: 'Paldea' }[regionId] || regionId;
   const p = regionId;
 
   const vMale      = variants.find(v => v.variant_type === `${p}_male`);
@@ -225,9 +232,17 @@ export function renderDrawerFormsAlolan(variants, sprite)   { renderDrawerFormsR
 export function renderDrawerFormsGalarian(variants, sprite) { renderDrawerFormsRegional(variants, sprite, 'galarian'); }
 export function renderDrawerFormsHisuian(variants, sprite)  { renderDrawerFormsRegional(variants, sprite, 'hisuian'); }
 
-// Formes « Paldéa » (race de Tauros). Tauros est exclusivement mâle => Mâle + Mâle Shiny.
+// Formes « Paldea » (race de Tauros). Tauros est exclusivement mâle => Mâle + Mâle Shiny.
 // race = { region, name, image_url } ; variant_type = region et region_shiny.
 export function renderDrawerFormsPaldean(race, variants) {
+  // Forme régionale de Paldea simple et GENRÉE (Axoloto, region === 'paldean') :
+  // même grille M/F que Alola/Galar/Hisui. Seules les races de Tauros (paldean_…)
+  // restent mâle uniquement (code ci-dessous).
+  if (race.region === 'paldean') {
+    renderDrawerFormsRegional(variants, race.image_url, 'paldean');
+    return;
+  }
+
   const field = $('form-selector-field');
   const grid  = $('form-grid');
   if (!field || !grid) return;
@@ -566,7 +581,9 @@ export async function saveCatchFromMain() {
     saveBtn.textContent = 'Sauvegarde…';
     const savedSeenNum = store.drawerPokemon.number;
     const savedSeenVts = formsToMark.map(f => f.variant_type || '');
-    const savedPaldeanTab = store.drawerPokemon.isPaldean
+    // Onglet race Tauros seulement (region 'paldean_…'). La forme régionale simple
+    // 'paldean' (Axoloto) ouvre l'onglet groupé « Formes régionales » (cf. plus bas).
+    const savedPaldeanTab = store.drawerPokemon.isPaldean && store.drawerPokemon.paldeanRegion !== 'paldean'
       ? `Forme Paldea ${paldeanRaceLabel({ name: store.drawerPokemon.paldeanName, region: store.drawerPokemon.paldeanRegion })}` : null;
     const date = $('catch-date').value || new Date().toISOString().slice(0, 10);
     const game = store.drawerGame?.name || $('catch-game')?.value.trim() || null;
@@ -594,7 +611,7 @@ export async function saveCatchFromMain() {
       if (!modalOverlay?.hidden && store.currentModalPokemonNumber === savedSeenNum) {
         if (savedSeenVts.some(vt => vt.includes('mega'))) store.pendingIllusTab = 'Méga-Évolution';
         else if (savedPaldeanTab && savedSeenVts.some(vt => vt.startsWith('paldean'))) store.pendingIllusTab = savedPaldeanTab;
-        else if (savedSeenVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'))) store.pendingIllusTab = 'Formes régionales';
+        else if (savedSeenVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian') || vt.startsWith('paldean'))) store.pendingIllusTab = 'Formes régionales';
         else if (savedSeenVts.some(vt => vt.includes('gigamax'))) store.pendingIllusTab = 'Gigamax';
         _openModal?.(savedSeenNum);
       }
@@ -667,7 +684,7 @@ export async function saveCatchFromMain() {
 
   const savedCatchNum = store.drawerPokemon.number;
   const savedCatchVts = formsToCapture.map(f => f.variant_type || '');
-  const savedCatchPaldeanTab = store.drawerPokemon.isPaldean
+  const savedCatchPaldeanTab = store.drawerPokemon.isPaldean && store.drawerPokemon.paldeanRegion !== 'paldean'
     ? `Forme Paldea ${paldeanRaceLabel({ name: store.drawerPokemon.paldeanName, region: store.drawerPokemon.paldeanRegion })}` : null;
   store.catchByNumber[store.drawerPokemon.number] = lastData;
   if (lastData?.is_shiny) store.shinyCatchByNumber[store.drawerPokemon.number] = lastData;
@@ -685,7 +702,7 @@ export async function saveCatchFromMain() {
   if (!modalOverlay?.hidden && store.currentModalPokemonNumber === savedCatchNum) {
     if (savedCatchVts.some(vt => vt.includes('mega'))) store.pendingIllusTab = 'Méga-Évolution';
     else if (savedCatchPaldeanTab && savedCatchVts.some(vt => vt.startsWith('paldean'))) store.pendingIllusTab = savedCatchPaldeanTab;
-    else if (savedCatchVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'))) store.pendingIllusTab = 'Formes régionales';
+    else if (savedCatchVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian') || vt.startsWith('paldean'))) store.pendingIllusTab = 'Formes régionales';
     else if (savedCatchVts.some(vt => vt.includes('gigamax'))) store.pendingIllusTab = 'Gigamax';
     _openModal?.(savedCatchNum);
   }
