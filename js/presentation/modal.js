@@ -292,7 +292,8 @@ export async function openModal(number) {
       const status  = getVariantStatus(p.number, v.variant_type);
       const meta    = VARIANT_STATUS_META[status];
       const isShiny = ['shiny','asexue_shiny','shiny_male','shiny_female','shiny_mega','shiny_mega_x','shiny_mega_y','shiny_gigamax','alolan_shiny','alolan_shiny_male','alolan_shiny_female','alolan_asexue_shiny','galarian_shiny','galarian_shiny_male','galarian_shiny_female','galarian_asexue_shiny','hisuian_shiny','hisuian_shiny_male','hisuian_shiny_female','hisuian_asexue_shiny','troizepy_shiny'].includes(v.variant_type)
-        || (v.variant_type.startsWith('paldean') && v.variant_type.includes('shiny'));
+        || (v.variant_type.startsWith('paldean') && v.variant_type.includes('shiny'))
+        || v.variant_type.includes('_shiny'); // Détecte aussi les formes spéciales shiny (ex: unown_a_shiny)
       const sparkles = isShiny ? `
         <span class="sparkle" style="top:-8px;left:18px;--sparkle-delay:0s;--sparkle-size:0.9rem;--sparkle-dur:2.2s">✦</span>
         <span class="sparkle" style="top:6px;right:-8px;--sparkle-delay:0.55s;--sparkle-size:0.65rem;--sparkle-dur:1.9s">✦</span>
@@ -454,7 +455,15 @@ export async function openModal(number) {
             };
             return [normal, shiny];
           });
-          const html = `<div class="variants-rows-wrapper">${variantRow(asexueBadge, unownVariants)}</div>`;
+          // Ajouter un style pour forcer le wrap de la grille sur plusieurs colonnes
+          const gridStyle = ' style="flex: 1; max-width: calc(100% - 60px)"';
+          const cardsHtml = unownVariants.map(variantCard).join('');
+          const html = `<div class="variants-rows-wrapper">
+            <div class="variants-row">
+              <div class="variants-gender-col">${asexueBadge}</div>
+              <div class="variants-grid"${gridStyle}>${cardsHtml}</div>
+            </div>
+          </div>`;
           return { id: grp, label: grp, html, show: true };
         } else {
           const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]);
