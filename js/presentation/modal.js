@@ -436,11 +436,19 @@ export async function openModal(number) {
     const formTabList = [
       { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: p.number !== 201 && !!(neutralVariants.length || asexueVariants.length || maleVariants.length || femaleVariants.length) },
       ...paldeanFormTabs,
-      ...sfSortedGroups.map(grp => ({
-        id: grp, label: grp,
-        html: `<div class="variants-grid variants-grid--2col">${sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]).join('')}</div>`,
-        show: true,
-      })),
+      ...sfSortedGroups.map(grp => {
+        // Zarbi (Zarbidex) : afficher avec badge asexué comme les autres formes
+        const isUnown = grp === 'Zarbidex';
+        const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]);
+        const html = isUnown
+          ? `<div class="variants-rows-wrapper">${variantRow(asexueBadge, sfByGroup[grp].flatMap(sf => {
+              const normal = { variant_type: sf.form_key, label: sf.form_label_fr, image_url: sf.image_url || spriteUrl(p.number, false) };
+              const shiny = { variant_type: sf.form_key + '_shiny', label: sf.form_label_fr + ' Shiny', image_url: sf.image_url_shiny || spriteUrl(p.number, true) };
+              return [normal, shiny];
+            }))}</div>`
+          : `<div class="variants-grid variants-grid--2col">${sfCards.join('')}</div>`;
+        return { id: grp, label: grp, html, show: true };
+      }),
       { id: 'mega',     label: 'Méga-Évolution',   html: `<div class="variants-rows-wrapper">${megaFormsContent}</div>`, show: !!megaVariants.length },
       { id: 'alola',    label: "Forme d'Alola",     html: `<div class="variants-rows-wrapper">${regionalVariantRows('alolan',   alolanVariants)}</div>`,   show: !!alolanVariants.length },
       { id: 'galar',    label: 'Forme de Galar',    html: `<div class="variants-rows-wrapper">${regionalVariantRows('galarian', galarianVariants)}</div>`, show: !!galarianVariants.length },
