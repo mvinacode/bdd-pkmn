@@ -277,9 +277,10 @@ export function renderDrawerFormsSpecial(specialForm) {
 
   const isMale     = specialForm.form_group === 'Pikachu Casquette';
   const isGendered = specialForm.form_group === 'Pikachu Partenaire';
-  const ICON    = isMale ? ICON_MALE_LG   : ICON_FEMALE_LG;
-  const ICON_SM = isMale ? ICON_MALE_SM   : ICON_FEMALE_SM;
-  const genderLabel = isMale ? 'Mâle' : 'Femelle';
+  const isUnown    = specialForm.form_group === 'Zarbidex'; // Zarbi est asexué
+  const ICON    = isUnown ? ICON_UNISEX_LG : (isMale ? ICON_MALE_LG   : ICON_FEMALE_LG);
+  const ICON_SM = isUnown ? ICON_UNISEX_SM : (isMale ? ICON_MALE_SM   : ICON_FEMALE_SM);
+  const genderLabel = isUnown ? 'Asexué' : (isMale ? 'Mâle' : 'Femelle');
 
   const label   = specialForm.form_label_fr;
   const vt      = specialForm.form_key;
@@ -425,7 +426,10 @@ export function bindDrawerEvents() {
 
         const items = [];
         for (const p of data) {
-          items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: null, paldean: null });
+          // Zarbi (#201) : ne pas afficher la forme de base (sans lettre), seulement les 28 formes spéciales
+          if (p.number !== 201) {
+            items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: null, paldean: null });
+          }
           if (alolanSpriteMap[p.number])   items.push({ p, isAlola: true,  isGalar: false, isHisui: false, specialForm: null, paldean: null });
           if (galarianSpriteMap[p.number]) items.push({ p, isAlola: false, isGalar: true,  isHisui: false, specialForm: null, paldean: null });
           if (hisuianSpriteMap[p.number])  items.push({ p, isAlola: false, isGalar: false, isHisui: true,  specialForm: null, paldean: null });
