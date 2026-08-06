@@ -336,11 +336,12 @@ export async function openModal(number) {
         </div>`;
     }
 
-    function variantRow(badge, subset) {
+    function variantRow(badge, subset, forceWrap = false) {
       if (!subset.length) return '';
+      const gridStyle = forceWrap ? ' style="max-width:800px"' : '';
       return `<div class="variants-row">
         <div class="variants-gender-col">${badge}</div>
-        <div class="variants-grid">${subset.map(variantCard).join('')}</div>
+        <div class="variants-grid"${gridStyle}>${subset.map(variantCard).join('')}</div>
       </div>`;
     }
 
@@ -455,15 +456,8 @@ export async function openModal(number) {
             };
             return [normal, shiny];
           });
-          // Ajouter un style pour forcer le wrap de la grille sur plusieurs colonnes
-          const gridStyle = ' style="flex: 1; max-width: calc(100% - 60px)"';
-          const cardsHtml = unownVariants.map(variantCard).join('');
-          const html = `<div class="variants-rows-wrapper">
-            <div class="variants-row">
-              <div class="variants-gender-col">${asexueBadge}</div>
-              <div class="variants-grid"${gridStyle}>${cardsHtml}</div>
-            </div>
-          </div>`;
+          // Utiliser variantRow avec forceWrap pour limiter la largeur de la grille
+          const html = `<div class="variants-rows-wrapper">${variantRow(asexueBadge, unownVariants, true)}</div>`;
           return { id: grp, label: grp, html, show: true };
         } else {
           const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]);
