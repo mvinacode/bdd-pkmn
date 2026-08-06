@@ -440,13 +440,21 @@ export async function openModal(number) {
         // Zarbi (Zarbidex) : structure custom avec badge asexué à gauche
         const isUnown = grp === 'Zarbidex';
         if (isUnown) {
-          const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]).join('');
-          const html = `<div class="variants-rows-wrapper">
-            <div class="variants-row">
-              <div class="variants-gender-col">${asexueBadge}</div>
-              <div class="variants-grid">${sfCards}</div>
-            </div>
-          </div>`;
+          // Convertir les special forms en objets variant pour utiliser variantCard
+          const unownVariants = sfByGroup[grp].flatMap(sf => {
+            const normal = {
+              variant_type: sf.form_key,
+              label: sf.form_label_fr,
+              image_url: sf.image_url || spriteUrl(p.number, false)
+            };
+            const shiny = {
+              variant_type: sf.form_key + '_shiny',
+              label: 'Shiny',
+              image_url: sf.image_url_shiny || spriteUrl(p.number, true)
+            };
+            return [normal, shiny];
+          });
+          const html = `<div class="variants-rows-wrapper">${variantRow(asexueBadge, unownVariants)}</div>`;
           return { id: grp, label: grp, html, show: true };
         } else {
           const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]);
