@@ -499,8 +499,10 @@ export async function openModal(number) {
       if (f.isSpecialForm) return f.formGroup || 'Formes spéciales';
       return 'Gigamax';
     }
+    // Filtre les formes qui ont au moins un artwork pour les illustrations
+    const formsWithArtwork = specialForms.filter(f => f.artwork_url || f.shiny_artwork_url);
     const formsByCategory = {};
-    for (const f of specialForms) {
+    for (const f of formsWithArtwork) {
       const cat = getFormCategory(f);
       if (!formsByCategory[cat]) formsByCategory[cat] = [];
       formsByCategory[cat].push(f);
@@ -511,7 +513,7 @@ export async function openModal(number) {
       ...CATEGORY_ORDER.filter(c => formsByCategory[c]),
       ...Object.keys(formsByCategory).filter(c => CATEGORY_ORDER.indexOf(c) === -1).sort((a, b) => a.localeCompare(b, 'fr')),
     ];
-    const useTabs = illusCategories.length > 1 || specialForms.length >= 4;
+    const useTabs = illusCategories.length > 1 || formsWithArtwork.length >= 4;
 
     function renderFormIllusCol(f) {
       return illustrationCol(
@@ -538,7 +540,7 @@ export async function openModal(number) {
       </div>` : `
       <div class="illus-row">
         ${baseIllusHtml}
-        ${specialForms.map(renderFormIllusCol).join('')}
+        ${formsWithArtwork.map(renderFormIllusCol).join('')}
       </div>`;
 
     // Apparitions indexées par onglet d'illustration : 'base' => forme de base,
