@@ -463,7 +463,8 @@ export async function openModal(number) {
       { id: 'gigamax',  label: 'Gigamax',            html: `<div class="variants-rows-wrapper"><div class="variants-grid">${gigamaxVariants.map(variantCard).join('')}</div></div>`, show: !!gigamaxVariants.length },
     ].filter(t => t.show);
 
-    const useFormsTabs = formTabList.length > 1;
+    // Afficher les onglets même s'il n'y en a qu'un pour Zarbi (pour montrer "Zarbidex")
+    const useFormsTabs = formTabList.length > 1 || (p.number === 201 && formTabList.length === 1);
     const variantsInnerHtml = useFormsTabs
       ? `<div class="illus-tabs forms-tabs-nav">
            ${formTabList.map((t, i) => `<button class="illus-tab-btn${i === 0 ? ' active' : ''}" data-forms-tab="${esc(t.id)}" aria-selected="${i === 0}">${esc(t.label)}</button>`).join('')}
