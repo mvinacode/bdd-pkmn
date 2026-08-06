@@ -434,7 +434,7 @@ export async function openModal(number) {
     });
 
     const formTabList = [
-      { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: !!(neutralVariants.length || asexueVariants.length || maleVariants.length || femaleVariants.length) },
+      { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: p.number !== 201 && !!(neutralVariants.length || asexueVariants.length || maleVariants.length || femaleVariants.length) },
       ...paldeanFormTabs,
       ...sfSortedGroups.map(grp => ({
         id: grp, label: grp,
@@ -475,12 +475,13 @@ export async function openModal(number) {
       const typeBadges  = typeList.map(t => typeBadge(t)).join('');
       const artImg      = artworkUrl ? `<img class="modal-artwork" src="${esc(artworkUrl)}" alt="${esc(name)}" width="200" height="200" loading="lazy">` : `<div class="modal-artwork modal-artwork--pending"></div>`;
       const shinImg     = shinyUrl   ? `<img class="modal-artwork" src="${esc(shinyUrl)}"  alt="Shiny"  width="200" height="200" loading="lazy">` : `<div class="modal-artwork modal-artwork--pending"></div>`;
-      const artworkHtml = shinyUrl || (!artworkUrl && !shinyUrl)
+      // Si aucun artwork (ni normal ni shiny), n'affiche pas les onglets artwork
+      const artworkHtml = (artworkUrl || shinyUrl)
         ? `<div class="illus-artworks">
              <div class="illus-artwork-item">${artImg}<span class="illus-artwork-label">${esc(name)}</span></div>
              <div class="illus-artwork-item">${shinImg}<span class="illus-artwork-label" style="color:var(--yellow)">Shiny</span></div>
            </div>`
-        : `${artImg}<span class="illus-col-name${extraClass.includes('is-mega') ? ' mega-label' : ''}">${esc(name)}</span>`;
+        : `<span class="illus-col-name${extraClass.includes('is-mega') ? ' mega-label' : ''}">${esc(name)}</span>`;
       return `
         <div class="illus-col-wrapper">
           ${typeBadges ? `<div class="illus-col-types">${typeBadges}</div>` : '<div class="illus-col-types"></div>'}
