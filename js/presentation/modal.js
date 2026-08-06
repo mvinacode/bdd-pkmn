@@ -441,10 +441,10 @@ export async function openModal(number) {
         const isUnown = grp === 'Zarbidex';
         if (isUnown) {
           const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]).join('');
-          const html = `<div class="variants-rows-wrapper" style="display:flex;justify-content:center">
-            <div class="variants-row" style="max-width:100%">
+          const html = `<div class="variants-rows-wrapper">
+            <div class="variants-row">
               <div class="variants-gender-col">${asexueBadge}</div>
-              <div class="variants-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:1rem;justify-items:center">${sfCards}</div>
+              <div class="variants-grid">${sfCards}</div>
             </div>
           </div>`;
           return { id: grp, label: grp, html, show: true };
