@@ -56,6 +56,14 @@ export const ICON_GMAX_SM   = `<img src="${GIGAMAX_ICON_URL}" width="22" height=
 export const SPECIAL_FORM_VT = {
   'Pichu Troizépi Shiny': 'troizepy_shiny',
   'Pichu Troizépi':       'troizepy',
+  // Zarbi - 28 formes (A-Z, !, ?)
+  'Forme A': 'unown_a', 'Forme B': 'unown_b', 'Forme C': 'unown_c', 'Forme D': 'unown_d',
+  'Forme E': 'unown_e', 'Forme F': 'unown_f', 'Forme G': 'unown_g', 'Forme H': 'unown_h',
+  'Forme I': 'unown_i', 'Forme J': 'unown_j', 'Forme K': 'unown_k', 'Forme L': 'unown_l',
+  'Forme M': 'unown_m', 'Forme N': 'unown_n', 'Forme O': 'unown_o', 'Forme P': 'unown_p',
+  'Forme Q': 'unown_q', 'Forme R': 'unown_r', 'Forme S': 'unown_s', 'Forme T': 'unown_t',
+  'Forme U': 'unown_u', 'Forme V': 'unown_v', 'Forme W': 'unown_w', 'Forme X': 'unown_x',
+  'Forme Y': 'unown_y', 'Forme Z': 'unown_z', 'Forme !': 'unown_exclamation', 'Forme ?': 'unown_question',
 };
 
 export const ALOLA_FORM_VT = {

@@ -1,9 +1,9 @@
 import { CONFIG, getPokemonImageUrl, isSupabaseConfigured } from './config.js';
 import { initAuth } from './auth.js';
 import { store } from './store.js';
-import { debounce } from './domain/constants.js?v=1';
+import { debounce } from './domain/constants.js?v=2';
 import { loadCatchesMap, setCatchesCallbacks } from './application/catches.js?v=2';
-import { renderGrid, updateCardAfterCatch, setCardCallbacks } from './presentation/card.js?v=8';
+import { renderGrid, updateCardAfterCatch, setCardCallbacks } from './presentation/card.js?v=9';
 import { openModal, closeModal, setModalCallbacks } from './presentation/modal.js?v=250';
 import { bindDrawerEvents, openDrawerWithPokemon, setDrawerCallbacks } from './presentation/drawer.js?v=12';
 import { populateTypeFilters } from './presentation/filters.js';
