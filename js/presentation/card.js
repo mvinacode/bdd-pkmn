@@ -118,7 +118,13 @@ export function renderCard(pokemon, icons = {}) {
   const formStatuses = SPECIAL_FORMS_ICONS.map(({ key, icon, variants }) => {
     const statuses = variants.map(vt => seenFormsMap[vt]?.status).filter(Boolean);
     let status = statuses.includes('owned') ? 'owned' : statuses.includes('seen') ? 'seen' : null;
-    if (key === 'shiny' && catch_?.is_shiny) status = 'owned';
+    // Détecte aussi les formes spéciales shiny (ex: unown_a_shiny)
+    if (key === 'shiny') {
+      const hasShinyFormOwned = Object.keys(seenFormsMap).some(vt =>
+        vt.includes('_shiny') && seenFormsMap[vt]?.status === 'owned'
+      );
+      if (catch_?.is_shiny || hasShinyFormOwned) status = 'owned';
+    }
     return { key, icon, status };
   });
   const formIconsHtml = formStatuses
