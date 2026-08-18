@@ -2430,6 +2430,19 @@ body {
   background: linear-gradient(135deg, #647045, #789d50, #fafdd6, #ffffff);
 }
 
+/* Pierre Nuit (Cornèbre → Corboss) */
+.evo-condition-item.is-stone-night::before {
+  background: linear-gradient(135deg, #b088af, #7b578f, #674271);
+}
+.evo-condition-item.is-stone-night .evo-condition {
+  color: #573e60;
+  text-shadow: none;
+}
+.evo-condition-item.is-stone-night.evo-condition--unseen::before,
+.evo-condition-item.is-stone-night.evo-condition--seen::before {
+  background: linear-gradient(135deg, #b088af, #7b578f, #674271);
+}
+
 /* Échange */
 .evo-condition-item.is-trade::before {
   background: linear-gradient(135deg, #111111, #888888, #111111);

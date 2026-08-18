@@ -49,10 +49,11 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneSun   = isStone && /soleil/i.test(condition);
     const isStoneWater = isStone && /\beau\b/i.test(condition);
     const isStoneShiny = isStone && /éclat/i.test(condition);
+    const isStoneNight = isStone && /nuit/i.test(condition);
     const isOvalStone  = /pierre\s+ovale/i.test(condition);
     const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}${inlineIcon}</span>
     </div>`;
@@ -386,10 +387,22 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
 
     // Multi-branches + formes régionales sans Gigamax : grille unifiée 3 colonnes
     if (regionals.length > 0 && gigamaxesBranch.length === 0) {
-      const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl);
-      const normalCount  = node.children.length;
+      // Un enfant du Pokémon de base peut être en réalité l'évolution EXCLUSIVE
+      // d'une forme régionale vers une nouvelle espèce (ex. Axoloto de Paldéa ->
+      // Terraiste #980, alors qu'Axoloto -> Maraiste). Cet enfant est « revendiqué »
+      // par la forme régionale via evolution_into_number : on le sort des branches
+      // normales pour le rattacher à sa forme régionale, avec la pill de celle-ci.
+      const claimedNums = new Set(
+        regionals
+          .filter(r => r.evolution_into_number && node.children.some(c => c.node.number === r.evolution_into_number))
+          .map(r => r.evolution_into_number)
+      );
+      const mainChildren = node.children.filter(c => !claimedNums.has(c.node.number));
 
-      const normalCells = node.children.map(c => {
+      const rootPortrait = evoPortrait(node.node, isCurrent, iconUrl);
+      const normalCount  = Math.max(mainChildren.length, 1);
+
+      const normalCells = mainChildren.map(c => {
         const cond      = c.node.evolution_condition || '';
         const cIconUrl  = iconByNumber[c.node.number] || null;
         const cPortrait = evoPortrait(c.node, c.node.number === currentNumber, cIconUrl);
@@ -408,8 +421,23 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
 
       let rOffset = normalCount + 1;
       const regionalSections = regionals.map(r => {
-        const rCount = node.children.length;
-        const rCells = node.children.map(c => {
+        // Forme régionale qui évolue vers une nouvelle espèce revendiquée (enfant
+        // sorti des branches normales) : une ligne « forme régionale -> espèce »,
+        // avec la pill (condition) propre à la forme régionale.
+        const claimedChild = r.evolution_into_number
+          ? node.children.find(c => c.node.number === r.evolution_into_number)
+          : null;
+        if (claimedChild) {
+          const cIconUrl  = iconByNumber[claimedChild.node.number] || null;
+          const cPortrait = evoPortrait(claimedChild.node, claimedChild.node.number === currentNumber, cIconUrl);
+          const cond      = r.evolution_condition || claimedChild.node.evolution_condition || '';
+          const itemImg   = r.evolution_item_image_url || claimedChild.node.evolution_item_image_url || null;
+          const startRow  = rOffset;
+          rOffset += 1;
+          return `<div class="evo-stage evo-stage--root-stretch" style="grid-row:${startRow};grid-column:1">${evoRegionalPortrait(r)}</div>${evoArrow(cond, itemImg)}<div class="evo-stage">${cPortrait}</div>`;
+        }
+        const rCount = mainChildren.length;
+        const rCells = mainChildren.map(c => {
           const childRegionals = regionalsByNumber[c.node.number] || [];
           const match = childRegionals.find(nr => nr.region === r.region);
           if (!match) return '';
