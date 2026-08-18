@@ -296,6 +296,16 @@ export function renderDrawerFormsSpecial(specialForm) {
     { label: label+' Shiny', displayLabel: genderLabel+' Shiny', variant_type: vtShiny, iconHtml: ICON_SM + ICON_SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
   ];
 
+  // Zarbi peut être Baron. Comme pour les formes régionales, le variant_type reste
+  // générique ('baron'/'shiny_baron') : c'est le label qui porte la forme (« Forme A
+  // Baron »), et la carte #201 n'a qu'un seul statut Baron pour les 28 lettres.
+  if (isUnown) {
+    entries.push(
+      { label: label+' Baron',       displayLabel: 'Baron',       variant_type: 'baron',       iconHtml: ICON_BARON_LG,                 sprite: specialForm.image_url                               || null },
+      { label: label+' Baron Shiny', displayLabel: 'Baron Shiny', variant_type: 'shiny_baron', iconHtml: ICON_BARON_XS + ICON_SHINY_SM, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+    );
+  }
+
   grid.innerHTML = entries.map((e, i) => `
     <button class="form-opt" data-idx="${i}" data-vt="${esc(e.variant_type)}" title="${esc(e.label)}">
       <div class="form-opt-icon">${e.iconHtml}</div>

@@ -6,6 +6,7 @@ import {
   deleteSeenByVariantType, upsertSeen, fetchEvolutionLinks,
 } from './supabase-client.js';
 import { initAuth } from './auth.js';
+import { SPECIAL_FORM_VT } from './domain/constants.js?v=2';
 
 const $ = id => document.getElementById(id);
 
@@ -124,7 +125,20 @@ function formLabelToVariantType(label) {
     'Gigamax':              'gigamax',    'Gigamax Shiny':              'shiny_gigamax',
     'Pichu Troizépi':       'troizepy',   'Pichu Troizépi Shiny':       'troizepy_shiny',
   };
-  return MAP[label] || null;
+  if (MAP[label]) return MAP[label];
+  // Barons des formes spéciales (« Forme A Baron », « Forme ? Baron Shiny »…) : le
+  // variant_type reste générique, seul le libellé porte la forme. Un fallback par
+  // suffixe évite d'énumérer les 28 lettres de Zarbi dans la table ci-dessus.
+  if (label?.endsWith(' Baron Shiny')) return 'shiny_baron';
+  if (label?.endsWith(' Baron'))       return 'baron';
+  // Formes spéciales (« Forme A », « Forme A Shiny ») : leur variant_type dérive de la
+  // form_key. Sans ça, éditer ou supprimer une session Zarbi laisse un statut résiduel
+  // dans pokemon_seen, car l'appelant ignore les libellés non résolus.
+  if (label?.endsWith(' Shiny')) {
+    const key = SPECIAL_FORM_VT[label.slice(0, -' Shiny'.length)];
+    if (key) return key + '_shiny';
+  }
+  return SPECIAL_FORM_VT[label] || null;
 }
 
 // ── Groupement par session ─────────────────────────────────────
@@ -508,15 +522,51 @@ function buildFormEntriesRegional(variants, iconMap, regionId) {
   ];
 }
 
+// Mêmes formes que renderDrawerFormsSpecial (drawer.js) : les deux grilles doivent
+// produire les mêmes `label`, sinon une session éditée ici perd ses formes.
 function buildFormEntriesSpecial(specialForm) {
+  const M26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
+  const M20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
   const F26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
   const F20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const SH20 = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
-  const label = specialForm.form_label_fr;
-  return [
-    { label: label,             displayLabel: 'Femelle',        variant_type: specialForm.form_key,            iconHtml: F26,        sprite: specialForm.image_url                               || null },
-    { label: label + ' Shiny',  displayLabel: 'Femelle Shiny',  variant_type: specialForm.form_key + '_shiny', iconHtml: F20 + SH20, sprite: specialForm.image_url_shiny || specialForm.image_url || null },
+  const U26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const U20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
+  const SH20  = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
+  const BAR28 = `<img src="${_BARON_URL}" width="28" height="28" alt="">`;
+  const BAR22 = `<img src="${_BARON_URL}" width="22" height="22" alt="">`;
+
+  const isMale     = specialForm.form_group === 'Pikachu Casquette';
+  const isGendered = specialForm.form_group === 'Pikachu Partenaire';
+  const isUnown    = specialForm.form_group === 'Zarbidex'; // Zarbi est asexué
+  const ICON    = isUnown ? U26 : (isMale ? M26 : F26);
+  const ICON_SM = isUnown ? U20 : (isMale ? M20 : F20);
+  const genderLabel = isUnown ? 'Asexué' : (isMale ? 'Mâle' : 'Femelle');
+
+  const label       = specialForm.form_label_fr;
+  const vt          = specialForm.form_key;
+  const vtShiny     = specialForm.form_key + '_shiny';
+  const sprite      = specialForm.image_url                               || null;
+  const spriteShiny = specialForm.image_url_shiny || specialForm.image_url || null;
+
+  const entries = isGendered ? [
+    { label,                   displayLabel: 'Mâle',                variant_type: vt,                  iconHtml: M26,            sprite },
+    { label: label + ' Shiny', displayLabel: 'Mâle Shiny',          variant_type: vtShiny,             iconHtml: M20 + SH20,     sprite: spriteShiny },
+    { label,                   displayLabel: 'Femelle',             variant_type: vt      + '_female', iconHtml: F26,            sprite },
+    { label: label + ' Shiny', displayLabel: 'Femelle Shiny',       variant_type: vtShiny + '_female', iconHtml: F20 + SH20,     sprite: spriteShiny },
+  ] : [
+    { label,                   displayLabel: genderLabel,           variant_type: vt,                  iconHtml: ICON,           sprite },
+    { label: label + ' Shiny', displayLabel: genderLabel + ' Shiny', variant_type: vtShiny,            iconHtml: ICON_SM + SH20, sprite: spriteShiny },
   ];
+
+  // Zarbi peut être Baron : variant_type générique comme pour les formes régionales,
+  // c'est le libellé qui porte la lettre (« Forme A Baron »).
+  if (isUnown) {
+    entries.push(
+      { label: label + ' Baron',       displayLabel: 'Baron',       variant_type: 'baron',       iconHtml: BAR28,        sprite },
+      { label: label + ' Baron Shiny', displayLabel: 'Baron Shiny', variant_type: 'shiny_baron', iconHtml: BAR22 + SH20, sprite: spriteShiny },
+    );
+  }
+  return entries;
 }
 
 // ── Modal d'édition ────────────────────────────────────────────
@@ -794,12 +844,16 @@ async function loadModalFormGrid(session) {
 
   // Détecte la région par le préfixe du form_label (couvre aussi "Alola Baron", "Galar Baron", etc.)
   const region = sessionRegion(session);
+  // Retrouve la forme spéciale par son libellé (« Forme A », « Forme A Shiny »,
+  // « Forme A Baron »…). On compare aux form_label_fr plutôt que de passer par
+  // formLabelToVariantType : un Baron y rend le type générique 'baron', qui ne
+  // désigne aucune forme — une session ne contenant qu'un Baron serait ratée.
   const specialFormKey = region ? null : (() => {
+    const forms = Object.entries(specialFormsMap[session.pokemon_number] || {});
     for (const f of session.forms) {
-      const vt = formLabelToVariantType(f.form_label);
-      if (!vt) continue;
-      const key = vt.endsWith('_shiny') ? vt.slice(0, -6) : vt;
-      if (specialFormsMap[session.pokemon_number]?.[key]) return key;
+      const baseLabel = (f.form_label || '').replace(/ Baron( Shiny)?$| Shiny$/, '');
+      const hit = forms.find(([, sf]) => sf.form_label_fr === baseLabel);
+      if (hit) return hit[0];
     }
     return null;
   })();
