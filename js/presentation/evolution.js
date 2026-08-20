@@ -49,11 +49,15 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneSun   = isStone && /soleil/i.test(condition);
     const isStoneWater = isStone && /\beau\b/i.test(condition);
     const isStoneShiny = isStone && /éclat/i.test(condition);
-    const isStoneNight = isStone && /nuit/i.test(condition);
+    // « Pierre Nuit » a son identité violette propre ; une condition de nuit qui
+    // mentionne un tout autre objet (Croc Rasoir de Scorvol) doit au contraire
+    // recevoir les bleus nocturnes de .evo-condition.is-night.
+    const isStoneNight = isStone && /pierre\s+nuit/i.test(condition);
+    const isNightItem  = /nuit/i.test(condition) && !isStoneNight;
     const isOvalStone  = /pierre\s+ovale/i.test(condition);
     const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}${inlineIcon}</span>
     </div>`;

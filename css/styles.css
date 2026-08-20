@@ -2452,6 +2452,28 @@ body {
 }
 
 /* Pierre Nuit (Cornèbre → Corboss) */
+/* Évolution nocturne tenant un objet (Scorplane → Scorvol, Croc Rasoir) : reprend
+   le fond, la bordure et la lune de .evo-condition.is-night, qui ne couvre que les
+   conditions sans objet. À ne pas confondre avec la Pierre Nuit, violette. */
+.evo-condition-item.is-night-item {
+  background: rgba(22, 35, 55, 0.75);
+}
+.evo-condition-item.is-night-item::before {
+  background: linear-gradient(135deg, rgba(70, 105, 148, 0.45), #9eb8d0, rgba(70, 105, 148, 0.45));
+}
+.evo-condition-item.is-night-item .evo-condition {
+  color: #9eb8d0;
+  text-shadow: none;
+}
+.evo-condition-item.is-night-item::after {
+  content: '🌙';
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
 .evo-condition-item.is-stone-night::before {
   background: linear-gradient(135deg, #b088af, #7b578f, #674271);
 }
