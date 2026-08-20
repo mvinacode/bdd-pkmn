@@ -6,7 +6,9 @@ import {
   deleteSeenByVariantType, upsertSeen, fetchEvolutionLinks,
 } from './supabase-client.js';
 import { initAuth } from './auth.js';
-import { SPECIAL_FORM_VT } from './domain/constants.js?v=2';
+import {
+  SPECIAL_FORM_VT, SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS,
+} from './domain/constants.js?v=5';
 
 const $ = id => document.getElementById(id);
 
@@ -535,9 +537,9 @@ function buildFormEntriesSpecial(specialForm) {
   const BAR28 = `<img src="${_BARON_URL}" width="28" height="28" alt="">`;
   const BAR22 = `<img src="${_BARON_URL}" width="22" height="22" alt="">`;
 
-  const isMale     = specialForm.form_group === 'Pikachu Casquette';
-  const isGendered = specialForm.form_group === 'Pikachu Partenaire';
-  const isUnown    = specialForm.form_group === 'Zarbidex'; // Zarbi est asexué
+  const isMale     = SF_MALE_GROUPS.has(specialForm.form_group);
+  const isGendered = SF_GENDERED_GROUPS.has(specialForm.form_group);
+  const isUnown    = SF_UNISEX_GROUPS.has(specialForm.form_group); // Zarbi : asexué + variante Baron
   const ICON    = isUnown ? U26 : (isMale ? M26 : F26);
   const ICON_SM = isUnown ? U20 : (isMale ? M20 : F20);
   const genderLabel = isUnown ? 'Asexué' : (isMale ? 'Mâle' : 'Femelle');

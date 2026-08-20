@@ -3,16 +3,17 @@ import { esc, spriteUrl, GAMES } from '../utils.js';
 import {
   MEGA_ICON_URL, GIGAMAX_ICON_URL, SHINY_ICON_URL, BARON_ICON_URL,
   VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEA_FORM_VT,
+  SF_GENDERED_GROUPS, SF_NO_DIMORPHISM_GROUPS, NO_BASE_FORM_NUMBERS,
   padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
-} from '../domain/constants.js?v=1';
-import { getVariantStatus } from '../domain/completion.js?v=1';
+} from '../domain/constants.js?v=5';
+import { getVariantStatus } from '../domain/completion.js?v=3';
 import { cycleVariantStatus } from '../application/catches.js?v=2';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances, fetchFormAppearances,
 } from '../supabase-client.js?v=7';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=209';
+import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=210';
 
 // Callbacks injectés par app.js pour éviter circulaire
 let _updateCardAfterCatch = null;
@@ -77,9 +78,14 @@ function seenFormIcon(vt, sfMap = {}) {
     case 'troizepy':       return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
     case 'troizepy_shiny': return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>` + shiny;
     default: {
-      const sfEntry = Object.values(sfMap).flatMap(m => Object.values(m)).find(f => f.form_key === vt || (f.form_key + '_shiny') === vt);
-      const sfLabel = sfEntry ? sfEntry.form_label_fr + (vt.endsWith('_shiny') ? ' Shiny' : '') : vt;
-      return `<span style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">${esc(sfLabel)}</span>`;
+      // Formes spéciales genrées : le sexe n'est porté que par le suffixe du type
+      // (« triple » = mâle, « triple_female » = femelle), pas par le libellé.
+      const isFemale = vt.endsWith('_female');
+      const bare     = isFemale ? vt.slice(0, -'_female'.length) : vt;
+      const sfEntry = Object.values(sfMap).flatMap(m => Object.values(m)).find(f => f.form_key === bare || (f.form_key + '_shiny') === bare);
+      const sfLabel = sfEntry ? sfEntry.form_label_fr + (bare.endsWith('_shiny') ? ' Shiny' : '') : vt;
+      const gender  = sfEntry && SF_GENDERED_GROUPS.has(sfEntry.form_group) ? (isFemale ? female : male) : '';
+      return gender + `<span style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">${esc(sfLabel)}</span>`;
     }
   }
 }
@@ -313,8 +319,10 @@ export async function openModal(number) {
         </div>`;
     }
 
-    function sfVariantCard(sf, isShiny) {
-      const vt     = isShiny ? sf.form_key + '_shiny' : sf.form_key;
+    // isFemale : formes spéciales genrées (cf. SF_GENDERED_GROUPS). Le tiroir
+    // enregistre la femelle sous le même type suffixé « _female ».
+    function sfVariantCard(sf, isShiny, isFemale = false) {
+      const vt     = (isShiny ? sf.form_key + '_shiny' : sf.form_key) + (isFemale ? '_female' : '');
       const label  = isShiny ? 'Shiny' : sf.form_label_fr;
       const iSrc   = isShiny
         ? (sf.image_url_shiny ? normalizeVariantUrl(sf.image_url_shiny) : spriteUrl(p.number, true))
@@ -336,13 +344,20 @@ export async function openModal(number) {
         </div>`;
     }
 
-    function variantRow(badge, subset, forceWrap = false) {
-      if (!subset.length) return '';
+    // Ligne badgée à partir de cartes DÉJÀ rendues (les formes spéciales ont leur
+    // propre fabrique de carte, sfVariantCard).
+    function variantRowHtml(badge, cards, forceWrap = false) {
+      if (!cards.length) return '';
       const gridStyle = forceWrap ? ' style="max-width:800px"' : '';
       return `<div class="variants-row">
         <div class="variants-gender-col">${badge}</div>
-        <div class="variants-grid"${gridStyle}>${subset.map(variantCard).join('')}</div>
+        <div class="variants-grid"${gridStyle}>${cards.join('')}</div>
       </div>`;
+    }
+
+    // Ligne badgée à partir d'objets variante (table pokemon_variants).
+    function variantRow(badge, subset, forceWrap = false) {
+      return variantRowHtml(badge, subset.map(variantCard), forceWrap);
     }
 
     function regionalVariantRows(prefix, allVariants) {
@@ -436,7 +451,7 @@ export async function openModal(number) {
     });
 
     const formTabList = [
-      { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: p.number !== 201 && !!(neutralVariants.length || asexueVariants.length || maleVariants.length || femaleVariants.length) },
+      { id: 'base', label: 'Base', html: `<div class="variants-rows-wrapper">${baseFormsContent}</div>`, show: !NO_BASE_FORM_NUMBERS.has(p.number) && !!(neutralVariants.length || asexueVariants.length || maleVariants.length || femaleVariants.length) },
       ...paldeanFormTabs,
       ...sfSortedGroups.map(grp => {
         // Zarbi (Zarbidex) : structure custom avec badge asexué à gauche
@@ -458,6 +473,17 @@ export async function openModal(number) {
           });
           // Utiliser variantRow avec forceWrap pour limiter la largeur de la grille
           const html = `<div class="variants-rows-wrapper">${variantRow(asexueBadge, unownVariants, true)}</div>`;
+          return { id: grp, label: grp, html, show: true };
+        } else if (SF_GENDERED_GROUPS.has(grp)) {
+          // Formes genrées : une ligne par sexe, comme les formes régionales.
+          const rowFor = isFemale =>
+            sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false, isFemale), sfVariantCard(sf, true, isFemale)]);
+          // Sexes identiques : une seule ligne au badge mixte. Le statut posé sur la
+          // femelle depuis le tiroir remonte quand même, getVariantStatus appariant
+          // « X » et « X_female ».
+          const html = SF_NO_DIMORPHISM_GROUPS.has(grp)
+            ? `<div class="variants-rows-wrapper">${variantRowHtml(neutralBadge, rowFor(false))}</div>`
+            : `<div class="variants-rows-wrapper">${variantRowHtml(maleBadge, rowFor(false))}${variantRowHtml(femaleBadge, rowFor(true))}</div>`;
           return { id: grp, label: grp, html, show: true };
         } else {
           const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]);

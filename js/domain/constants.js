@@ -56,6 +56,9 @@ export const ICON_GMAX_SM   = `<img src="${GIGAMAX_ICON_URL}" width="22" height=
 export const SPECIAL_FORM_VT = {
   'Pichu Troizépi Shiny': 'troizepy_shiny',
   'Pichu Troizépi':       'troizepy',
+  // Deusolourdo : nombre de segments (le suffixe « Shiny » est géré par l'appelant)
+  'Forme Double': 'double',
+  'Forme Triple': 'triple',
   // Zarbi - 28 formes (A-Z, !, ?)
   'Forme A': 'unown_a', 'Forme B': 'unown_b', 'Forme C': 'unown_c', 'Forme D': 'unown_d',
   'Forme E': 'unown_e', 'Forme F': 'unown_f', 'Forme G': 'unown_g', 'Forme H': 'unown_h',
@@ -65,6 +68,25 @@ export const SPECIAL_FORM_VT = {
   'Forme U': 'unown_u', 'Forme V': 'unown_v', 'Forme W': 'unown_w', 'Forme X': 'unown_x',
   'Forme Y': 'unown_y', 'Forme Z': 'unown_z', 'Forme !': 'unown_exclamation', 'Forme ?': 'unown_question',
 };
+
+// Pokémon dont la forme « nue » n'existe pas : tout individu appartient
+// forcément à une forme nommée (Zarbi = une lettre, Deusolourdo = Double ou
+// Triple). Leur entrée sans forme est donc masquée dans le tiroir et la modale.
+export const NO_BASE_FORM_NUMBERS = new Set([201, 982]);
+
+// Genre d'une forme spéciale, déduit de son `form_group` (pokemon_special_forms).
+// Un groupe absent de ces trois listes est traité comme femelle : c'est le cas de
+// Troizépi (form_group NULL), qui n'existe qu'en femelle.
+export const SF_MALE_GROUPS     = new Set(['Pikachu Casquette']);
+export const SF_GENDERED_GROUPS = new Set(['Pikachu Partenaire', 'Segments']);
+export const SF_UNISEX_GROUPS   = new Set(['Zarbidex']);
+
+// Sous-ensemble de SF_GENDERED_GROUPS : les deux sexes existent mais sont
+// visuellement identiques (Deusolourdo). Le tiroir propose quand même Mâle et
+// Femelle — on enregistre le sexe capturé — mais la modale n'affiche qu'une
+// ligne au badge mixte, comme pour les Pokémon sans dimorphisme. Pikachu
+// Partenaire n'en fait pas partie : sa femelle a la queue en cœur.
+export const SF_NO_DIMORPHISM_GROUPS = new Set(['Segments']);
 
 export const ALOLA_FORM_VT = {
   'Alola Mâle Shiny':    'alolan_shiny_male',

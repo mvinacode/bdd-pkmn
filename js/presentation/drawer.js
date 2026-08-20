@@ -8,8 +8,9 @@ import {
   MALE_SVG, FEMALE_SVG,
   SHINY_ICON_URL, BARON_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL,
   normalizeVariantUrl, padNumber,
-} from '../domain/constants.js?v=1';
-import { getVariantStatus } from '../domain/completion.js?v=1';
+  SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS, NO_BASE_FORM_NUMBERS,
+} from '../domain/constants.js?v=5';
+import { getVariantStatus } from '../domain/completion.js?v=3';
 import { addToSeen } from '../application/catches.js?v=2';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
@@ -275,9 +276,9 @@ export function renderDrawerFormsSpecial(specialForm) {
   const grid  = $('form-grid');
   if (!field || !grid) return;
 
-  const isMale     = specialForm.form_group === 'Pikachu Casquette';
-  const isGendered = specialForm.form_group === 'Pikachu Partenaire';
-  const isUnown    = specialForm.form_group === 'Zarbidex'; // Zarbi est asexué
+  const isMale     = SF_MALE_GROUPS.has(specialForm.form_group);
+  const isGendered = SF_GENDERED_GROUPS.has(specialForm.form_group);
+  const isUnown    = SF_UNISEX_GROUPS.has(specialForm.form_group); // Zarbi : asexué + variante Baron
   const ICON    = isUnown ? ICON_UNISEX_LG : (isMale ? ICON_MALE_LG   : ICON_FEMALE_LG);
   const ICON_SM = isUnown ? ICON_UNISEX_SM : (isMale ? ICON_MALE_SM   : ICON_FEMALE_SM);
   const genderLabel = isUnown ? 'Asexué' : (isMale ? 'Mâle' : 'Femelle');
@@ -436,8 +437,8 @@ export function bindDrawerEvents() {
 
         const items = [];
         for (const p of data) {
-          // Zarbi (#201) : ne pas afficher la forme de base (sans lettre), seulement les 28 formes spéciales
-          if (p.number !== 201) {
+          // Zarbi, Deusolourdo… : pas de forme « nue », seulement les formes nommées
+          if (!NO_BASE_FORM_NUMBERS.has(p.number)) {
             items.push({ p, isAlola: false, isGalar: false, isHisui: false, specialForm: null, paldean: null });
           }
           if (alolanSpriteMap[p.number])   items.push({ p, isAlola: true,  isGalar: false, isHisui: false, specialForm: null, paldean: null });

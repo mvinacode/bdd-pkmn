@@ -1,6 +1,7 @@
 import { store } from '../store.js';
 
 export function getVariantStatus(pokemonNumber, variantType) {
+  if (!variantType) return '';   // garde-fou : un type absent ne doit jamais casser le rendu
   const direct = store.seenMap[pokemonNumber]?.[variantType]?.status;
   if (direct) return direct;
   const seen = store.seenMap[pokemonNumber];
@@ -45,5 +46,11 @@ export function getVariantStatus(pokemonNumber, variantType) {
     return seen['paldean_shiny_male']?.status || seen['paldean_shiny_female']?.status || '';
   if (variantType === 'paldean_shiny_male' || variantType === 'paldean_shiny_female')
     return seen['paldean_shiny']?.status || '';
-  return '';
+  // Formes spéciales genrées (Pikachu Partenaire, Deusolourdo…) : le tiroir
+  // enregistre « <form_key>[_shiny] » pour le mâle et le même type suffixé
+  // « _female » pour la femelle. Chaque carte reflète donc son homologue quand
+  // elle n'a pas de statut propre, comme les paires régionales ci-dessus.
+  if (variantType.endsWith('_female'))
+    return seen[variantType.slice(0, -'_female'.length)]?.status || '';
+  return seen[`${variantType}_female`]?.status || '';
 }

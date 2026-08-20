@@ -1,6 +1,6 @@
 import { esc } from '../utils.js';
-import { normalizeVariantUrl, getImageUrl, padNumber, toRoman, typeBadge } from '../domain/constants.js?v=1';
-import { MEGA_ICON_URL, GIGAMAX_ICON_URL } from '../domain/constants.js?v=1';
+import { normalizeVariantUrl, getImageUrl, padNumber, toRoman, typeBadge } from '../domain/constants.js?v=5';
+import { MEGA_ICON_URL, GIGAMAX_ICON_URL } from '../domain/constants.js?v=5';
 
 export function collectTreeNumbers(tree) {
   if (!tree) return [];
@@ -67,9 +67,10 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isCopieMove = /\bcopie\b/i.test(condition);
     const isCoupDoubleMove = /coup\s+double/i.test(condition);
     const isDoubleLaserMove = /double\s+laser/i.test(condition);
+    const isHyperceuseMove = /hyperceuse/i.test(condition);
     const isGalanoaBand  = /(bracelet|couronne)\s+galanoa/i.test(condition);
     const isCritical  = /coup.{0,5}critique/i.test(condition);
-    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isRolloutMove && !isAncientPowerMove && !isCopieMove && !isCoupDoubleMove && !isDoubleLaserMove && !isGalanoaBand && !isCritical;
+    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isRolloutMove && !isAncientPowerMove && !isCopieMove && !isCoupDoubleMove && !isDoubleLaserMove && !isHyperceuseMove && !isGalanoaBand && !isCritical;
     const isStone      = isItem && /pierre\s/i.test(condition);
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -97,10 +98,12 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
       ? esc(condition).replace(/Coup\s+Double/i, '<span class="move-name">$&</span>')
       : isDoubleLaserMove
       ? esc(condition).replace(/Double\s+Laser/i, '<span class="move-name">$&</span>')
+      : isHyperceuseMove
+      ? esc(condition).replace(/Hyperceuse/i, '<span class="move-name">$&</span>')
       : esc(condition);
     // Passe « sans capacité » à la ligne (virgule conservée) pour garder la pill compacte
     const conditionDisplay = conditionInner.replace(/,\s*(sans\s+capacit[ée]s?)/i, ',<br>$1');
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isCritical ? ' is-critical' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isHyperceuseMove ? ' is-hyperceuse-move' : ''}${isCritical ? ' is-critical' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
   } else if (inlineIcon) {
     // Condition réduite à sa seule icône (aucun texte restant après extraction)
     conditionHtml = `<span class="evo-condition">${inlineIcon}</span>`;

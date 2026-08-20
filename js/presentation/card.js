@@ -5,7 +5,7 @@ import {
   ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEAN_FORM_VT, PALDEA_FORM_VT,
   GENDER_GROUPS, GENDER_VTS_FLAT,
   padNumber, normalizeVariantUrl, formatCatchDateShort, typeBadge,
-} from '../domain/constants.js?v=2';
+} from '../domain/constants.js?v=5';
 import { getAlolanSprite, getGalarianSprite, getHisuianSprite, getPaldeanSprite, getSpecialFormSprite } from '../domain/sprites.js';
 
 // Callback injecté par app.js pour éviter dépendance circulaire card ↔ modal

@@ -2035,8 +2035,10 @@ body {
   text-underline-offset: 2px;
 }
 
+/* Capacités de type Normal : Copie, Coup Double, Hyperceuse (Deusolourdo). */
 .evo-condition.is-copie-move,
-.evo-condition.is-coup-double-move {
+.evo-condition.is-coup-double-move,
+.evo-condition.is-hyperceuse-move {
   color: #8d8f8d;
   border: 1px solid transparent;
   background:
@@ -2048,7 +2050,8 @@ body {
   line-height: 1.3;
 }
 .evo-condition.is-copie-move .move-name,
-.evo-condition.is-coup-double-move .move-name {
+.evo-condition.is-coup-double-move .move-name,
+.evo-condition.is-hyperceuse-move .move-name {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
