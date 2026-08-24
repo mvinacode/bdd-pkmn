@@ -55,9 +55,14 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneNight = isStone && /pierre\s+nuit/i.test(condition);
     const isNightItem  = /nuit/i.test(condition) && !isStoneNight;
     const isOvalStone  = /pierre\s+ovale/i.test(condition);
+    // Pendant diurne de is-night-item : évolution de JOUR en tenant un objet
+    // (Farfuret de Hisui → Farfurex, Griffe Rasoir de jour, exactement le miroir
+    // de Farfuret → Dimoret la nuit). La Pierre Ovale de Leveinard mentionne elle
+    // aussi « Jour » mais garde son identité nacrée propre.
+    const isDayItem    = /\bjour\b/i.test(condition) && !isOvalStone;
     const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isDayItem ? ' is-day-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${esc(condition)}${inlineIcon}</span>
     </div>`;
@@ -72,9 +77,10 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isCoupDoubleMove = /coup\s+double/i.test(condition);
     const isDoubleLaserMove = /double\s+laser/i.test(condition);
     const isHyperceuseMove = /hyperceuse/i.test(condition);
+    const isMultitoxikMove = /multitoxik/i.test(condition);
     const isGalanoaBand  = /(bracelet|couronne)\s+galanoa/i.test(condition);
     const isCritical  = /coup.{0,5}critique/i.test(condition);
-    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isRolloutMove && !isAncientPowerMove && !isCopieMove && !isCoupDoubleMove && !isDoubleLaserMove && !isHyperceuseMove && !isGalanoaBand && !isCritical;
+    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isRolloutMove && !isAncientPowerMove && !isCopieMove && !isCoupDoubleMove && !isDoubleLaserMove && !isHyperceuseMove && !isMultitoxikMove && !isGalanoaBand && !isCritical;
     const isStone      = isItem && /pierre\s/i.test(condition);
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -104,10 +110,12 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
       ? esc(condition).replace(/Double\s+Laser/i, '<span class="move-name">$&</span>')
       : isHyperceuseMove
       ? esc(condition).replace(/Hyperceuse/i, '<span class="move-name">$&</span>')
+      : isMultitoxikMove
+      ? esc(condition).replace(/Multitoxik/i, '<span class="move-name">$&</span>')
       : esc(condition);
     // Passe « sans capacité » à la ligne (virgule conservée) pour garder la pill compacte
     const conditionDisplay = conditionInner.replace(/,\s*(sans\s+capacit[ée]s?)/i, ',<br>$1');
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isHyperceuseMove ? ' is-hyperceuse-move' : ''}${isCritical ? ' is-critical' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isHyperceuseMove ? ' is-hyperceuse-move' : ''}${isMultitoxikMove ? ' is-multitoxik-move' : ''}${isCritical ? ' is-critical' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
   } else if (inlineIcon) {
     // Condition réduite à sa seule icône (aucun texte restant après extraction)
     conditionHtml = `<span class="evo-condition">${inlineIcon}</span>`;

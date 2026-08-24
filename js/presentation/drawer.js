@@ -17,7 +17,7 @@ import {
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
   fetchHisuianVariantsForNumbers, fetchPaldeanFormsForNumbers, fetchSpecialFormsForNumbers,
   insertCatch, fetchVariantMap,
-} from '../supabase-client.js?v=7';
+} from '../supabase-client.js?v=8';
 
 // Libellé court d'une forme de Paldea à partir du nom complet : « … (Race Combative) »
 // => « Race Combative ». Pour la forme régionale simple (region === 'paldean', ex.

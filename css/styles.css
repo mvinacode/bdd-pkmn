@@ -2056,6 +2056,24 @@ body {
   text-underline-offset: 2px;
 }
 
+/* Multitoxik (Qwilfish de Hisui → Qwilpik) : violet du poison de Hisui */
+.evo-condition.is-multitoxik-move {
+  color: #fefefe;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #923fcc, #bf8fe2, #923fcc) border-box;
+  text-shadow: 0 0 10px rgba(146, 63, 204, 0.5);
+  white-space: normal;
+  text-align: center;
+  max-width: 12rem;
+  line-height: 1.3;
+}
+.evo-condition.is-multitoxik-move .move-name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .evo-condition.is-critical {
   color: #f0c040;
   border: 1px solid transparent;
@@ -2467,6 +2485,28 @@ body {
 }
 .evo-condition-item.is-night-item::after {
   content: '🌙';
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* Évolution DIURNE tenant un objet (Farfuret de Hisui → Farfurex, Griffe Rasoir) :
+   miroir exact de .is-night-item — même géométrie, tons chauds et soleil au lieu
+   des bleus nocturnes et de la lune. */
+.evo-condition-item.is-day-item {
+  background: rgba(58, 42, 16, 0.75);
+}
+.evo-condition-item.is-day-item::before {
+  background: linear-gradient(135deg, rgba(178, 130, 46, 0.45), #f0c979, rgba(178, 130, 46, 0.45));
+}
+.evo-condition-item.is-day-item .evo-condition {
+  color: #f0c979;
+  text-shadow: none;
+}
+.evo-condition-item.is-day-item::after {
+  content: '☀️';
   position: absolute;
   top: -5px;
   right: -8px;

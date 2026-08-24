@@ -233,18 +233,25 @@ export async function fetchVariantIcons(pokemonNumbers) {
 async function _fetchVariantsByType(variantType, pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return [];
-  // La forme régionale peut être neutre (`galarian`) ou asexuée (`galarian_asexue`,
-  // ex. Artikodin de Galar) : on récupère les deux pour que le résultat régional
-  // apparaisse dans la recherche. On préfère la forme neutre si les deux existent.
+  // La forme régionale peut être neutre (`galarian`), asexuée (`galarian_asexue`,
+  // ex. Artikodin de Galar) ou uniquement genrée (`hisuian_male`/`hisuian_female`,
+  // ex. Farfuret de Hisui, qui n'a AUCUNE ligne neutre) : on interroge toutes ces
+  // déclinaisons pour que le résultat régional apparaisse dans la recherche, et on
+  // ne garde qu'une ligne par Pokémon, la première dans l'ordre de préférence.
+  const byPreference = [
+    variantType, `${variantType}_asexue`, `${variantType}_male`, `${variantType}_female`,
+  ];
   const { data } = await client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .in('variant_type', [variantType, `${variantType}_asexue`])
+    .in('variant_type', byPreference)
     .in('pokemon_number', pokemonNumbers);
   if (!data) return [];
   const byNumber = {};
   for (const r of data) {
-    if (!byNumber[r.pokemon_number] || r.variant_type === variantType) byNumber[r.pokemon_number] = r;
+    const kept = byNumber[r.pokemon_number];
+    if (!kept || byPreference.indexOf(r.variant_type) < byPreference.indexOf(kept.variant_type))
+      byNumber[r.pokemon_number] = r;
   }
   return Object.values(byNumber);
 }
