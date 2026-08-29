@@ -1,4 +1,4 @@
-import { TYPE_FR } from '../domain/constants.js?v=5';
+import { TYPE_FR } from '../domain/constants.js?v=6';
 import { fetchTypes } from '../supabase-client.js';
 
 export async function populateTypeFilters() {

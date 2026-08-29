@@ -1,5 +1,5 @@
 import { store } from '../store.js';
-import { debounce } from '../domain/constants.js?v=5';
+import { debounce } from '../domain/constants.js?v=6';
 
 // Mémorise la position dans la grille via une « carte ancre » (numéro de Pokémon)
 // plutôt qu'une position en pixels : avec le scroll infini et le chargement

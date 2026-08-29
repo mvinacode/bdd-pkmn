@@ -8,7 +8,7 @@ import {
 import { initAuth } from './auth.js';
 import {
   SPECIAL_FORM_VT, SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS,
-} from './domain/constants.js?v=5';
+} from './domain/constants.js?v=6';
 
 const $ = id => document.getElementById(id);
 

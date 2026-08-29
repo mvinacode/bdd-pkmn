@@ -56,6 +56,11 @@ export const ICON_GMAX_SM   = `<img src="${GIGAMAX_ICON_URL}" width="22" height=
 export const SPECIAL_FORM_VT = {
   'Pichu Troizépi Shiny': 'troizepy_shiny',
   'Pichu Troizépi':       'troizepy',
+  // Ursaking Lune Vermeille — forme exclusivement mâle (cf. SF_MALE_GROUPS).
+  // Entrée shiny explicite, comme Troizépi : sans elle, une capture shiny de cette
+  // forme serait prise pour un shiny de base (isBaseShinyCatch dans card.js).
+  'Lune Vermeille Shiny': 'scarlet_moon_shiny',
+  'Lune Vermeille':       'scarlet_moon',
   // Deusolourdo : nombre de segments (le suffixe « Shiny » est géré par l'appelant)
   'Forme Double': 'double',
   'Forme Triple': 'triple',
@@ -77,7 +82,7 @@ export const NO_BASE_FORM_NUMBERS = new Set([201, 982]);
 // Genre d'une forme spéciale, déduit de son `form_group` (pokemon_special_forms).
 // Un groupe absent de ces trois listes est traité comme femelle : c'est le cas de
 // Troizépi (form_group NULL), qui n'existe qu'en femelle.
-export const SF_MALE_GROUPS     = new Set(['Pikachu Casquette']);
+export const SF_MALE_GROUPS     = new Set(['Pikachu Casquette', 'Lune Vermeille']);
 export const SF_GENDERED_GROUPS = new Set(['Pikachu Partenaire', 'Segments']);
 export const SF_UNISEX_GROUPS   = new Set(['Zarbidex']);
 

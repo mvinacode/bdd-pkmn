@@ -3,9 +3,9 @@ import { esc, spriteUrl, GAMES } from '../utils.js';
 import {
   MEGA_ICON_URL, GIGAMAX_ICON_URL, SHINY_ICON_URL, BARON_ICON_URL,
   VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEA_FORM_VT,
-  SF_GENDERED_GROUPS, SF_NO_DIMORPHISM_GROUPS, NO_BASE_FORM_NUMBERS,
+  SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_NO_DIMORPHISM_GROUPS, NO_BASE_FORM_NUMBERS,
   padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
-} from '../domain/constants.js?v=5';
+} from '../domain/constants.js?v=6';
 import { getVariantStatus } from '../domain/completion.js?v=3';
 import { cycleVariantStatus } from '../application/catches.js?v=2';
 import {
@@ -484,6 +484,12 @@ export async function openModal(number) {
           const html = SF_NO_DIMORPHISM_GROUPS.has(grp)
             ? `<div class="variants-rows-wrapper">${variantRowHtml(neutralBadge, rowFor(false))}</div>`
             : `<div class="variants-rows-wrapper">${variantRowHtml(maleBadge, rowFor(false))}${variantRowHtml(femaleBadge, rowFor(true))}</div>`;
+          return { id: grp, label: grp, html, show: true };
+        } else if (SF_MALE_GROUPS.has(grp)) {
+          // Groupe exclusivement mâle (Ursaking Lune Vermeille, Pikachu Casquette) :
+          // une seule ligne badgée mâle, comme les races de Tauros.
+          const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]);
+          const html = `<div class="variants-rows-wrapper">${variantRowHtml(maleBadge, sfCards, sfByGroup[grp].length > 1)}</div>`;
           return { id: grp, label: grp, html, show: true };
         } else {
           const sfCards = sfByGroup[grp].flatMap(sf => [sfVariantCard(sf, false), sfVariantCard(sf, true)]);

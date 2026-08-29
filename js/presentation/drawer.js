@@ -9,7 +9,7 @@ import {
   SHINY_ICON_URL, BARON_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL,
   normalizeVariantUrl, padNumber,
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS, NO_BASE_FORM_NUMBERS,
-} from '../domain/constants.js?v=5';
+} from '../domain/constants.js?v=6';
 import { getVariantStatus } from '../domain/completion.js?v=3';
 import { addToSeen } from '../application/catches.js?v=2';
 import {
