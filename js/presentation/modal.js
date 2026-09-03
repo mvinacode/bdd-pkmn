@@ -13,7 +13,7 @@ import {
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances, fetchFormAppearances,
 } from '../supabase-client.js?v=8';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=213';
+import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=214';
 
 // Callbacks injectés par app.js pour éviter circulaire
 let _updateCardAfterCatch = null;

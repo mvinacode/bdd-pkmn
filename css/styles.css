@@ -2087,6 +2087,25 @@ body {
   line-height: 1.35;
 }
 
+/* Babimanta → Démanta : monter d'un niveau avec un Rémoraid dans l'équipe.
+   Vert d'eau du dos de Babimanta. */
+.evo-condition.is-remoraid {
+  color: #c3e7d5;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #c3e7d5, #518172, #f1ffed) border-box;
+  text-shadow: 0 0 10px rgba(195, 231, 213, 0.45);
+  white-space: normal;
+  text-align: center;
+  max-width: 10rem;
+  line-height: 1.35;
+}
+.evo-condition.is-remoraid .evo-partner-name {
+  color: #f1ffed;
+  font-weight: 600;
+}
+
 .evo-chain-regional-grid .evo-arrow .evo-condition {
   width: 100%;
   text-align: center;
@@ -2319,6 +2338,20 @@ body {
 .evo-condition-item.is-galanoa-band .evo-condition {
   color: #fd7b2c !important;
   text-shadow: 0 0 8px rgba(253,123,44,0.35);
+}
+
+/* Babimanta → Démanta : la condition porte le sprite de Rémoraid, elle passe
+   donc par la variante « avec icône » (.evo-condition-item). */
+.evo-condition-item.is-remoraid::before {
+  background: linear-gradient(135deg, #c3e7d5, #518172, #f1ffed) !important;
+}
+.evo-condition-item.is-remoraid .evo-condition {
+  color: #c3e7d5 !important;
+  text-shadow: 0 0 8px rgba(195, 231, 213, 0.4);
+}
+.evo-condition-item.is-remoraid .evo-partner-name {
+  color: #f1ffed;
+  font-weight: 600;
 }
 
 /* Portrait racine (Pokémon source d'une chaîne avec branches multiples) */

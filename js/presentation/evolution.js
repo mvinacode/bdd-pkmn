@@ -32,6 +32,10 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
   }
   if (itemImageUrl) {
     const isGalanoaBand = /(bracelet|couronne)\s+galanoa/i.test(condition);
+    // Babimanta → Démanta : la condition porte le sprite de Rémoraid, elle
+    // passe donc par cette branche. À exclure d'`isStone`, qui est ici le style
+    // « objet » par défaut et non un vrai test sur le mot « pierre ».
+    const isRemoraid    = /r[ée]moraid/i.test(condition);
     const isKingsRock   = /roche\s+royale/i.test(condition);
     const isTradeEvo    = /échange/i.test(condition) && !isKingsRock;
     const isTradeMetalCoat = isTradeEvo && /peau\s*m[ée]tal/i.test(condition);
@@ -41,7 +45,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isTradeMagmariseur = isTradeEvo && /magmariseur/i.test(condition);
     const isTradeAmeliorator = isTradeEvo && /am[ée]liorat/i.test(condition);
     const isTradeCdDouteux = isTradeEvo && /douteux/i.test(condition);
-    const isStone      = !bidirectional && !isGigamax && !isGalanoaBand;
+    const isStone      = !bidirectional && !isGigamax && !isGalanoaBand && !isRemoraid;
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
     const isStoneFire  = isStone && /feu/i.test(condition);
@@ -62,9 +66,11 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isDayItem    = /\bjour\b/i.test(condition) && !isOvalStone;
     const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isDayItem ? ' is-day-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isDayItem ? ' is-day-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isRemoraid ? ' is-remoraid' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
-      <span class="evo-condition ${textClass}">${esc(condition)}${inlineIcon}</span>
+      <span class="evo-condition ${textClass}">${isRemoraid
+        ? esc(condition).replace(/R[ée]moraid/i, '<span class="evo-partner-name">$&</span>')
+        : esc(condition)}${inlineIcon}</span>
     </div>`;
   } else if (condition) {
     const isNight     = condition.toLowerCase().includes('nuit');
@@ -80,7 +86,11 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isMultitoxikMove = /multitoxik/i.test(condition);
     const isGalanoaBand  = /(bracelet|couronne)\s+galanoa/i.test(condition);
     const isCritical  = /coup.{0,5}critique/i.test(condition);
-    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isRolloutMove && !isAncientPowerMove && !isCopieMove && !isCoupDoubleMove && !isDoubleLaserMove && !isHyperceuseMove && !isMultitoxikMove && !isGalanoaBand && !isCritical;
+    // Babimanta → Démanta sans icône : la condition ne commence pas par
+    // « Niv. », il faut donc l'exclure d'`isItem` pour qu'elle ne reçoive pas
+    // le style « objet ».
+    const isRemoraid  = /r[ée]moraid/i.test(condition);
+    const isItem      = condition && !condition.startsWith('Niv.') && !isNight && !isHappiness && !isRageMove && !isRolloutMove && !isAncientPowerMove && !isCopieMove && !isCoupDoubleMove && !isDoubleLaserMove && !isHyperceuseMove && !isMultitoxikMove && !isGalanoaBand && !isCritical && !isRemoraid;
     const isStone      = isItem && /pierre\s/i.test(condition);
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
@@ -112,10 +122,12 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
       ? esc(condition).replace(/Hyperceuse/i, '<span class="move-name">$&</span>')
       : isMultitoxikMove
       ? esc(condition).replace(/Multitoxik/i, '<span class="move-name">$&</span>')
+      : isRemoraid
+      ? esc(condition).replace(/R[ée]moraid/i, '<span class="evo-partner-name">$&</span>')
       : esc(condition);
     // Passe « sans capacité » à la ligne (virgule conservée) pour garder la pill compacte
     const conditionDisplay = conditionInner.replace(/,\s*(sans\s+capacit[ée]s?)/i, ',<br>$1');
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isHyperceuseMove ? ' is-hyperceuse-move' : ''}${isMultitoxikMove ? ' is-multitoxik-move' : ''}${isCritical ? ' is-critical' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isHyperceuseMove ? ' is-hyperceuse-move' : ''}${isMultitoxikMove ? ' is-multitoxik-move' : ''}${isCritical ? ' is-critical' : ''}${isRemoraid ? ' is-remoraid' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
   } else if (inlineIcon) {
     // Condition réduite à sa seule icône (aucun texte restant après extraction)
     conditionHtml = `<span class="evo-condition">${inlineIcon}</span>`;
