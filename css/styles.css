@@ -2017,8 +2017,10 @@ body {
   text-underline-offset: 2px;
 }
 
-/* Double Laser (Girafarig → Farigiraf) */
-.evo-condition.is-double-laser-move {
+/* Capacités Psy : Double Laser (Girafarig → Farigiraf) et Sprint Bouclier
+   (Cerfrousse → Cerbyllin) — même rose que le type Psy. */
+.evo-condition.is-double-laser-move,
+.evo-condition.is-sprint-bouclier-move {
   color: #fdeff3;
   border: 1px solid transparent;
   background:
@@ -2030,7 +2032,8 @@ body {
   max-width: 12rem;
   line-height: 1.3;
 }
-.evo-condition.is-double-laser-move .move-name {
+.evo-condition.is-double-laser-move .move-name,
+.evo-condition.is-sprint-bouclier-move .move-name {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -2352,6 +2355,21 @@ body {
 .evo-condition-item.is-remoraid .evo-partner-name {
   color: #f1ffed;
   font-weight: 600;
+}
+
+/* Cerfrousse → Cerbyllin : évolution par capacité Psy (Sprint Bouclier), mais
+   accompagnée de l'icône de maîtrise — elle passe donc par la variante
+   « avec icône ». Même rose que la pill Double Laser. */
+.evo-condition-item.is-sprint-bouclier-move::before {
+  background: linear-gradient(135deg, #ff8fb4, #ef3f7a, #a3264f) !important;
+}
+.evo-condition-item.is-sprint-bouclier-move .evo-condition {
+  color: #fdeff3 !important;
+  text-shadow: 0 0 10px rgba(239, 63, 122, 0.5);
+}
+.evo-condition-item.is-sprint-bouclier-move .move-name {
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* Portrait racine (Pokémon source d'une chaîne avec branches multiples) */
