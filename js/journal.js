@@ -4,8 +4,8 @@ import {
   fetchVariants, fetchMegaEvolutions, insertCatch, deleteCatch,
   updateCatchesBySession, deleteCatchesBySession,
   deleteSeenByVariantType, upsertSeen, fetchEvolutionLinks,
-} from './supabase-client.js';
-import { initAuth } from './auth.js';
+} from './supabase-client.js?v=8';
+import { initAuth } from './auth.js?v=2';
 import {
   SPECIAL_FORM_VT, SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS,
 } from './domain/constants.js?v=6';

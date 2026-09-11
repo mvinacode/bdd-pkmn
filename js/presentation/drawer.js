@@ -11,7 +11,7 @@ import {
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS, NO_BASE_FORM_NUMBERS,
 } from '../domain/constants.js?v=6';
 import { getVariantStatus } from '../domain/completion.js?v=3';
-import { addToSeen } from '../application/catches.js?v=2';
+import { addToSeen } from '../application/catches.js?v=3';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,

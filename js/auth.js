@@ -1,4 +1,4 @@
-import { getSupabaseClient } from './supabase-client.js';
+import { getSupabaseClient } from './supabase-client.js?v=8';
 import { USER_PREFS } from './config.js';
 
 export async function initAuth() {

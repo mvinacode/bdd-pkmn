@@ -7,7 +7,7 @@ import {
   padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
 } from '../domain/constants.js?v=6';
 import { getVariantStatus } from '../domain/completion.js?v=3';
-import { cycleVariantStatus } from '../application/catches.js?v=2';
+import { cycleVariantStatus } from '../application/catches.js?v=3';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
