@@ -6,7 +6,7 @@ import {
   GENDER_GROUPS, GENDER_VTS_FLAT,
   padNumber, normalizeVariantUrl, formatCatchDateShort, typeBadge,
 } from '../domain/constants.js?v=6';
-import { getAlolanSprite, getGalarianSprite, getHisuianSprite, getPaldeanSprite, getSpecialFormSprite } from '../domain/sprites.js';
+import { getAlolanSprite, getGalarianSprite, getHisuianSprite, getPaldeanSprite, getSpecialFormSprite } from '../domain/sprites.js?v=2';
 
 // Callback injecté par app.js pour éviter dépendance circulaire card ↔ modal
 let _openModal = null;
