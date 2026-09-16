@@ -4,9 +4,9 @@ import {
   upsertSeen, deleteSeenForm, deleteAllSeenForPokemon,
   fetchCatches, fetchSeen, fetchVariantMap, fetchSpecialFormsForNumbers,
   fetchRegionalBaronNumbers, fetchRegionalForms,
-} from '../supabase-client.js?v=8';
-import { getVariantStatus } from '../domain/completion.js?v=3';
-import { ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT } from '../domain/constants.js?v=6';
+} from '../supabase-client.js?v=9';
+import { getVariantStatus } from '../domain/completion.js?v=4';
+import { ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT } from '../domain/constants.js?v=7';
 
 export function updateCapturedCounter() {
   const el = document.getElementById('captured-count');

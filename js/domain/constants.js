@@ -93,38 +93,24 @@ export const SF_UNISEX_GROUPS   = new Set(['Zarbidex']);
 // Partenaire n'en fait pas partie : sa femelle a la queue en cœur.
 export const SF_NO_DIMORPHISM_GROUPS = new Set(['Segments']);
 
-export const ALOLA_FORM_VT = {
-  'Alola Mâle Shiny':    'alolan_shiny_male',
-  'Alola Femelle Shiny': 'alolan_shiny_female',
-  'Alola Shiny':         'alolan_shiny',
-  'Alola Asexué Shiny': 'alolan_shiny',
-  'Alola Mâle':          'alolan_male',
-  'Alola Femelle':       'alolan_female',
-  'Alola':               'alolan',
-  'Alola Asexué':       'alolan',
-};
+// Formes régionales Alola/Galar/Hisui/Paldea : même table form_label (enregistré
+// par le drawer) => variant_type, seuls le préfixe du libellé et celui du type changent.
+function regionalFormVt(label, region) {
+  return {
+    [`${label} Mâle Shiny`]:    `${region}_shiny_male`,
+    [`${label} Femelle Shiny`]: `${region}_shiny_female`,
+    [`${label} Shiny`]:         `${region}_shiny`,
+    [`${label} Asexué Shiny`]:  `${region}_shiny`,
+    [`${label} Mâle`]:          `${region}_male`,
+    [`${label} Femelle`]:       `${region}_female`,
+    [label]:                    region,
+    [`${label} Asexué`]:        region,
+  };
+}
 
-export const GALAR_FORM_VT = {
-  'Galar Mâle Shiny':    'galarian_shiny_male',
-  'Galar Femelle Shiny': 'galarian_shiny_female',
-  'Galar Shiny':         'galarian_shiny',
-  'Galar Asexué Shiny': 'galarian_shiny',
-  'Galar Mâle':          'galarian_male',
-  'Galar Femelle':       'galarian_female',
-  'Galar':               'galarian',
-  'Galar Asexué':       'galarian',
-};
-
-export const HISUI_FORM_VT = {
-  'Hisui Mâle Shiny':    'hisuian_shiny_male',
-  'Hisui Femelle Shiny': 'hisuian_shiny_female',
-  'Hisui Shiny':         'hisuian_shiny',
-  'Hisui Asexué Shiny': 'hisuian_shiny',
-  'Hisui Mâle':          'hisuian_male',
-  'Hisui Femelle':       'hisuian_female',
-  'Hisui':               'hisuian',
-  'Hisui Asexué':       'hisuian',
-};
+export const ALOLA_FORM_VT = regionalFormVt('Alola', 'alolan');
+export const GALAR_FORM_VT = regionalFormVt('Galar', 'galarian');
+export const HISUI_FORM_VT = regionalFormVt('Hisui', 'hisuian');
 
 // Races de Paldea (Tauros, exclusivement mâle). Clé = form_label enregistré par le
 // drawer (« {Race} Mâle [Shiny] ») => variant_type.
@@ -139,17 +125,8 @@ export const PALDEAN_FORM_VT = {
 
 // Forme régionale « Paldea » classique et GENRÉE (M/F), ex. Axoloto de Paldea
 // (region = 'paldean' exactement, pas une race de Tauros). Se comporte comme
-// Alola/Galar/Hisui. Clé = form_label enregistré par le drawer => variant_type.
-export const PALDEA_FORM_VT = {
-  'Paldea Mâle Shiny':    'paldean_shiny_male',
-  'Paldea Femelle Shiny': 'paldean_shiny_female',
-  'Paldea Shiny':         'paldean_shiny',
-  'Paldea Asexué Shiny':  'paldean_shiny',
-  'Paldea Mâle':          'paldean_male',
-  'Paldea Femelle':       'paldean_female',
-  'Paldea':               'paldean',
-  'Paldea Asexué':        'paldean',
-};
+// Alola/Galar/Hisui.
+export const PALDEA_FORM_VT = regionalFormVt('Paldea', 'paldean');
 
 export const VARIANT_STATUS_META = {
   '':      { label: 'Non vu',  cls: '' },

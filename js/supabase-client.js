@@ -291,7 +291,6 @@ export async function fetchRegionalBaronNumbers(pokemonNumbers) {
 
 /**
  * Récupère les formes régionales (Alola, Galar…) pour une liste de numéros.
- * Tente d'inclure evolution_into_number ; retombe sur la requête de base si la colonne n'existe pas.
  */
 export async function fetchRegionalForms(pokemonNumbers) {
   const client = getSupabaseClient();
@@ -300,13 +299,11 @@ export async function fetchRegionalForms(pokemonNumbers) {
     .from('pokemon_regional_forms')
     .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url, evolution_into_number, can_be_baron')
     .in('pokemon_number', pokemonNumbers);
-  if (!error) return data || [];
-  // Fallback si evolution_into_number n'existe pas encore en base
-  const { data: data2 } = await client
-    .from('pokemon_regional_forms')
-    .select('pokemon_number, name, region, artwork_url, shiny_artwork_url, description_fr, types, image_url, evolution_condition, evolution_item_image_url, can_be_baron')
-    .in('pokemon_number', pokemonNumbers);
-  return data2 || [];
+  if (error) {
+    console.error('[Supabase] Erreur fetchRegionalForms:', error.message);
+    return [];
+  }
+  return data || [];
 }
 
 /**

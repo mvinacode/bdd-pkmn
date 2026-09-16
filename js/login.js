@@ -1,4 +1,4 @@
-import { getSupabaseClient } from './supabase-client.js?v=8';
+import { getSupabaseClient } from './supabase-client.js?v=9';
 
 (async () => {
   const client = getSupabaseClient();

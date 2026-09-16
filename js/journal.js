@@ -4,15 +4,17 @@ import {
   fetchVariants, fetchMegaEvolutions, insertCatch, deleteCatch,
   updateCatchesBySession, deleteCatchesBySession,
   deleteSeenByVariantType, upsertSeen, fetchEvolutionLinks,
-} from './supabase-client.js?v=8';
-import { initAuth } from './auth.js?v=2';
+} from './supabase-client.js?v=9';
+import { initAuth } from './auth.js?v=3';
 import {
   SPECIAL_FORM_VT, SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS,
-} from './domain/constants.js?v=6';
+  SHINY_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL, BARON_ICON_URL,
+  ICON_MALE_LG, ICON_MALE_SM, ICON_FEMALE_LG, ICON_FEMALE_SM, ICON_UNISEX_LG, ICON_UNISEX_SM,
+  ICON_SHINY_SM, ICON_BARON_LG, ICON_BARON_XS, ICON_MEGA_LG, ICON_MEGA_SM, ICON_GMAX_LG, ICON_GMAX_SM,
+  padNumber,
+} from './domain/constants.js?v=7';
 
 const $ = id => document.getElementById(id);
-
-function padNumber(n) { return String(n).padStart(4, '0'); }
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -28,19 +30,15 @@ function formatMonthYear(dateStr) {
 
 // ── Icônes formes ─────────────────────────────────────────────
 
-const _SHINY_URL   = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779139479/shiny_abqivl.png';
-const _MEGA_URL    = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128811/mega_evolution_t9nlsa.svg';
-const _GIGAMAX_URL = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128704/gigantamax_yescyy.png';
-const _BARON_URL   = 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779139486/baron_jvi4lm.png';
 
 const S = 13;
 const _MALE_ICO    = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="${S}" height="${S}"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
 const _FEMALE_ICO  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="${S}" height="${S}"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
 const _NEUTRAL_ICO = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="${S}" height="${S}"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-const _SHINY_ICO   = `<img src="${_SHINY_URL}"   width="${S}" height="${S}" alt="Shiny"   style="vertical-align:middle">`;
-const _MEGA_ICO    = `<img src="${_MEGA_URL}"    width="${S}" height="${S}" alt="Méga"    style="vertical-align:middle">`;
-const _GIGAMAX_ICO = `<img src="${_GIGAMAX_URL}" width="${S}" height="${S}" alt="Gigamax" style="vertical-align:middle">`;
-const _BARON_ICO   = `<img src="${_BARON_URL}"   width="${S}" height="${S}" alt="Baron"   style="vertical-align:middle">`;
+const _SHINY_ICO   = `<img src="${SHINY_ICON_URL}"   width="${S}" height="${S}" alt="Shiny"   style="vertical-align:middle">`;
+const _MEGA_ICO    = `<img src="${MEGA_ICON_URL}"    width="${S}" height="${S}" alt="Méga"    style="vertical-align:middle">`;
+const _GIGAMAX_ICO = `<img src="${GIGAMAX_ICON_URL}" width="${S}" height="${S}" alt="Gigamax" style="vertical-align:middle">`;
+const _BARON_ICO   = `<img src="${BARON_ICON_URL}"   width="${S}" height="${S}" alt="Baron"   style="vertical-align:middle">`;
 
 function formLabelToIcons(label, isShiny) {
   if (!label || label === 'Normale') return isShiny ? _NEUTRAL_ICO + _SHINY_ICO : _NEUTRAL_ICO;
@@ -438,19 +436,6 @@ function setSectionCollapsed(section, collapsed) {
 // ── Entrées de formes (même logique que renderDrawerForms dans app.js) ────────
 
 function buildFormEntries(variants, megas, iconMap) {
-  const M26 = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const F26 = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const U26 = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const M20 = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const F20 = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const U20 = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SH20   = `<img src="${_SHINY_URL}"   width="20" height="20" alt="">`;
-  const BAR28  = `<img src="${_BARON_URL}"   width="28" height="28" alt="">`;
-  const BAR22  = `<img src="${_BARON_URL}"   width="22" height="22" alt="">`;
-  const MEGA28 = `<img src="${_MEGA_URL}"    width="28" height="28" alt="">`;
-  const MEGA22 = `<img src="${_MEGA_URL}"    width="22" height="22" alt="">`;
-  const GMAX28 = `<img src="${_GIGAMAX_URL}" width="28" height="28" alt="">`;
-  const GMAX22 = `<img src="${_GIGAMAX_URL}" width="22" height="22" alt="">`;
 
   const maleV      = variants.find(v => v.variant_type === 'male');
   const femaleV    = variants.find(v => v.variant_type === 'female');
@@ -458,14 +443,14 @@ function buildFormEntries(variants, megas, iconMap) {
   const gmaxShinyV = variants.find(v => v.variant_type === 'shiny_gigamax');
 
   const entries = [
-    { label: 'Mâle',          variant_type: 'male',         iconHtml: M26,            sprite: maleV?.image_url   || iconMap.normal || null },
-    { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: M20 + SH20,     sprite: iconMap.shiny  || null },
-    { label: 'Femelle',       variant_type: 'female',       iconHtml: F26,            sprite: femaleV?.image_url || iconMap.normal || null },
-    { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: F20 + SH20,     sprite: iconMap.shiny  || null },
-    { label: 'Asexué',       variant_type: 'normal',       iconHtml: U26,            sprite: iconMap.normal || null },
-    { label: 'Asexué Shiny', variant_type: 'shiny',        iconHtml: U20 + SH20,     sprite: iconMap.shiny  || null },
-    { label: 'Baron',         variant_type: 'baron',        iconHtml: BAR28,          sprite: iconMap.normal || null },
-    { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: BAR22 + SH20,   sprite: iconMap.normal || null },
+    { label: 'Mâle',          variant_type: 'male',         iconHtml: ICON_MALE_LG,            sprite: maleV?.image_url   || iconMap.normal || null },
+    { label: 'Mâle Shiny',    variant_type: 'shiny_male',   iconHtml: ICON_MALE_SM + ICON_SHINY_SM,     sprite: iconMap.shiny  || null },
+    { label: 'Femelle',       variant_type: 'female',       iconHtml: ICON_FEMALE_LG,            sprite: femaleV?.image_url || iconMap.normal || null },
+    { label: 'Femelle Shiny', variant_type: 'shiny_female', iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM,     sprite: iconMap.shiny  || null },
+    { label: 'Asexué',       variant_type: 'normal',       iconHtml: ICON_UNISEX_LG,            sprite: iconMap.normal || null },
+    { label: 'Asexué Shiny', variant_type: 'shiny',        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM,     sprite: iconMap.shiny  || null },
+    { label: 'Baron',         variant_type: 'baron',        iconHtml: ICON_BARON_LG,          sprite: iconMap.normal || null },
+    { label: 'Baron Shiny',   variant_type: 'shiny_baron',  iconHtml: ICON_BARON_XS + ICON_SHINY_SM,   sprite: iconMap.normal || null },
   ];
 
   const megasWithImg = megas.filter(m => m.image_url);
@@ -475,30 +460,21 @@ function buildFormEntries(variants, megas, iconMap) {
                     : m.name?.toLowerCase().includes(' y') ? 'mega_y' : 'mega';
       const vtShiny = vt === 'mega_x' ? 'shiny_mega_x' : vt === 'mega_y' ? 'shiny_mega_y' : 'shiny_mega';
       const label   = vt === 'mega_x' ? 'Méga-Évo. X' : vt === 'mega_y' ? 'Méga-Évo. Y' : 'Méga-Évolution';
-      entries.push({ label,                 variant_type: vt,      iconHtml: MEGA28,           sprite: m.image_url });
-      entries.push({ label: label+' Shiny', variant_type: vtShiny, iconHtml: MEGA22 + SH20,    sprite: null });
+      entries.push({ label,                 variant_type: vt,      iconHtml: ICON_MEGA_LG,           sprite: m.image_url });
+      entries.push({ label: label+' Shiny', variant_type: vtShiny, iconHtml: ICON_MEGA_SM + ICON_SHINY_SM,    sprite: null });
     }
   } else {
-    entries.push({ label: 'Méga-Évolution',       variant_type: 'mega',       iconHtml: MEGA28,        sprite: null });
-    entries.push({ label: 'Méga-Évolution Shiny', variant_type: 'shiny_mega', iconHtml: MEGA22 + SH20, sprite: null });
+    entries.push({ label: 'Méga-Évolution',       variant_type: 'mega',       iconHtml: ICON_MEGA_LG,        sprite: null });
+    entries.push({ label: 'Méga-Évolution Shiny', variant_type: 'shiny_mega', iconHtml: ICON_MEGA_SM + ICON_SHINY_SM, sprite: null });
   }
 
-  entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: GMAX28,        sprite: gmaxV?.image_url      || null });
-  entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: GMAX22 + SH20, sprite: gmaxShinyV?.image_url || null });
+  entries.push({ label: 'Gigamax',       variant_type: 'gigamax',       iconHtml: ICON_GMAX_LG,        sprite: gmaxV?.image_url      || null });
+  entries.push({ label: 'Gigamax Shiny', variant_type: 'shiny_gigamax', iconHtml: ICON_GMAX_SM + ICON_SHINY_SM, sprite: gmaxShinyV?.image_url || null });
 
   return entries;
 }
 
 function buildFormEntriesRegional(variants, iconMap, regionId) {
-  const M26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const F26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const U26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const M20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const F20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const U20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SH20  = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
-  const BAR28 = `<img src="${_BARON_URL}" width="28" height="28" alt="">`;
-  const BAR22 = `<img src="${_BARON_URL}" width="22" height="22" alt="">`;
 
   const regionLabel = { alolan: 'Alola', galarian: 'Galar', hisuian: 'Hisui', paldean: 'Paldea' }[regionId];
   const p = regionId;
@@ -513,35 +489,26 @@ function buildFormEntriesRegional(variants, iconMap, regionId) {
   const base      = vBase?.image_url  || iconMap.normal || null;
   const baseShiny = vShiny?.image_url || base;
   return [
-    { label: `${regionLabel} Mâle`,          displayLabel: 'Mâle',          variant_type: `${p}_male`,         iconHtml: M26,        sprite: vMale?.image_url      || base      },
-    { label: `${regionLabel} Mâle Shiny`,    displayLabel: 'Mâle Shiny',    variant_type: `${p}_shiny_male`,   iconHtml: M20 + SH20, sprite: vShinyMale?.image_url || baseShiny },
-    { label: `${regionLabel} Femelle`,       displayLabel: 'Femelle',       variant_type: `${p}_female`,       iconHtml: F26,        sprite: vFemale?.image_url    || base      },
-    { label: `${regionLabel} Femelle Shiny`, displayLabel: 'Femelle Shiny', variant_type: `${p}_shiny_female`, iconHtml: F20 + SH20, sprite: vShinyFem?.image_url  || baseShiny },
-    { label: `${regionLabel} Asexué`,       displayLabel: 'Asexué',       variant_type: p,                   iconHtml: U26,        sprite: base      },
-    { label: `${regionLabel} Asexué Shiny`, displayLabel: 'Asexué Shiny', variant_type: `${p}_shiny`,        iconHtml: U20 + SH20, sprite: baseShiny },
-    { label: `${regionLabel} Baron`,         displayLabel: 'Baron',         variant_type: 'baron',             iconHtml: BAR28,      sprite: base      },
-    { label: `${regionLabel} Baron Shiny`,   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',       iconHtml: BAR22+SH20, sprite: baseShiny },
+    { label: `${regionLabel} Mâle`,          displayLabel: 'Mâle',          variant_type: `${p}_male`,         iconHtml: ICON_MALE_LG,        sprite: vMale?.image_url      || base      },
+    { label: `${regionLabel} Mâle Shiny`,    displayLabel: 'Mâle Shiny',    variant_type: `${p}_shiny_male`,   iconHtml: ICON_MALE_SM + ICON_SHINY_SM, sprite: vShinyMale?.image_url || baseShiny },
+    { label: `${regionLabel} Femelle`,       displayLabel: 'Femelle',       variant_type: `${p}_female`,       iconHtml: ICON_FEMALE_LG,        sprite: vFemale?.image_url    || base      },
+    { label: `${regionLabel} Femelle Shiny`, displayLabel: 'Femelle Shiny', variant_type: `${p}_shiny_female`, iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM, sprite: vShinyFem?.image_url  || baseShiny },
+    { label: `${regionLabel} Asexué`,       displayLabel: 'Asexué',       variant_type: p,                   iconHtml: ICON_UNISEX_LG,        sprite: base      },
+    { label: `${regionLabel} Asexué Shiny`, displayLabel: 'Asexué Shiny', variant_type: `${p}_shiny`,        iconHtml: ICON_UNISEX_SM + ICON_SHINY_SM, sprite: baseShiny },
+    { label: `${regionLabel} Baron`,         displayLabel: 'Baron',         variant_type: 'baron',             iconHtml: ICON_BARON_LG,      sprite: base      },
+    { label: `${regionLabel} Baron Shiny`,   displayLabel: 'Baron Shiny',   variant_type: 'shiny_baron',       iconHtml: ICON_BARON_XS+ICON_SHINY_SM, sprite: baseShiny },
   ];
 }
 
 // Mêmes formes que renderDrawerFormsSpecial (drawer.js) : les deux grilles doivent
 // produire les mêmes `label`, sinon une session éditée ici perd ses formes.
 function buildFormEntriesSpecial(specialForm) {
-  const M26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const M20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const F26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const F20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const U26  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="26" height="26"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const U20  = `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="20" height="20"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  const SH20  = `<img src="${_SHINY_URL}" width="20" height="20" alt="">`;
-  const BAR28 = `<img src="${_BARON_URL}" width="28" height="28" alt="">`;
-  const BAR22 = `<img src="${_BARON_URL}" width="22" height="22" alt="">`;
 
   const isMale     = SF_MALE_GROUPS.has(specialForm.form_group);
   const isGendered = SF_GENDERED_GROUPS.has(specialForm.form_group);
   const isUnown    = SF_UNISEX_GROUPS.has(specialForm.form_group); // Zarbi : asexué + variante Baron
-  const ICON    = isUnown ? U26 : (isMale ? M26 : F26);
-  const ICON_SM = isUnown ? U20 : (isMale ? M20 : F20);
+  const ICON    = isUnown ? ICON_UNISEX_LG : (isMale ? ICON_MALE_LG : ICON_FEMALE_LG);
+  const ICON_SM = isUnown ? ICON_UNISEX_SM : (isMale ? ICON_MALE_SM : ICON_FEMALE_SM);
   const genderLabel = isUnown ? 'Asexué' : (isMale ? 'Mâle' : 'Femelle');
 
   const label       = specialForm.form_label_fr;
@@ -551,21 +518,21 @@ function buildFormEntriesSpecial(specialForm) {
   const spriteShiny = specialForm.image_url_shiny || specialForm.image_url || null;
 
   const entries = isGendered ? [
-    { label,                   displayLabel: 'Mâle',                variant_type: vt,                  iconHtml: M26,            sprite },
-    { label: label + ' Shiny', displayLabel: 'Mâle Shiny',          variant_type: vtShiny,             iconHtml: M20 + SH20,     sprite: spriteShiny },
-    { label,                   displayLabel: 'Femelle',             variant_type: vt      + '_female', iconHtml: F26,            sprite },
-    { label: label + ' Shiny', displayLabel: 'Femelle Shiny',       variant_type: vtShiny + '_female', iconHtml: F20 + SH20,     sprite: spriteShiny },
+    { label,                   displayLabel: 'Mâle',                variant_type: vt,                  iconHtml: ICON_MALE_LG,            sprite },
+    { label: label + ' Shiny', displayLabel: 'Mâle Shiny',          variant_type: vtShiny,             iconHtml: ICON_MALE_SM + ICON_SHINY_SM,     sprite: spriteShiny },
+    { label,                   displayLabel: 'Femelle',             variant_type: vt      + '_female', iconHtml: ICON_FEMALE_LG,            sprite },
+    { label: label + ' Shiny', displayLabel: 'Femelle Shiny',       variant_type: vtShiny + '_female', iconHtml: ICON_FEMALE_SM + ICON_SHINY_SM,     sprite: spriteShiny },
   ] : [
     { label,                   displayLabel: genderLabel,           variant_type: vt,                  iconHtml: ICON,           sprite },
-    { label: label + ' Shiny', displayLabel: genderLabel + ' Shiny', variant_type: vtShiny,            iconHtml: ICON_SM + SH20, sprite: spriteShiny },
+    { label: label + ' Shiny', displayLabel: genderLabel + ' Shiny', variant_type: vtShiny,            iconHtml: ICON_SM + ICON_SHINY_SM, sprite: spriteShiny },
   ];
 
   // Zarbi peut être Baron : variant_type générique comme pour les formes régionales,
   // c'est le libellé qui porte la lettre (« Forme A Baron »).
   if (isUnown) {
     entries.push(
-      { label: label + ' Baron',       displayLabel: 'Baron',       variant_type: 'baron',       iconHtml: BAR28,        sprite },
-      { label: label + ' Baron Shiny', displayLabel: 'Baron Shiny', variant_type: 'shiny_baron', iconHtml: BAR22 + SH20, sprite: spriteShiny },
+      { label: label + ' Baron',       displayLabel: 'Baron',       variant_type: 'baron',       iconHtml: ICON_BARON_LG,        sprite },
+      { label: label + ' Baron Shiny', displayLabel: 'Baron Shiny', variant_type: 'shiny_baron', iconHtml: ICON_BARON_XS + ICON_SHINY_SM, sprite: spriteShiny },
     );
   }
   return entries;
@@ -710,17 +677,7 @@ function buildEditModal() {
     // 2. Synchroniser les formes (diff ajout / suppression)
     if (_formEntries.length > 0) {
       const selectedEntries = selectedBtns.map(b => _formEntries[parseInt(b.dataset.idx)]);
-      // Normalise les labels "Asexué" stockés sous la forme courte (ex: 'Alola' → 'Alola Asexué')
-      const normLabel = l => {
-        if (l === 'Alola')       return 'Alola Asexué';
-        if (l === 'Alola Shiny') return 'Alola Asexué Shiny';
-        if (l === 'Galar')       return 'Galar Asexué';
-        if (l === 'Galar Shiny') return 'Galar Asexué Shiny';
-        if (l === 'Hisui')       return 'Hisui Asexué';
-        if (l === 'Hisui Shiny') return 'Hisui Asexué Shiny';
-        return l;
-      };
-      const origLabels = new Set(_editSessionForms.map(f => normLabel(f.form_label)));
+      const origLabels = new Set(_editSessionForms.map(f => f.form_label));
       const selLabels  = new Set(selectedEntries.map(e => e.label));
 
       // Mémoriser une référence avant les suppressions
@@ -728,7 +685,7 @@ function buildEditModal() {
 
       // Supprimer les formes désélectionnées
       for (const form of _editSessionForms) {
-        if (selLabels.has(normLabel(form.form_label))) continue;
+        if (selLabels.has(form.form_label)) continue;
         const rec = allCatches.find(c =>
           c && (c.session_id || String(c.id)) === _editSessionId && c.form_label === form.form_label
         );
@@ -867,12 +824,7 @@ async function loadModalFormGrid(session) {
     : buildFormEntries(variantData, megaData, iconMap);
   _editSessionForms = [...session.forms];
 
-  const normalizeLabel = l => {
-    if (l === 'Alola') return 'Alola Asexué';
-    if (l === 'Alola Shiny') return 'Alola Asexué Shiny';
-    return l;
-  };
-  const selectedLabels = new Set(session.forms.map(f => normalizeLabel(f.form_label)));
+  const selectedLabels = new Set(session.forms.map(f => f.form_label));
 
   formGrid.innerHTML = _formEntries.map((e, i) => `
     <button class="form-opt${selectedLabels.has(e.label) ? ' selected' : ''}" data-idx="${i}" title="${esc(e.label)}">

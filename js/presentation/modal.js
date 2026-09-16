@@ -5,15 +5,15 @@ import {
   VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEA_FORM_VT,
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_NO_DIMORPHISM_GROUPS, NO_BASE_FORM_NUMBERS,
   padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
-} from '../domain/constants.js?v=6';
-import { getVariantStatus } from '../domain/completion.js?v=3';
-import { cycleVariantStatus } from '../application/catches.js?v=3';
+} from '../domain/constants.js?v=7';
+import { getVariantStatus } from '../domain/completion.js?v=4';
+import { cycleVariantStatus } from '../application/catches.js?v=4';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances, fetchFormAppearances,
-} from '../supabase-client.js?v=8';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=217';
+} from '../supabase-client.js?v=9';
+import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=218';
 
 // Callbacks injectés par app.js pour éviter circulaire
 let _updateCardAfterCatch = null;

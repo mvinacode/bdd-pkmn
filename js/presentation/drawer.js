@@ -9,15 +9,15 @@ import {
   SHINY_ICON_URL, BARON_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL,
   normalizeVariantUrl, padNumber,
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS, NO_BASE_FORM_NUMBERS,
-} from '../domain/constants.js?v=6';
-import { getVariantStatus } from '../domain/completion.js?v=3';
-import { addToSeen } from '../application/catches.js?v=3';
+} from '../domain/constants.js?v=7';
+import { getVariantStatus } from '../domain/completion.js?v=4';
+import { addToSeen } from '../application/catches.js?v=4';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
   fetchHisuianVariantsForNumbers, fetchPaldeanFormsForNumbers, fetchSpecialFormsForNumbers,
   insertCatch, fetchVariantMap,
-} from '../supabase-client.js?v=8';
+} from '../supabase-client.js?v=9';
 
 // Libellé court d'une forme de Paldea à partir du nom complet : « … (Race Combative) »
 // => « Race Combative ». Pour la forme régionale simple (region === 'paldean', ex.

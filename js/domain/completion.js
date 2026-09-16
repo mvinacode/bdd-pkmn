@@ -1,51 +1,33 @@
 import { store } from '../store.js';
 
+// Formes appariées : une forme neutre et ses deux versions genrées se reflètent
+// quand l'une n'a pas de statut propre ('normal' ↔ 'male'/'female', 'alolan_shiny'
+// ↔ 'alolan_shiny_male'/'alolan_shiny_female'…), pour la forme de base et chaque
+// région. Le neutre renvoie au mâle puis à la femelle ; chaque sexe, au neutre.
+const PAIRED_FALLBACKS = new Map();
+for (const region of ['', 'alolan', 'galarian', 'hisuian', 'paldean']) {
+  const p = region ? `${region}_` : '';
+  for (const [neutral, male, female] of [
+    [region || 'normal', `${p}male`,       `${p}female`],
+    [`${p}shiny`,        `${p}shiny_male`, `${p}shiny_female`],
+  ]) {
+    PAIRED_FALLBACKS.set(neutral, [male, female]);
+    PAIRED_FALLBACKS.set(male,    [neutral]);
+    PAIRED_FALLBACKS.set(female,  [neutral]);
+  }
+}
+
 export function getVariantStatus(pokemonNumber, variantType) {
   if (!variantType) return '';   // garde-fou : un type absent ne doit jamais casser le rendu
   const direct = store.seenMap[pokemonNumber]?.[variantType]?.status;
   if (direct) return direct;
   const seen = store.seenMap[pokemonNumber];
   if (!seen) return '';
-  if (variantType === 'normal')
-    return seen['male']?.status || seen['female']?.status || '';
-  if (variantType === 'male' || variantType === 'female')
-    return seen['normal']?.status || '';
-  if (variantType === 'shiny')
-    return seen['shiny_male']?.status || seen['shiny_female']?.status || '';
-  if (variantType === 'shiny_male' || variantType === 'shiny_female')
-    return seen['shiny']?.status || '';
-  if (variantType === 'alolan')
-    return seen['alolan_male']?.status || seen['alolan_female']?.status || '';
-  if (variantType === 'alolan_male' || variantType === 'alolan_female')
-    return seen['alolan']?.status || '';
-  if (variantType === 'alolan_shiny')
-    return seen['alolan_shiny_male']?.status || seen['alolan_shiny_female']?.status || '';
-  if (variantType === 'alolan_shiny_male' || variantType === 'alolan_shiny_female')
-    return seen['alolan_shiny']?.status || '';
-  if (variantType === 'galarian')
-    return seen['galarian_male']?.status || seen['galarian_female']?.status || '';
-  if (variantType === 'galarian_male' || variantType === 'galarian_female')
-    return seen['galarian']?.status || '';
-  if (variantType === 'galarian_shiny')
-    return seen['galarian_shiny_male']?.status || seen['galarian_shiny_female']?.status || '';
-  if (variantType === 'galarian_shiny_male' || variantType === 'galarian_shiny_female')
-    return seen['galarian_shiny']?.status || '';
-  if (variantType === 'hisuian')
-    return seen['hisuian_male']?.status || seen['hisuian_female']?.status || '';
-  if (variantType === 'hisuian_male' || variantType === 'hisuian_female')
-    return seen['hisuian']?.status || '';
-  if (variantType === 'hisuian_shiny')
-    return seen['hisuian_shiny_male']?.status || seen['hisuian_shiny_female']?.status || '';
-  if (variantType === 'hisuian_shiny_male' || variantType === 'hisuian_shiny_female')
-    return seen['hisuian_shiny']?.status || '';
-  if (variantType === 'paldean')
-    return seen['paldean_male']?.status || seen['paldean_female']?.status || '';
-  if (variantType === 'paldean_male' || variantType === 'paldean_female')
-    return seen['paldean']?.status || '';
-  if (variantType === 'paldean_shiny')
-    return seen['paldean_shiny_male']?.status || seen['paldean_shiny_female']?.status || '';
-  if (variantType === 'paldean_shiny_male' || variantType === 'paldean_shiny_female')
-    return seen['paldean_shiny']?.status || '';
+  const fallbacks = PAIRED_FALLBACKS.get(variantType);
+  if (fallbacks) {
+    for (const vt of fallbacks) if (seen[vt]?.status) return seen[vt].status;
+    return '';
+  }
   // Formes spéciales genrées (Pikachu Partenaire, Deusolourdo…) : le tiroir
   // enregistre « <form_key>[_shiny] » pour le mâle et le même type suffixé
   // « _female » pour la femelle. Chaque carte reflète donc son homologue quand
