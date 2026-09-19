@@ -282,6 +282,35 @@ export function buildEvolutionHtml(tree, currentNumber, megasByNumber = {}, icon
           const childPortrait = evoPortrait(soleChild.node, soleChild.node.number === currentNumber, childIconUrl);
           const gcIconUrl    = iconByNumber[grandChild.node.number] || null;
           const gcPortrait   = evoPortrait(grandChild.node, grandChild.node.number === currentNumber, gcIconUrl);
+          const gcArrow      = evoArrow(grandChild.node.evolution_condition || '', grandChild.node.evolution_item_image_url || null);
+          // Variante où la chaîne régionale démarre dès la RACINE (ex. Zigzaton
+          // de Galar → Linéon de Galar → Ixon) : la racine a elle aussi des formes
+          // régionales, que la disposition à deux branches ci-dessous laisserait
+          // de côté. On passe alors à la grille 5 colonnes, une ligne par région ;
+          // seule la ligne régionale atteint le petit-enfant.
+          if (regionals.length > 0) {
+            const EMPTY_CELL = '<div></div>';
+            const baseRow = [
+              `<div class="evo-stage">${portrait}</div>`,
+              evoArrow(condition, soleChild.node.evolution_item_image_url || null),
+              `<div class="evo-stage">${childPortrait}</div>`,
+              EMPTY_CELL, EMPTY_CELL,
+            ].join('');
+            const regionalRows = regionals.map(r => {
+              const matchingNext = childRegionals.find(nr => nr.region === r.region);
+              const reachesGc    = matchingNext?.evolution_into_number === grandChild.node.number;
+              const arrowCond    = r.evolution_condition || matchingNext?.evolution_condition || condition;
+              const arrowItemImg = r.evolution_item_image_url || matchingNext?.evolution_item_image_url || null;
+              return [
+                `<div class="evo-stage">${evoRegionalPortrait(r)}</div>`,
+                evoArrow(arrowCond, arrowItemImg),
+                `<div class="evo-stage">${matchingNext ? evoRegionalPortrait(matchingNext) : ''}</div>`,
+                reachesGc ? gcArrow : EMPTY_CELL,
+                reachesGc ? `<div class="evo-stage">${gcPortrait}</div>` : EMPTY_CELL,
+              ].join('');
+            }).join('');
+            return `<div class="evo-chain-regional-grid evo-chain-regional-grid--3stage">${baseRow}${regionalRows}</div>`;
+          }
           const normalBranch = `<div class="evo-branch-item">${evoArrow(condition, soleChild.node.evolution_item_image_url || null)}<div class="evo-stage">${childPortrait}</div></div>`;
           // Chaîne régionale (forme régionale → petit-enfant) regroupée dans une
           // seule cellule pour que la grille « alignée » empile les deux pills de
