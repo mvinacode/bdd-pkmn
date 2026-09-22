@@ -1,5 +1,5 @@
 import { esc } from '../utils.js';
-import { normalizeVariantUrl, getImageUrl, padNumber, toRoman, typeBadge } from '../domain/constants.js?v=7';
+import { normalizeVariantUrl, getImageUrl, padNumber, toRoman, typeBadge, MALE_SVG } from '../domain/constants.js?v=7';
 import { MEGA_ICON_URL, GIGAMAX_ICON_URL } from '../domain/constants.js?v=7';
 
 export function collectTreeNumbers(tree) {
@@ -18,6 +18,11 @@ export function evoPortrait(node, isCurrent, iconUrl = null, extraClass = '') {
       <span class="evo-number">#${esc(padNumber(node.number))}</span>
     </button>`;
 }
+
+// Symbole de genre d'une condition (Kirlia → Gallame : « ♂ + Pierre Aube ») :
+// remplacé par l'icône mâle de la section « Formes » (MALE_SVG, tracée en
+// `currentColor`), que la pill colore en bleu.
+const markMale = html => html.replace(/♂/g, () => `<span class="evo-gender-male">${MALE_SVG}</span>`);
 
 export function evoArrow(condition = '', itemImageUrl = null, bidirectional = false, isGigamax = false, orientation = 'right') {
   let conditionHtml = '';
@@ -58,6 +63,8 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isStoneSun   = isStone && /soleil/i.test(condition);
     const isStoneWater = isStone && /\beau\b/i.test(condition);
     const isStoneShiny = isStone && /éclat/i.test(condition);
+    // Pierre Aube (Kirlia → Gallame) : turquoise, identité propre parmi les pierres.
+    const isStoneDawn  = isStone && /pierre\s+aube/i.test(condition);
     // « Pierre Nuit » a son identité violette propre ; une condition de nuit qui
     // mentionne un tout autre objet (Croc Rasoir de Scorvol) doit au contraire
     // recevoir les bleus nocturnes de .evo-condition.is-night.
@@ -71,15 +78,15 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isDayItem    = /\bjour\b/i.test(condition) && !isOvalStone;
     const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isDayItem ? ' is-day-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isRemoraid ? ' is-remoraid' : ''}${isSprintBouclierMove ? ' is-sprint-bouclier-move' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneDawn ? ' is-stone-dawn' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isDayItem ? ' is-day-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isRemoraid ? ' is-remoraid' : ''}${isSprintBouclierMove ? ' is-sprint-bouclier-move' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
-      <span class="evo-condition ${textClass}">${isRemoraid
+      <span class="evo-condition ${textClass}">${markMale(isRemoraid
         ? esc(condition).replace(/R[ée]moraid/i, '<span class="evo-partner-name">$&</span>')
         : isSprintBouclierMove
         ? esc(condition)
             .replace(/Sprint\s+Bouclier/i, '<span class="move-name">$&</span>')
             .replace(/,\s*(Style\s+Rapide)/i, ',<br>$1')
-        : esc(condition)}${inlineIcon}</span>
+        : esc(condition))}${inlineIcon}</span>
     </div>`;
   } else if (condition) {
     const isNight     = condition.toLowerCase().includes('nuit');
@@ -97,6 +104,9 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isSprintBouclierMove = /sprint\s+bouclier/i.test(condition);
     const isGalanoaBand  = /(bracelet|couronne)\s+galanoa/i.test(condition);
     const isCritical  = /coup.{0,5}critique/i.test(condition);
+    // Chenipotte → Armulys / Blindalys : l'issue dépend de la valeur interne du
+    // Pokémon, invisible en jeu. Pill à bordure dégradée sur quatre pastels.
+    const isPersonality = /valeur\s+interne/i.test(condition);
     // Babimanta → Démanta sans icône : la condition ne commence pas par
     // « Niv. », il faut donc l'exclure d'`isItem` pour qu'elle ne reçoive pas
     // le style « objet ».
@@ -142,8 +152,9 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     // pour garder la pill compacte
     const conditionDisplay = conditionInner
       .replace(/,\s*(sans\s+capacit[ée]s?)/i, ',<br>$1')
-      .replace(/,\s*(style\s+rapide)/i, ',<br>$1');
-    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isHyperceuseMove ? ' is-hyperceuse-move' : ''}${isMultitoxikMove ? ' is-multitoxik-move' : ''}${isSprintBouclierMove ? ' is-sprint-bouclier-move' : ''}${isCritical ? ' is-critical' : ''}${isRemoraid ? ' is-remoraid' : ''}"><span class="evo-cond-body">${conditionDisplay}${inlineIcon}</span></span>`;
+      .replace(/,\s*(style\s+rapide)/i, ',<br>$1')
+      .replace(/(valeur)\s+(interne)/i, '$1<br>$2');
+    conditionHtml = `<span class="evo-condition${isItem ? ' is-item' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur ? ' is-trade' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isNight ? ' is-night' : ''}${isHappiness ? ' is-happiness' : ''}${isDay ? ' is-day' : ''}${isRageMove ? ' is-rage-move' : ''}${isRolloutMove ? ' is-rollout-move' : ''}${isAncientPowerMove ? ' is-ancient-power-move' : ''}${isCopieMove ? ' is-copie-move' : ''}${isCoupDoubleMove ? ' is-coup-double-move' : ''}${isDoubleLaserMove ? ' is-double-laser-move' : ''}${isHyperceuseMove ? ' is-hyperceuse-move' : ''}${isMultitoxikMove ? ' is-multitoxik-move' : ''}${isSprintBouclierMove ? ' is-sprint-bouclier-move' : ''}${isCritical ? ' is-critical' : ''}${isRemoraid ? ' is-remoraid' : ''}${isPersonality ? ' is-personality' : ''}"><span class="evo-cond-body">${markMale(conditionDisplay)}${inlineIcon}</span></span>`;
   } else if (inlineIcon) {
     // Condition réduite à sa seule icône (aucun texte restant après extraction)
     conditionHtml = `<span class="evo-condition">${inlineIcon}</span>`;

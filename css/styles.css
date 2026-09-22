@@ -1871,6 +1871,16 @@ body {
   color: var(--text-primary);
 }
 
+/* Chenipotte → Armulys / Blindalys : l'issue dépend de la valeur interne du
+   Pokémon. Bordure dégradée sur quatre pastels pour évoquer le tirage, texte blanc. */
+.evo-condition.is-personality {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+    linear-gradient(135deg, #ff9999, #9999ff, #99ff99, #ffff99) border-box;
+  color: #ffffff;
+}
+
 .evo-condition.is-night {
   position: relative;
   background: rgba(22, 35, 55, 0.75);
@@ -2520,6 +2530,33 @@ body {
   background: linear-gradient(135deg, #647045, #789d50, #fafdd6, #ffffff);
 }
 
+/* Pierre Aube (Kirlia → Gallame) : turquoise, la seule pierre dont la condition
+   porte aussi un symbole de genre. */
+.evo-condition-item.is-stone-dawn::before {
+  background: linear-gradient(135deg, #10c8c0, #167c7c, #befbf7);
+}
+.evo-condition-item.is-stone-dawn .evo-condition {
+  color: #cefbf8;
+  text-shadow: 0 0 8px rgba(16, 200, 192, 0.45);
+}
+.evo-condition-item.is-stone-dawn.evo-condition--unseen::before,
+.evo-condition-item.is-stone-dawn.evo-condition--seen::before {
+  background: linear-gradient(135deg, #10c8c0, #167c7c, #befbf7);
+}
+
+/* Symbole ♂ d'une condition de genre : on réutilise l'icône mâle de la section
+   « Formes » (MALE_SVG), tracée en `currentColor`, et on la peint du bleu mâle
+   du projet plutôt que du blanc qu'elle prend dans la modale. */
+.evo-gender-male {
+  color: #5b9bd5;
+  display: inline-flex;
+  vertical-align: -0.24em;
+}
+.evo-gender-male svg {
+  width: 1.2em;
+  height: 1.2em;
+}
+
 /* Pierre Nuit (Cornèbre → Corboss) */
 /* Évolution nocturne tenant un objet (Scorplane → Scorvol, Croc Rasoir) : reprend
    le fond, la bordure et la lune de .evo-condition.is-night, qui ne couvre que les
@@ -2776,6 +2813,19 @@ body {
   flex-direction: column;
   gap: 6px;
   align-items: flex-start;
+}
+
+/* Fourche mixte : une pill « objet » fait 200px (largeur fixe), une pill de
+   texte seul prend sa largeur naturelle. Quand les deux cohabitent dans la même
+   fourche (Kirlia : « Niv. 30 » au-dessus de « ♂ + Pierre Aube »), on aligne la
+   seconde sur la première pour que les pills se superposent exactement.
+   Le `:has()` ne regarde que les pills SŒURS (combinateur enfant) : sans lui,
+   une pill d'objet nichée plus bas dans la branche (Méga) déclencherait la
+   règle et étirerait des pills de fourches qui n'ont rien à aligner. */
+.evo-branches:has(> .evo-branch-item > .evo-arrow > .evo-condition-item) > .evo-branch-item > .evo-arrow > .evo-condition {
+  width: 200px;
+  text-align: center;
+  box-sizing: border-box;
 }
 
 /* Éventail (ex. Évoli → ses évolitions) : grille — rangée 1 = base étirée sur
