@@ -46,6 +46,9 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     // pills de capacité sans objet. À exclure d'`isStone` pour la même raison
     // que Rémoraid.
     const isSprintBouclierMove = /sprint\s+bouclier/i.test(condition);
+    // Ningale → Munja : l'icône est une Poké Ball (à avoir dans l'inventaire),
+    // pas un objet d'évolution. À exclure d'`isStone` pour la même raison.
+    const isShedinja    = /emplacement\s+libre/i.test(condition);
     const isKingsRock   = /roche\s+royale/i.test(condition);
     const isTradeEvo    = /échange/i.test(condition) && !isKingsRock;
     const isTradeMetalCoat = isTradeEvo && /peau\s*m[ée]tal/i.test(condition);
@@ -55,7 +58,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isTradeMagmariseur = isTradeEvo && /magmariseur/i.test(condition);
     const isTradeAmeliorator = isTradeEvo && /am[ée]liorat/i.test(condition);
     const isTradeCdDouteux = isTradeEvo && /douteux/i.test(condition);
-    const isStone      = !bidirectional && !isGigamax && !isGalanoaBand && !isRemoraid && !isSprintBouclierMove;
+    const isStone      = !bidirectional && !isGigamax && !isGalanoaBand && !isRemoraid && !isSprintBouclierMove && !isShedinja;
     const isStoneIce   = isStone && /glace/i.test(condition);
     const isStoneMoon  = isStone && /lune/i.test(condition);
     const isStoneFire  = isStone && /feu/i.test(condition);
@@ -78,7 +81,7 @@ export function evoArrow(condition = '', itemImageUrl = null, bidirectional = fa
     const isDayItem    = /\bjour\b/i.test(condition) && !isOvalStone;
     const isObsidienne = /obsidienne/i.test(condition);
     const textClass = (bidirectional || isGigamax) ? 'is-mega' : 'is-item';
-    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneDawn ? ' is-stone-dawn' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isDayItem ? ' is-day-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isRemoraid ? ' is-remoraid' : ''}${isSprintBouclierMove ? ' is-sprint-bouclier-move' : ''}">
+    conditionHtml = `<div class="evo-condition-item${isGigamax ? ' is-gigamax' : ''}${isStone ? ' is-stone' : ''}${isStoneIce ? ' is-stone-ice' : ''}${isStoneMoon ? ' is-stone-moon' : ''}${isStoneFire ? ' is-stone-fire' : ''}${isStoneLeaf ? ' is-stone-leaf' : ''}${isStoneSun ? ' is-stone-sun' : ''}${isStoneWater ? ' is-stone-water' : ''}${isStoneShiny ? ' is-stone-shiny' : ''}${isStoneDawn ? ' is-stone-dawn' : ''}${isStoneNight ? ' is-stone-night' : ''}${isNightItem ? ' is-night-item' : ''}${isDayItem ? ' is-day-item' : ''}${isOvalStone ? ' is-oval-stone' : ''}${isObsidienne ? ' is-obsidienne' : ''}${isKingsRock ? ' is-kings-rock' : ''}${isTradeEvo && !isTradeMetalCoat && !isTradeProtector && !isTradeDracoScale && !isTradeElectriseur && !isTradeMagmariseur && !isTradeAmeliorator && !isTradeCdDouteux ? ' is-trade' : ''}${isTradeMetalCoat ? ' is-trade-metal-coat' : ''}${isTradeProtector ? ' is-trade-protector' : ''}${isTradeDracoScale ? ' is-trade-draco-scale' : ''}${isTradeElectriseur ? ' is-trade-electriseur' : ''}${isTradeMagmariseur ? ' is-trade-magmariseur' : ''}${isTradeAmeliorator ? ' is-trade-ameliorator' : ''}${isTradeCdDouteux ? ' is-trade-cd-douteux' : ''}${isGalanoaBand ? ' is-galanoa-band' : ''}${isRemoraid ? ' is-remoraid' : ''}${isSprintBouclierMove ? ' is-sprint-bouclier-move' : ''}${isShedinja ? ' is-shedinja' : ''}">
       <img src="${esc(itemImageUrl)}" alt="${esc(condition)}" class="evo-item-img">
       <span class="evo-condition ${textClass}">${markMale(isRemoraid
         ? esc(condition).replace(/R[ée]moraid/i, '<span class="evo-partner-name">$&</span>')

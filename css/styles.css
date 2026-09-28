@@ -2367,6 +2367,17 @@ body {
   font-weight: 600;
 }
 
+/* Ningale → Munja : la condition porte l'icône de Poké Ball, elle passe donc
+   par la variante « avec icône ». Dégradé mue d'insecte, texte blanc. */
+.evo-condition-item.is-shedinja::before {
+  background: linear-gradient(135deg, #edd195, #b2936b, #c4b4aa) !important;
+}
+.evo-condition-item.is-shedinja .evo-condition {
+  color: #ffffff !important;
+  /* Condition longue : réduite pour tenir sur 3-4 lignes */
+  font-size: 0.72rem;
+}
+
 /* Cerfrousse → Cerbyllin : évolution par capacité Psy (Sprint Bouclier), mais
    accompagnée de l'icône de maîtrise — elle passe donc par la variante
    « avec icône ». Même rose que la pill Double Laser. */
