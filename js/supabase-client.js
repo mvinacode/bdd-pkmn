@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { CONFIG, isSupabaseConfigured } from './config.js';
+import { fetchAllRows } from './fetch-all-rows.js';
 
 let _supabase = null;
 
@@ -368,10 +369,11 @@ export async function fetchGigamaxForChain(pokemonNumbers) {
 export async function fetchVariantMap(pokemonNumbers) {
   const client = getSupabaseClient();
   if (!client || !pokemonNumbers.length) return {};
-  const { data } = await client
+  const { data } = await fetchAllRows(() => client
     .from('pokemon_variants')
     .select('pokemon_number, variant_type, image_url')
-    .in('pokemon_number', pokemonNumbers);
+    .in('pokemon_number', pokemonNumbers)
+    .order('id'));
   const map = {};
   for (const r of data || []) {
     if (!map[r.pokemon_number]) map[r.pokemon_number] = {};
@@ -414,13 +416,14 @@ export async function fetchForms(pokemonNumber) {
 export async function fetchCatches(ownerUuid) {
   const client = getSupabaseClient();
   if (!client) return { data: [], error: { message: 'Supabase non configuré' } };
-  const { data, error } = await client
+  const { data, error } = await fetchAllRows(() => client
     .from('catches')
     .select('*')
     .eq('owner_uuid', ownerUuid)
     .order('caught_at', { ascending: false })
-    .order('created_at', { ascending: false });
-  return { data: data || [], error };
+    .order('created_at', { ascending: false })
+    .order('id'));
+  return { data, error };
 }
 
 /**
@@ -429,9 +432,10 @@ export async function fetchCatches(ownerUuid) {
 export async function fetchSeen(ownerUuid) {
   const client = getSupabaseClient();
   if (!client) return { data: [], error: null };
-  const { data, error } = await client.from('pokemon_seen').select('*').eq('owner_uuid', ownerUuid);
+  const { data, error } = await fetchAllRows(() =>
+    client.from('pokemon_seen').select('*').eq('owner_uuid', ownerUuid).order('id'));
   if (error) console.error('[Supabase] Erreur fetchSeen:', error.message);
-  return { data: data || [], error };
+  return { data, error };
 }
 
 /**
@@ -564,9 +568,10 @@ export async function fetchSpecialFormsByNumber(pokemonNumber) {
 export async function fetchEvolutionLinks() {
   const client = getSupabaseClient();
   if (!client) return [];
-  const { data, error } = await client.from('pokemon').select('number, evolves_from_number');
+  const { data, error } = await fetchAllRows(() =>
+    client.from('pokemon').select('number, evolves_from_number').order('number'));
   if (error) { console.error('[Supabase] Erreur fetchEvolutionLinks:', error.message); return []; }
-  return data || [];
+  return data;
 }
 
 /**
@@ -575,7 +580,8 @@ export async function fetchEvolutionLinks() {
 export async function fetchTypes() {
   const client = getSupabaseClient();
   if (!client) return [];
-  const { data, error } = await client.from('pokemon_types').select('type_name').order('type_name');
+  const { data, error } = await fetchAllRows(() =>
+    client.from('pokemon_types').select('type_name').order('type_name').order('pokemon_id').order('slot'));
   if (error) return [];
-  return [...new Set((data || []).map(r => r.type_name))];
+  return [...new Set(data.map(r => r.type_name))];
 }
