@@ -1,4 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+// URL complète (version figée) et non « @supabase/supabase-js » : GitHub Pages
+// sert aussi le code source tel quel, où un nom de paquet nu ne se résout pas.
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/+esm';
 import { CONFIG, isSupabaseConfigured } from './config.js';
 import { fetchAllRows } from './fetch-all-rows.js';
 
