@@ -1,3 +1,5 @@
+import { store } from './store.js';
+
 export const BALLS = [
   { name: 'Poké Ball',    slug: 'poke-ball', customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779138950/poke_ball_gdlzec.png' },
   { name: 'Super Ball',   slug: 'great-ball',   customUrl: 'https://res.cloudinary.com/dkgfa4apm/image/upload/v1779544047/super_ball_hljkjm.png' },
@@ -52,7 +54,7 @@ export function spriteUrl(number, shiny) {
 }
 
 export function getOwnerUuid() {
-  return window._ownerUuid || null;
+  return store.ownerUuid;
 }
 
 export const GAMES = [

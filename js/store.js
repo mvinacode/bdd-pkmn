@@ -1,5 +1,9 @@
 // État mutable partagé de l'application — source de vérité unique
 export const store = {
+  // Session (remplis par auth.js)
+  ownerUuid: null,
+  prefs:     { genderFormsMode: 'none', strictComplete: false, requireAllFormsForComplete: false },
+
   // Collection
   catchByNumber:    {},
   shinyCatchByNumber: {},

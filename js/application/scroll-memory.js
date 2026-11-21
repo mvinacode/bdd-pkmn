@@ -5,7 +5,7 @@ import { debounce } from '../domain/constants.js';
 // plutôt qu'une position en pixels : avec le scroll infini et le chargement
 // différé des images, les pixels ne sont pas fiables.
 
-const storageKey = () => `pkmn-scroll-anchor:${window._ownerUuid || 'anon'}`;
+const storageKey = () => `pkmn-scroll-anchor:${store.ownerUuid || 'anon'}`;
 
 // Désactivé tant que la restauration n'est pas finie, pour que le passage
 // programmatique en haut de page n'écrase pas l'ancre sauvegardée.
