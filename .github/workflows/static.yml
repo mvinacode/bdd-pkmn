@@ -36,6 +36,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
+      # Même npm majeur qu'en local : npm 10 et 11 ne gèrent pas pareil les
+      # dépendances optionnelles WebAssembly de rolldown dans le lock.
+      - name: Use npm 11
+        run: npm install -g npm@11
       - name: Install dependencies
         run: npm ci
       # Un lint ou un test en échec bloque la mise en ligne.
