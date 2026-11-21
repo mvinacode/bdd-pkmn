@@ -1,0 +1,3 @@
+# Références de test comparées octet par octet : fins de ligne Unix partout
+tests/modal/__golden__/** text eol=lf
+tests/modal/fixtures/** text eol=lf
