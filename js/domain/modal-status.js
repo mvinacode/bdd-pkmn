@@ -1,7 +1,7 @@
 // Règles d'état (vu / obtenu) de la fiche Pokémon : coloration des illustrations
-// et des portraits de la chaîne d'évolution. Fonctions pures, reprises telles
-// quelles de l'ancien openModal (presentation/modal.js), particularités comprises.
-import { ALOLA_FORM_VT, GALAR_FORM_VT, PALDEA_FORM_VT, SPECIAL_FORM_VT } from './constants.js';
+// et des portraits de la chaîne d'évolution. Fonctions pures.
+import { formLabelToVariantType } from './form-labels.js';
+import { NO_BASE_FORM_NUMBERS } from './constants.js';
 
 /**
  * État d'une forme (méga, gigamax, régionale…) d'un Pokémon de la chaîne d'évolution.
@@ -20,34 +20,36 @@ export function evoFormStatus(seenForms, latestCatch, formType) {
   return 'unseen';
 }
 
-// Formes comptées pour l'illustration de base : ni shiny-ness ni région Alola,
-// Galar ou Paldéa (Hisui n'est pas exclu, comme dans l'ancien code).
-const isBaseLike = vt => !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean');
+// Variantes de la forme de base. Chaque autre forme (régionale, méga, gigamax,
+// baron, spéciale…) a sa propre illustration et ne colore jamais celle de base.
+const BASE_VARIANTS = new Set(['normal', 'asexue', 'male', 'female']);
+const BASE_SHINY_VARIANTS = new Set(['shiny', 'asexue_shiny', 'shiny_male', 'shiny_female']);
+const isBaseVariant = vt => BASE_VARIANTS.has(vt) || BASE_SHINY_VARIANTS.has(vt);
 
-/**
- * Est-ce que la capture la plus récente est une capture de la forme de base ?
- * (Hisui n'est pas exclu, comme dans l'ancien code.)
- */
+// Capture de la forme de base : libellé « Normale », « Mâle Shiny », « Asexué »…
+// Une ancienne capture sans libellé compte aussi comme forme de base.
 function isBaseCatch(c) {
-  return !!c && !ALOLA_FORM_VT[c.form_label] && !GALAR_FORM_VT[c.form_label] && !PALDEA_FORM_VT[c.form_label]
-    && !SPECIAL_FORM_VT[c.form_label] && !/^(Méga|Gigamax|Baron)/.test(c.form_label || '');
+  if (!c) return false;
+  return !c.form_label || isBaseVariant(formLabelToVariantType(c.form_label));
 }
 
 /**
  * État des deux illustrations (normale, shiny) d'une colonne de la fiche.
  * @param {object} seenForms   { [variant_type]: { status } } du Pokémon affiché
  * @param {object|null} latestCatch
- * @param {{ kind: 'base'|'mega'|'gigamax'|'regional'|'special', region?: string, sfKey?: string }} column
+ * @param {{ kind: 'base'|'mega'|'gigamax'|'regional'|'special', region?: string, sfKey?: string,
+ *           pokemonNumber?: number }} column  pokemonNumber : requis pour la colonne de base
  * @returns {{ ownedNormal: boolean, seenNormal: boolean, ownedShiny: boolean, seenShiny: boolean }}
  */
 export function artworkStatus(seenForms, latestCatch, column) {
   const entries = Object.entries(seenForms || {});
   const any = (match, shiny, status) =>
     entries.some(([vt, d]) => match(vt) && vt.includes('shiny') === shiny && d.status === status);
-  const byMatch = match => ({
-    ownedNormal: any(match, false, 'owned'),
+  // `catchCounts` : une capture (quelle que soit sa forme) vaut « obtenu ».
+  const byMatch = (match, catchCounts = null) => ({
+    ownedNormal: (!!catchCounts && !catchCounts.is_shiny) || any(match, false, 'owned'),
     seenNormal:  any(match, false, 'seen'),
-    ownedShiny:  any(match, true, 'owned'),
+    ownedShiny:  (!!catchCounts && !!catchCounts.is_shiny) || any(match, true, 'owned'),
     seenShiny:   any(match, true, 'seen'),
   });
 
@@ -72,6 +74,10 @@ export function artworkStatus(seenForms, latestCatch, column) {
       }
       return baseArtworkStatus(entries, latestCatch);
     default:
+      // Zarbi, Deusolourdo… : pas de forme « nue », chaque individu est une forme
+      // nommée. Leur illustration principale représente l'espèce et reflète donc
+      // n'importe laquelle de leurs formes.
+      if (NO_BASE_FORM_NUMBERS.has(column.pokemonNumber)) return byMatch(() => true, latestCatch);
       return baseArtworkStatus(entries, latestCatch);
   }
 }
@@ -79,7 +85,7 @@ export function artworkStatus(seenForms, latestCatch, column) {
 function baseArtworkStatus(entries, latestCatch) {
   const base = isBaseCatch(latestCatch);
   const any = (shiny, status) =>
-    entries.some(([vt, d]) => vt.includes('shiny') === shiny && isBaseLike(vt) && d.status === status);
+    entries.some(([vt, d]) => isBaseVariant(vt) && BASE_SHINY_VARIANTS.has(vt) === shiny && d.status === status);
   return {
     ownedNormal: (base && !latestCatch.is_shiny) || any(false, 'owned'),
     seenNormal:  any(false, 'seen'),

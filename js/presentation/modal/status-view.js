@@ -66,12 +66,12 @@ export function refreshEvoStatuses(root) {
 }
 
 // Type de colonne d'illustration (cf. illustrations.js), pour artworkStatus.
-function artworkColumnOf(col) {
+function artworkColumnOf(col, pokemonNumber) {
   if (col?.classList.contains('is-mega'))         return { kind: 'mega' };
   if (col?.classList.contains('is-gigamax'))      return { kind: 'gigamax' };
   if (col?.classList.contains('is-regional'))     return { kind: 'regional', region: col.dataset.region };
   if (col?.classList.contains('is-special-form')) return { kind: 'special', sfKey: col.dataset.sfKey };
-  return { kind: 'base' };
+  return { kind: 'base', pokemonNumber };
 }
 
 function applyArtworkClass(img, owned, seen) {
@@ -90,7 +90,7 @@ export function paintArtworks(root, pokemonNumber, latestCatch) {
   const forms = store.seenMap[pokemonNumber] || {};
   root.querySelectorAll('.illus-col-wrapper').forEach(wrapper => {
     const col = wrapper.querySelector('.illus-col');
-    const { ownedNormal, seenNormal, ownedShiny, seenShiny } = artworkStatus(forms, latestCatch, artworkColumnOf(col));
+    const { ownedNormal, seenNormal, ownedShiny, seenShiny } = artworkStatus(forms, latestCatch, artworkColumnOf(col, pokemonNumber));
     const items = wrapper.querySelectorAll('.illus-artwork-item');
     if (items.length >= 2) {
       applyArtworkClass(items[0].querySelector('.modal-artwork'), ownedNormal, seenNormal);
