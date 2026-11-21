@@ -8,6 +8,7 @@ import {
 import { initAuth } from './auth.js';
 import { formLabelToVariantType } from './domain/form-labels.js';
 import { findVariantSprite } from './domain/sprite-chains.js';
+import { createCatchSessions } from './application/catch-sessions.js';
 import {
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS,
   SHINY_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL, BARON_ICON_URL,
@@ -17,6 +18,10 @@ import {
 } from './domain/constants.js';
 
 const $ = id => document.getElementById(id);
+
+const catchSessions = createCatchSessions({
+  insertCatch, deleteCatch, updateCatchesBySession, deleteSeenByVariantType, upsertSeen, getOwnerUuid,
+});
 
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -458,7 +463,6 @@ let _editSessionId   = null;
 let _editBall        = null;
 let _editGame        = null;
 let _formEntries     = [];
-let _editSessionForms = [];
 
 function buildEditModal() {
   const overlay = document.createElement('div');
@@ -567,97 +571,22 @@ function buildEditModal() {
     btn.disabled    = true;
     btn.textContent = 'Sauvegarde…';
 
-    // 1. Mettre à jour ball / date / jeu sur tous les records de la session
-    const updates = {
-      caught_at: date,
+    const { catches, error } = await catchSessions.editSession(allCatches, {
+      sessionId: _editSessionId,
+      date,
       game,
-      ...(ballEntry ? { ball_name: ballEntry.name, ball_image_url: ballUrl(ballEntry.slug) } : {}),
-    };
-    const { error } = await updateCatchesBySession(_editSessionId, updates);
+      ball: ballEntry ? { name: ballEntry.name, imageUrl: ballUrl(ballEntry.slug) } : null,
+      // Pas de grille de formes (Pokémon sans variantes) : formes inchangées.
+      selectedEntries: _formEntries.length > 0 ? selectedBtns.map(b => _formEntries[parseInt(b.dataset.idx)]) : null,
+      defaultSprite: spriteUrl,
+    });
     if (error) {
       alert('Erreur lors de la sauvegarde.');
       btn.disabled    = false;
       btn.textContent = 'Sauvegarder';
       return;
     }
-    allCatches.forEach(c => {
-      if (c && (c.session_id || String(c.id)) === _editSessionId) {
-        c.caught_at = date;
-        c.game      = game;
-        if (ballEntry) { c.ball_name = ballEntry.name; c.ball_image_url = ballUrl(ballEntry.slug); }
-      }
-    });
-
-    // 2. Synchroniser les formes (diff ajout / suppression)
-    if (_formEntries.length > 0) {
-      const selectedEntries = selectedBtns.map(b => _formEntries[parseInt(b.dataset.idx)]);
-      const origLabels = new Set(_editSessionForms.map(f => f.form_label));
-      const selLabels  = new Set(selectedEntries.map(e => e.label));
-
-      // Mémoriser une référence avant les suppressions
-      const base = allCatches.find(c => c && (c.session_id || String(c.id)) === _editSessionId);
-
-      // Supprimer les formes désélectionnées
-      for (const form of _editSessionForms) {
-        if (selLabels.has(form.form_label)) continue;
-        const rec = allCatches.find(c =>
-          c && (c.session_id || String(c.id)) === _editSessionId && c.form_label === form.form_label
-        );
-        if (rec) {
-          const { error: de } = await deleteCatch(rec.id);
-          if (!de) {
-            allCatches = allCatches.filter(c => c && c.id !== rec.id);
-            // Nettoyer pokemon_seen si aucune autre capture ne conserve cette forme
-            const vt = formLabelToVariantType(form.form_label);
-            if (vt) {
-              const stillHas = allCatches.some(c =>
-                c && c.pokemon_number === rec.pokemon_number && c.form_label === form.form_label
-              );
-              if (!stillHas) await deleteSeenByVariantType(getOwnerUuid(), rec.pokemon_number, vt);
-            }
-          }
-        }
-      }
-
-      // Insérer les nouvelles formes sélectionnées
-      if (base) {
-        for (const entry of selectedEntries) {
-          if (origLabels.has(entry.label)) continue;
-          const isShiny = entry.variant_type.includes('shiny');
-          const { data: newRec, error: ie } = await insertCatch({
-            owner_uuid:      getOwnerUuid(),
-            pokemon_number:  base.pokemon_number,
-            pokemon_name_fr: base.pokemon_name_fr,
-            is_shiny:        isShiny,
-            sprite_url:      entry.sprite || spriteUrl(base.pokemon_number, isShiny),
-            ball_name:       (ballEntry ?? { name: base.ball_name }).name,
-            ball_image_url:  ballEntry ? ballUrl(ballEntry.slug) : base.ball_image_url,
-            caught_at:       date,
-            game,
-            notes:           base.notes,
-            form_label:      entry.label,
-            session_id:      _editSessionId,
-          });
-          if (!ie && newRec) {
-            allCatches.push(newRec);
-            const newVt = formLabelToVariantType(entry.label);
-            if (newVt) {
-              await upsertSeen({
-                owner_uuid:     getOwnerUuid(),
-                pokemon_number: newRec.pokemon_number,
-                variant_type:   newVt,
-                status:         'owned',
-                form_label:     newRec.form_label,
-                is_shiny:       newRec.is_shiny,
-                sprite_url:     newRec.sprite_url,
-                caught_at:      newRec.caught_at,
-                game:           newRec.game,
-              });
-            }
-          }
-        }
-      }
-    }
+    allCatches = catches;
 
     btn.disabled    = false;
     btn.textContent = 'Sauvegarder';
@@ -671,30 +600,9 @@ function buildEditModal() {
     const name = je?.dataset.name || 'ce Pokémon';
     if (!confirm(`Supprimer cette capture de ${name} ?`)) return;
 
-    // Récupère le numéro avant suppression
-    const sessionCatches = allCatches.filter(c => c && (c.session_id || String(c.id)) === _editSessionId);
-    const pokemonNumber  = sessionCatches[0]?.pokemon_number;
-
-    let deleteError = null;
-    for (const c of sessionCatches) {
-      const { error: de } = await deleteCatch(c.id);
-      if (de) { deleteError = de; break; }
-    }
-    if (deleteError) { alert('Erreur lors de la suppression.'); return; }
-
-    allCatches = allCatches.filter(c => c && (c.session_id || String(c.id)) !== _editSessionId);
-
-    // Nettoyer pokemon_seen forme par forme (évite les statuts résiduels sur l'index)
-    if (pokemonNumber) {
-      for (const c of sessionCatches) {
-        const vt = formLabelToVariantType(c.form_label);
-        if (!vt) continue;
-        const stillHas = allCatches.some(other =>
-          other && other.pokemon_number === pokemonNumber && other.form_label === c.form_label
-        );
-        if (!stillHas) await deleteSeenByVariantType(getOwnerUuid(), pokemonNumber, vt);
-      }
-    }
+    const { catches, error } = await catchSessions.deleteSession(allCatches, _editSessionId);
+    if (error) { alert('Erreur lors de la suppression.'); return; }
+    allCatches = catches;
 
     closeModal();
     render();
@@ -736,7 +644,6 @@ async function loadModalFormGrid(session) {
     : sfEntry
     ? buildFormEntriesSpecial(sfEntry)
     : buildFormEntries(variantData, megaData, iconMap);
-  _editSessionForms = [...session.forms];
 
   const selectedLabels = new Set(session.forms.map(f => f.form_label));
 
@@ -754,7 +661,6 @@ async function loadModalFormGrid(session) {
 function openEditModal(session) {
   _editSessionId   = session.sessionId;
   _formEntries     = [];
-  _editSessionForms = [];
 
   const spriteSrc  = getSessionSprite(session) || session.sprite_url || spriteUrl(session.pokemon_number, session.forms.some(f => f.is_shiny));
   const jmSprite   = $('jm-sprite');
