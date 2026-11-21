@@ -14,3 +14,6 @@ Thumbs.db
 # Node / Vite
 node_modules/
 dist/
+
+# Données locales (textes Poképédia, sauvegardes) : hors dépôt
+.local/
