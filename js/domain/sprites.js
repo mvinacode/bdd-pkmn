@@ -1,27 +1,14 @@
 import { store } from '../store.js';
+import { findVariantSprite } from './sprite-chains.js';
 
-// Alola, Galar et Hisui partagent les mêmes chaînes de repli, seul le préfixe
-// de région change (`alolan`, `galarian`, `hisuian`).
-function getRegionalSprite(region, pokemonNumber, variantType) {
-  const r = region;
-  const variants = store.variantMap[pokemonNumber] || {};
-  const chains = {
-    [`${r}_shiny_male`]:   [`${r}_shiny_male`,   `${r}_shiny`, r],
-    [`${r}_shiny_female`]: [`${r}_shiny_female`, `${r}_shiny`, r],
-    [`${r}_shiny`]:        [`${r}_shiny`, `${r}_asexue_shiny`, r, `${r}_asexue`],
-    [`${r}_male`]:         [`${r}_male`,   r],
-    [`${r}_female`]:       [`${r}_female`, r],
-    [r]:                   [r, `${r}_asexue`],
-  };
-  for (const fvt of (chains[variantType] || [variantType])) {
-    if (variants[fvt]) return variants[fvt];
-  }
-  return null;
+// Alola, Galar et Hisui suivent la chaîne de repli commune (domain/sprite-chains.js).
+function getRegionalSprite(pokemonNumber, variantType) {
+  return findVariantSprite(store.variantMap[pokemonNumber], variantType);
 }
 
-export const getAlolanSprite   = (pokemonNumber, variantType) => getRegionalSprite('alolan',   pokemonNumber, variantType);
-export const getGalarianSprite = (pokemonNumber, variantType) => getRegionalSprite('galarian', pokemonNumber, variantType);
-export const getHisuianSprite  = (pokemonNumber, variantType) => getRegionalSprite('hisuian',  pokemonNumber, variantType);
+export const getAlolanSprite   = (pokemonNumber, variantType) => getRegionalSprite(pokemonNumber, variantType);
+export const getGalarianSprite = (pokemonNumber, variantType) => getRegionalSprite(pokemonNumber, variantType);
+export const getHisuianSprite  = (pokemonNumber, variantType) => getRegionalSprite(pokemonNumber, variantType);
 
 export function getPaldeanSprite(pokemonNumber, variantType) {
   const variants = store.variantMap[pokemonNumber] || {};

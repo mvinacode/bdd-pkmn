@@ -2,7 +2,9 @@
 // ex. « Galar Femelle Shiny ») vers le variant_type de pokemon_seen / pokemon_variants
 // (ex. galarian_shiny_female). Les tables régionales et spéciales viennent de
 // constants.js : une seule source pour le tiroir, la carte et le journal.
-import { ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, PALDEA_FORM_VT, SPECIAL_FORM_VT } from './constants.js';
+import {
+  ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, PALDEA_FORM_VT, PALDEAN_FORM_VT, SPECIAL_FORM_VT,
+} from './constants.js';
 
 const BASE_FORM_VT = {
   'Normale': 'normal',          'Asexué': 'normal',
@@ -19,6 +21,8 @@ const BASE_FORM_VT = {
 const LABEL_TO_VT = {
   ...BASE_FORM_VT,
   ...ALOLA_FORM_VT, ...GALAR_FORM_VT, ...HISUI_FORM_VT, ...PALDEA_FORM_VT,
+  // Races de Tauros (« Race Combative Mâle Shiny »…)
+  ...PALDEAN_FORM_VT,
 };
 
 /** @returns {string|null} le variant_type, ou null si le libellé est inconnu */

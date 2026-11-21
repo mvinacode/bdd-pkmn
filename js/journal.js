@@ -7,6 +7,7 @@ import {
 } from './supabase-client.js';
 import { initAuth } from './auth.js';
 import { formLabelToVariantType } from './domain/form-labels.js';
+import { findVariantSprite } from './domain/sprite-chains.js';
 import {
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS,
   SHINY_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL, BARON_ICON_URL,
@@ -171,44 +172,6 @@ function saveCollapsed() {
 }
 const collapsedSections = loadCollapsed();
 
-// Chaînes de fallback par variant_type pour trouver le bon sprite
-function variantFallbacks(vt) {
-  // 'asexue'/'asexue_shiny' : icône de base des Pokémon asexués (le label
-  // « Asexué » est mappé sur 'normal', mais l'icône est stockée sous 'asexue').
-  const base      = ['normal', 'asexue', 'male', 'female'];
-  const baseShiny = ['shiny', 'asexue_shiny', 'shiny_male', 'shiny_female', 'normal', 'asexue', 'male', 'female'];
-  const chains = {
-    'alolan_shiny_male':   ['alolan_shiny_male',   'alolan_shiny', 'alolan'],
-    'alolan_shiny_female': ['alolan_shiny_female',  'alolan_shiny', 'alolan'],
-    'alolan_shiny':        ['alolan_shiny',          'alolan'],
-    'alolan_male':         ['alolan_male',           'alolan'],
-    'alolan_female':       ['alolan_female',         'alolan'],
-    'alolan':              ['alolan'],
-    'paldean_shiny_male':   ['paldean_shiny_male',   'paldean_shiny', 'paldean'],
-    'paldean_shiny_female': ['paldean_shiny_female',  'paldean_shiny', 'paldean'],
-    'paldean_shiny':        ['paldean_shiny',          'paldean'],
-    'paldean_male':         ['paldean_male',           'paldean'],
-    'paldean_female':       ['paldean_female',         'paldean'],
-    'paldean':              ['paldean'],
-    'shiny_male':          ['shiny_male',   'shiny'],
-    'shiny_female':        ['shiny_female', 'shiny'],
-    'shiny':               ['shiny',  'asexue_shiny'],
-    'male':                ['male',   'normal'],
-    'female':              ['female', 'normal'],
-    'normal':              ['normal', 'asexue'],
-    // Méga et Gigamax → sprite de base du Pokémon, pas le sprite spécial
-    'mega':          base,      'shiny_mega':    baseShiny,
-    'mega_x':        base,      'shiny_mega_x':  baseShiny,
-    'mega_y':        base,      'shiny_mega_y':  baseShiny,
-    'gigamax':       base,      'shiny_gigamax': baseShiny,
-    'baron':         base,      'shiny_baron':   baseShiny,
-    // Formes spéciales — leurs propres sprites (gérés via specialFormsMap)
-    'troizepy':       ['troizepy'],
-    'troizepy_shiny': ['troizepy_shiny', 'troizepy'],
-  };
-  return chains[vt] || [vt];
-}
-
 // Détecte la région d'une session via le préfixe de n'importe quel libellé de forme.
 function sessionRegion(session) {
   for (const f of session.forms) {
@@ -236,9 +199,8 @@ function getSessionSprite(session) {
   }
   if (vt) {
     // Cherche dans pokemon_variants d'abord
-    for (const fvt of variantFallbacks(vt)) {
-      if (variants[fvt]) return variants[fvt];
-    }
+    const sprite = findVariantSprite(variants, vt);
+    if (sprite) return sprite;
     // Fallback : cherche dans specialFormsMap (formes spéciales)
     const isShiny = vt.endsWith('_shiny');
     const formKey = isShiny ? vt.slice(0, -6) : vt;
