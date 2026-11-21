@@ -5,19 +5,17 @@ import {
   ICON_UNISEX_LG, ICON_UNISEX_SM, ICON_SHINY_SM,
   ICON_BARON_LG, ICON_BARON_XS,
   ICON_MEGA_LG, ICON_MEGA_SM, ICON_GMAX_LG, ICON_GMAX_SM,
-  MALE_SVG, FEMALE_SVG,
-  SHINY_ICON_URL, BARON_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL,
   normalizeVariantUrl, padNumber,
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS, NO_BASE_FORM_NUMBERS,
-} from '../domain/constants.js?v=7';
-import { getVariantStatus } from '../domain/completion.js?v=4';
-import { addToSeen } from '../application/catches.js?v=4';
+} from '../domain/constants.js';
+import { getVariantStatus } from '../domain/completion.js';
+import { addToSeen } from '../application/catches.js';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
   fetchHisuianVariantsForNumbers, fetchPaldeanFormsForNumbers, fetchSpecialFormsForNumbers,
   insertCatch, fetchVariantMap,
-} from '../supabase-client.js?v=9';
+} from '../supabase-client.js';
 
 // Libellé court d'une forme de Paldea à partir du nom complet : « … (Race Combative) »
 // => « Race Combative ». Pour la forme régionale simple (region === 'paldean', ex.
@@ -87,16 +85,6 @@ export function closeCatchDrawer() {
   store.drawerPokemon = null;
   store.drawerBall    = null;
   store.drawerShiny   = false;
-}
-
-function getFormIcon(vt) {
-  if (vt.includes('baron'))   return `<img src="${BARON_ICON_URL}"   width="28" height="28" alt="">`;
-  if (vt.includes('shiny'))   return `<img src="${SHINY_ICON_URL}"   width="28" height="28" alt="">`;
-  if (vt.includes('gigamax')) return `<img src="${GIGAMAX_ICON_URL}" width="28" height="28" alt="">`;
-  if (vt.includes('mega'))    return `<img src="${MEGA_ICON_URL}"    width="28" height="28" alt="">`;
-  if (vt === 'male')   return MALE_SVG;
-  if (vt === 'female') return FEMALE_SVG;
-  return '';
 }
 
 function _bindFormGrid(grid, entries) {

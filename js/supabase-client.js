@@ -1,3 +1,4 @@
+import { createClient } from '@supabase/supabase-js';
 import { CONFIG, isSupabaseConfigured } from './config.js';
 
 let _supabase = null;
@@ -6,7 +7,7 @@ export function getSupabaseClient() {
   if (!_supabase) {
     if (!isSupabaseConfigured()) return null;
     try {
-      _supabase = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, {
+      _supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, {
         auth: { persistSession: true },
       });
     } catch (e) {

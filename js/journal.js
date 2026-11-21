@@ -2,17 +2,17 @@ import { BALLS, GAMES, ballUrl, spriteUrl, esc, getOwnerUuid } from './utils.js'
 import {
   fetchCatches, fetchVariantMap, fetchSpecialFormsForNumbers,
   fetchVariants, fetchMegaEvolutions, insertCatch, deleteCatch,
-  updateCatchesBySession, deleteCatchesBySession,
+  updateCatchesBySession,
   deleteSeenByVariantType, upsertSeen, fetchEvolutionLinks,
-} from './supabase-client.js?v=9';
-import { initAuth } from './auth.js?v=3';
+} from './supabase-client.js';
+import { initAuth } from './auth.js';
 import {
   SPECIAL_FORM_VT, SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS,
   SHINY_ICON_URL, MEGA_ICON_URL, GIGAMAX_ICON_URL, BARON_ICON_URL,
   ICON_MALE_LG, ICON_MALE_SM, ICON_FEMALE_LG, ICON_FEMALE_SM, ICON_UNISEX_LG, ICON_UNISEX_SM,
   ICON_SHINY_SM, ICON_BARON_LG, ICON_BARON_XS, ICON_MEGA_LG, ICON_MEGA_SM, ICON_GMAX_LG, ICON_GMAX_SM,
   padNumber,
-} from './domain/constants.js?v=7';
+} from './domain/constants.js';
 
 const $ = id => document.getElementById(id);
 

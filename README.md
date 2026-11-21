@@ -39,11 +39,19 @@ bdd_pkmn/
    ⚠️ Active d'abord la policy INSERT temporaire dans Supabase (voir schema.sql)
 
 ### 4. Lancer le site
-Ouvre `index.html` — utilise un serveur local pour éviter les restrictions CORS :
-```bash
-# Python
-python -m http.server 8080
+Prérequis : Node.js 20 ou plus, puis une seule fois `npm install`.
 
-# Node
-npx serve .
-```
+| Commande | Rôle |
+|---|---|
+| `npm run dev` | Serveur de développement (rechargement automatique) |
+| `npm run build` | Construit le site final dans `dist/` |
+| `npm run preview` | Sert `dist/` pour vérifier le build |
+| `npm run lint` | Analyse du code (ESLint) |
+| `npm test` | Tests unitaires (Vitest, dossier `tests/`) |
+
+Plus besoin de `?v=N` dans les imports ni dans les `<link>` : Vite ajoute lui-même
+une empreinte aux noms de fichiers à chaque build.
+
+### 5. Mise en ligne
+Un push sur `main` déclenche `.github/workflows/static.yml` : lint, tests, build,
+puis publication de `dist/` sur GitHub Pages. Un lint ou un test en échec bloque la mise en ligne.

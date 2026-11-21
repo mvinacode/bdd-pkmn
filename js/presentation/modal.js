@@ -1,94 +1,23 @@
 import { store } from '../store.js';
 import { esc, spriteUrl, GAMES } from '../utils.js';
 import {
-  MEGA_ICON_URL, GIGAMAX_ICON_URL, SHINY_ICON_URL, BARON_ICON_URL,
-  VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, HISUI_FORM_VT, SPECIAL_FORM_VT, PALDEA_FORM_VT,
+  MEGA_ICON_URL, GIGAMAX_ICON_URL,
+  VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, SPECIAL_FORM_VT, PALDEA_FORM_VT,
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_NO_DIMORPHISM_GROUPS, NO_BASE_FORM_NUMBERS,
-  padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge, debounce,
-} from '../domain/constants.js?v=7';
-import { getVariantStatus } from '../domain/completion.js?v=4';
-import { cycleVariantStatus } from '../application/catches.js?v=4';
+  padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge,
+} from '../domain/constants.js';
+import { getVariantStatus } from '../domain/completion.js';
+import { cycleVariantStatus } from '../application/catches.js';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
   fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
   fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances, fetchFormAppearances,
-} from '../supabase-client.js?v=9';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js?v=224';
-
-// Callbacks injectés par app.js pour éviter circulaire
-let _updateCardAfterCatch = null;
-let _openDrawerWithPokemon = null;
-export function setModalCallbacks({ updateCardAfterCatch, openDrawerWithPokemon }) {
-  _updateCardAfterCatch    = updateCardAfterCatch;
-  _openDrawerWithPokemon   = openDrawerWithPokemon;
-}
+} from '../supabase-client.js';
+import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js';
 
 const MODAL_MALE_SVG   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
 const MODAL_FEMALE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
 const MODAL_ASEXUE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-
-function seenFormIcon(vt, sfMap = {}) {
-  const S = 14;
-  const male      = `<svg viewBox="0 0 24 24" fill="none" stroke="#5b9bd5" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="${S}" height="${S}"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
-  const female    = `<svg viewBox="0 0 24 24" fill="none" stroke="#e07fc0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="${S}" height="${S}"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
-  const shiny     = `<img src="${SHINY_ICON_URL}"   width="${S}" height="${S}" alt="Shiny">`;
-  const mega      = `<img src="${MEGA_ICON_URL}"    width="${S}" height="${S}" alt="Méga">`;
-  const gmax      = `<img src="${GIGAMAX_ICON_URL}" width="${S}" height="${S}" alt="Gigamax">`;
-  const baron     = `<img src="${BARON_ICON_URL}"   width="${S}" height="${S}" alt="Baron">`;
-  const genderless= `<svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" width="${S}" height="${S}"><circle cx="12" cy="8" r="5"/><line x1="12" y1="13" x2="12" y2="22"/></svg>`;
-  switch (vt) {
-    case 'normal':        return genderless;
-    case 'asexue':        return genderless;
-    case 'male':          return male;
-    case 'female':        return female;
-    case 'shiny':         return genderless + shiny;
-    case 'asexue_shiny':  return genderless + shiny;
-    case 'shiny_male':    return male + shiny;
-    case 'shiny_female':  return female + shiny;
-    case 'mega': case 'mega_x': case 'mega_y': return mega;
-    case 'shiny_mega': case 'shiny_mega_x': case 'shiny_mega_y': return mega + shiny;
-    case 'gigamax':       return gmax;
-    case 'shiny_gigamax': return gmax + shiny;
-    case 'baron':         return baron;
-    case 'shiny_baron':   return baron + shiny;
-    case 'alolan':              return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>`;
-    case 'alolan_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">Alola</span>` + shiny;
-    case 'alolan_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + male;
-    case 'alolan_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + male + shiny;
-    case 'alolan_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female;
-    case 'alolan_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#77b5fe">A</span>` + female + shiny;
-    case 'galarian':              return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>`;
-    case 'galarian_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">Galar</span>` + shiny;
-    case 'galarian_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + male;
-    case 'galarian_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + male + shiny;
-    case 'galarian_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + female;
-    case 'galarian_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#ce93d8">G</span>` + female + shiny;
-    case 'hisuian':              return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>`;
-    case 'hisuian_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">Hisui</span>` + shiny;
-    case 'hisuian_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + male;
-    case 'hisuian_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + male + shiny;
-    case 'hisuian_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + female;
-    case 'hisuian_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#c4934c">H</span>` + female + shiny;
-    case 'paldean':              return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>`;
-    case 'paldean_shiny':        return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">Paldea</span>` + shiny;
-    case 'paldean_male':         return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + male;
-    case 'paldean_shiny_male':   return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + male + shiny;
-    case 'paldean_female':       return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + female;
-    case 'paldean_shiny_female': return `<span style="font-size:0.7rem;font-weight:600;color:#d96666">P</span>` + female + shiny;
-    case 'troizepy':       return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>`;
-    case 'troizepy_shiny': return female + `<span style="font-size:0.7rem;font-weight:600;color:#c4a747">T</span>` + shiny;
-    default: {
-      // Formes spéciales genrées : le sexe n'est porté que par le suffixe du type
-      // (« triple » = mâle, « triple_female » = femelle), pas par le libellé.
-      const isFemale = vt.endsWith('_female');
-      const bare     = isFemale ? vt.slice(0, -'_female'.length) : vt;
-      const sfEntry = Object.values(sfMap).flatMap(m => Object.values(m)).find(f => f.form_key === bare || (f.form_key + '_shiny') === bare);
-      const sfLabel = sfEntry ? sfEntry.form_label_fr + (bare.endsWith('_shiny') ? ' Shiny' : '') : vt;
-      const gender  = sfEntry && SF_GENDERED_GROUPS.has(sfEntry.form_group) ? (isFemale ? female : male) : '';
-      return gender + `<span style="font-size:0.7rem;font-weight:600;color:var(--text-muted)">${esc(sfLabel)}</span>`;
-    }
-  }
-}
 
 // Mini-formatage (type BBCode) du mode d'obtention. On échappe d'abord tout le
 // texte (anti-injection), puis on ne génère que nos propres balises sûres :
@@ -239,7 +168,7 @@ export async function openModal(number) {
   modalContent.innerHTML = '<div class="modal-loading"><div class="pokeball-loader"><div class="pb-top"></div><div class="pb-middle"><div class="pb-btn"></div></div><div class="pb-bottom"></div></div></div>';
 
   try {
-    const [{ data: p }, , forms, variants, gigamax, specialFormsList, appearances, formAppearances] = await Promise.all([
+    const [{ data: p }, , , variants, gigamax, specialFormsList, appearances, formAppearances] = await Promise.all([
       fetchPokemonByNumber(number),
       fetchEvolutionChain({ number, evolves_from_number: null }).catch(() => null),
       fetchForms(number),
@@ -291,7 +220,6 @@ export async function openModal(number) {
     const catch_ = store.catchByNumber[p.number] || null;
 
     const imgSrc  = p.image_url || getImageUrl(p.number);
-    const types   = (p.types || []).map(typeBadge).join('');
     const evoHtml = buildEvolutionHtml(realEvoTree, p.number, megasByNumber, iconByNumber, gigamaxByNumber, regionalsByNumber);
 
     function variantCard(v) {

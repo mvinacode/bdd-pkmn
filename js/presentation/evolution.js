@@ -1,6 +1,6 @@
 import { esc } from '../utils.js';
-import { normalizeVariantUrl, getImageUrl, padNumber, toRoman, typeBadge, MALE_SVG } from '../domain/constants.js?v=7';
-import { MEGA_ICON_URL, GIGAMAX_ICON_URL } from '../domain/constants.js?v=7';
+import { normalizeVariantUrl, getImageUrl, padNumber, MALE_SVG } from '../domain/constants.js';
+import { MEGA_ICON_URL, GIGAMAX_ICON_URL } from '../domain/constants.js';
 
 export function collectTreeNumbers(tree) {
   if (!tree) return [];

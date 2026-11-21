@@ -1,4 +1,4 @@
-import { getSupabaseClient } from './supabase-client.js?v=9';
+import { getSupabaseClient } from './supabase-client.js';
 
 (async () => {
   const client = getSupabaseClient();
@@ -6,7 +6,7 @@ import { getSupabaseClient } from './supabase-client.js?v=9';
     try {
       const { data } = await client.auth.getSession();
       if (data.session?.user) { window.location.href = 'index.html'; return; }
-    } catch (_) {}
+    } catch { /* pas de session valide : on reste sur la page de connexion */ }
   }
 
   let mode = 'login';

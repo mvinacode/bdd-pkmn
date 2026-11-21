@@ -1,3 +1,5 @@
+/* global getSupabaseClient, getPokemonImageUrl, isSupabaseConfigured */
+// Script console : s'appuie sur les fonctions exposées sur window par app.js.
 /**
  * POPULATE.JS — Script de peuplement de la base Supabase depuis PokeAPI.
  *
@@ -126,9 +128,6 @@ async function populateDatabase(start = 1, end = 1025, batchSize = 20) {
     console.error('[Populate] Supabase non configuré. Remplis js/config.js d\'abord.');
     return;
   }
-  // Vide le cache pour que les nouvelles données s'affichent immédiatement
-  if (typeof cacheClear === 'function') cacheClear();
-
   const client = getSupabaseClient();
   let success = 0;
   let errors  = 0;
