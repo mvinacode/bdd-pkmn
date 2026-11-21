@@ -9,12 +9,8 @@ import {
 import { getVariantStatus } from '../domain/completion.js';
 import { artworkStatus, evoFormStatus } from '../domain/modal-status.js';
 import { cycleVariantStatus } from '../application/catches.js';
-import {
-  fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
-  fetchSpecialFormsByNumber, fetchMegaEvolutions, fetchVariantIcons, fetchGigamaxForChain,
-  fetchGigamaxVariantIcons, fetchRegionalForms, fetchAppearances, fetchFormAppearances,
-} from '../supabase-client.js';
-import { buildEvolutionHtml, collectTreeNumbers } from './evolution.js';
+import { loadModalData } from '../application/modal-data.js';
+import { buildEvolutionHtml } from './evolution.js';
 
 const MODAL_MALE_SVG   = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="9.5" cy="14.5" r="5.5"/><line x1="13.5" y1="10.5" x2="20" y2="4"/><polyline points="16,4 20,4 20,8"/></svg>`;
 const MODAL_FEMALE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><circle cx="12" cy="9" r="6"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`;
@@ -178,53 +174,12 @@ export async function openModal(number) {
   modalContent.innerHTML = '<div class="modal-loading"><div class="pokeball-loader"><div class="pb-top"></div><div class="pb-middle"><div class="pb-btn"></div></div><div class="pb-bottom"></div></div></div>';
 
   try {
-    const [{ data: p }, , , variants, gigamax, specialFormsList, appearances, formAppearances] = await Promise.all([
-      fetchPokemonByNumber(number),
-      fetchEvolutionChain({ number, evolves_from_number: null }).catch(() => null),
-      fetchForms(number),
-      fetchVariants(number),
-      fetchGigamax(number),
-      fetchSpecialFormsByNumber(number).catch(() => []),
-      fetchAppearances(number).catch(() => []),
-      fetchFormAppearances(number).catch(() => ({})),
-    ]);
-
-    if (!p) { closeModal(); return; }
-
-    const realEvoTree = await fetchEvolutionChain(p).catch(() => null);
-    const treeNumbers = collectTreeNumbers(realEvoTree);
-    const [megaRows, iconRows, gigamaxChainRows, gigamaxIconRows, regionalRows] = await Promise.all([
-      fetchMegaEvolutions(treeNumbers).catch(() => []),
-      fetchVariantIcons(treeNumbers).catch(() => []),
-      fetchGigamaxForChain(treeNumbers).catch(() => []),
-      fetchGigamaxVariantIcons(treeNumbers).catch(() => []),
-      fetchRegionalForms(treeNumbers).catch(() => []),
-    ]);
-    const megasByNumber = {};
-    for (const m of megaRows) {
-      if (!megasByNumber[m.pokemon_number]) megasByNumber[m.pokemon_number] = [];
-      megasByNumber[m.pokemon_number].push(m);
-    }
-    const regionalsByNumber = {};
-    for (const r of regionalRows) {
-      if (!regionalsByNumber[r.pokemon_number]) regionalsByNumber[r.pokemon_number] = [];
-      regionalsByNumber[r.pokemon_number].push(r);
-    }
-    // Ordre canonique des races de Paldea (ex. Tauros), appliqué partout — chaîne
-    // d'évolution incluse : Combative → Flamboyante → Aquatique.
-    const PALDEAN_REGION_ORDER = ['paldean_combat', 'paldean_blaze', 'paldean_aqua'];
-    for (const num in regionalsByNumber) {
-      regionalsByNumber[num].sort((a, b) =>
-        (PALDEAN_REGION_ORDER.indexOf(a.region) + 1 || 99) - (PALDEAN_REGION_ORDER.indexOf(b.region) + 1 || 99)
-      );
-    }
-    const gigamaxSpriteMap = Object.fromEntries(gigamaxIconRows.map(r => [r.pokemon_number, r.image_url]));
-    const gigamaxByNumber  = {};
-    for (const g of gigamaxChainRows) {
-      if (!gigamaxByNumber[g.pokemon_number]) gigamaxByNumber[g.pokemon_number] = [];
-      gigamaxByNumber[g.pokemon_number].push({ ...g, sprite_url: gigamaxSpriteMap[g.pokemon_number] || null });
-    }
-    const iconByNumber = Object.fromEntries(iconRows.map(r => [r.pokemon_number, r.image_url]));
+    const data = await loadModalData(number);
+    if (!data) { closeModal(); return; }
+    const {
+      pokemon: p, variants, gigamax, specialForms: specialFormsList, appearances, formAppearances,
+      evoTree: realEvoTree, megasByNumber, regionalsByNumber, gigamaxByNumber, iconByNumber,
+    } = data;
 
     // Capture utilisée plus bas par refreshArtworks (état des artworks).
     const catch_ = store.catchByNumber[p.number] || null;

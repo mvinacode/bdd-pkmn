@@ -2,11 +2,6 @@ import { esc } from '../utils.js';
 import { normalizeVariantUrl, getImageUrl, padNumber, MALE_SVG } from '../domain/constants.js';
 import { MEGA_ICON_URL, GIGAMAX_ICON_URL } from '../domain/constants.js';
 
-export function collectTreeNumbers(tree) {
-  if (!tree) return [];
-  return [tree.node.number, ...tree.children.flatMap(c => collectTreeNumbers(c))];
-}
-
 export function evoPortrait(node, isCurrent, iconUrl = null, extraClass = '') {
   const img = iconUrl ? normalizeVariantUrl(iconUrl) : getImageUrl(node.number);
   return `
