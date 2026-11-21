@@ -16,5 +16,10 @@ export default defineConfig({
   },
   test: {
     include: ['tests/**/*.test.js'],
+    // Le site importe Supabase par URL figée (cf. js/supabase-client.js) ; en test
+    // cette URL pointe vers le même paquet installé en devDependency.
+    alias: {
+      'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/+esm': '@supabase/supabase-js',
+    },
   },
 });

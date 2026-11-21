@@ -1,0 +1,2447 @@
+{
+ "fetchAppearances([128])": [
+  {
+   "game_slug": "lets-go-pikachu",
+   "method": "[b][color=#f4d924]Route 14, route 15 [/color][/b] : \n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781955950/hautes_herbes_apbhrt.png[/icon] [u]Hautes herbes.[/u] [i]5 %[/i]\n\n[color=#f4d924][b]Menu[/b], [i]Communication[/i][/color]:\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "perle-scintillante",
+   "method": "[color=#d9b1c5][b]Route 209, Route 210 (sud)[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782481167/poke_radar_jnm3k5.png[/icon] [u]Poké Radar[/u], [i]2 %[/i].\n\n[color=#d9b1c5][b]Grands Souterrains[/b], [i]Caverne Ensoleillée, Caverne du Glacier, Caverne du Miroir d'Eau, Caverne du Piton, Grotte Spacieuse, Grotte de la Prairie, Grotte de la Rivière, Grotte des Eaux Souterraines, Grotte des Rochers, Grotte des Stalactites et Grotte du Blizzard[/i] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781971054/explorakit_dt6wyt.png[/icon] [u]Explorakit[/u], Pokédex National obtenu.\nhttps://res.cloudinary.com/dkgfa4apm/image/upload/v1781973599/carte_grands_souterrains_liwfi7.png https://res.cloudinary.com/dkgfa4apm/image/upload/v1781973598/zones_grands_souterrains_njt2fk.png\n\n[color=#d9b1c5][b]Bonville[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] à la [b]Garderie[/b].\n\n[color=#d9b1c5][b]Salle Union[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "lets-go-evoli",
+   "method": "[b][color=#dea150]Route 14, route 15 [/color][/b] : \r\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781955950/hautes_herbes_apbhrt.png[/icon] [u]Hautes herbes.[/u] [i]5 %[/i]\r\n\r\n[color=#dea150][b]Menu[/b], [i]Communication[/i][/color]:\r\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "epee",
+   "method": "[color=#00a1e9][b]Isolarmure[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781955950/hautes_herbes_apbhrt.png[/icon] [u]Hautes herbes[/u], [icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782069183/pokemon_vadrouilleur_dimamf.png[/icon] [u]Pokémon vadrouilleurs[/u]. \n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782480799/0128_localisations_epee_bouclier_mpcahi.png[/img]\n\n[color=#00a1e9][b]Isolarmure[/b], [i]Raid Dynamax[/i] :[/color]\n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782480799/0128_raid_epee_bouclier_bycnb3.png[/img]\n\n[color=#00a1e9][b]Couronneige[/b], [i]Grand Raid Dynamax[/i] :[/color]\n[u]Pokémon rencontrables[/u].\n\n[color=#00a1e9][b]Comm-Y :[/b][/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "bouclier",
+   "method": "[color=#e4005a][b]Isolarmure[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781955950/hautes_herbes_apbhrt.png[/icon] [u]Hautes herbes[/u], [icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782069183/pokemon_vadrouilleur_dimamf.png[/icon] [u]Pokémon vadrouilleurs[/u]. \n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782480799/0128_localisations_epee_bouclier_mpcahi.png[/img]\n\n[color=#e4005a][b]Isolarmure[/b], [i]Raid Dynamax[/i] :[/color]\n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782480799/0128_raid_epee_bouclier_bycnb3.png[/img]\n\n[color=#e4005a][b]Couronneige[/b], [i]Grand Raid Dynamax[/i] :[/color]\n[u]Pokémon rencontrables[/u].\n\n[color=#e4005a][b]Comm-Y :[/b][/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "diamant-etincelant",
+   "method": "[color=#d7ebf7][b]Route 209, Route 210 (sud)[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782481167/poke_radar_jnm3k5.png[/icon] [u]Poké Radar[/u], [i]20 %[/i].\n\n[color=#d7ebf7][b]Grands Souterrains[/b], [i]Caverne Ensoleillée, Caverne du Glacier, Caverne du Miroir d'Eau, Caverne du Piton, Grotte Spacieuse, Grotte de la Prairie, Grotte de la Rivière, Grotte des Eaux Souterraines, Grotte des Rochers, Grotte des Stalactites et Grotte du Blizzard[/i] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781971054/explorakit_dt6wyt.png[/icon] [u]Explorakit[/u], Pokédex National obtenu.\nhttps://res.cloudinary.com/dkgfa4apm/image/upload/v1781973599/carte_grands_souterrains_liwfi7.png https://res.cloudinary.com/dkgfa4apm/image/upload/v1781973598/zones_grands_souterrains_njt2fk.png\n\n[color=#d7ebf7][b]Bonville[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] à la [b]Garderie[/b].\n\n[color=#d7ebf7][b]Salle Union[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "ecarlate",
+   "method": "[color=#99241d][b]Terra-Dôme[/b] :[/color]\n[u]Zone Savane[/u], [i]Biome Herbe, fixe téracristallisé[/i].\n\n[color=#99241d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\n\n[color=#99241d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "violet",
+   "method": "[color=#4c1c6d][b]Terra-Dôme[/b] :[/color]\n[u]Zone Savane[/u], [i]Biome Herbe, fixe téracristallisé[/i].\n\n[color=#4c1c6d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\n\n[color=#4c1c6d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  }
+ ],
+ "fetchAppearances([144])": [],
+ "fetchAppearances([194])": [],
+ "fetchAppearances([201])": [],
+ "fetchAppearances([215])": [],
+ "fetchAppearances([25])": [],
+ "fetchAppearances([307])": [],
+ "fetchAppearances([308])": [],
+ "fetchAppearances([52])": [],
+ "fetchAppearances([6])": [
+  {
+   "game_slug": "ecarlate",
+   "method": "[color=#99241d][b]Paldea[/b] :[/color]\n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#99241d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "violet",
+   "method": "[color=#4c1c6d][b]Paldea[/b] :[/color]\n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#4c1c6d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "legendes-za",
+   "method": "[color=#76c486][b]Extradimension[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781987117/faille_sauvage_b8a6dm.png[/icon] [u]Failles Sauvages[/u] ★★★★ et ★★★★★.\n\n[color=#76c486][b]Illumis[/b] :[/color]\n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#76c486][b]Jeu en Ligne[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "lets-go-pikachu",
+   "method": "[b][color=#f4d924]Route 1, Route 2, Route 3, Route 4, Route 5, Route 6, Route 7, Route 8, Route 9, Route 10, Route 11, Route 12, Route 13, Route 14, Route 15, Route 16, Route 17, Route 18, Chenal 19, Chenal 20, Chenal 21, Route 22, Route 23 Route 24 et Route 25[/color][/b] : \n[u]Dans les airs[/u] après la Ligue, Apparition rare.\n\n[b][color=#f4d924]Kanto[/color][/b] : \n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#f4d924][b]Menu[/b], [i]Communication[/i][/color]:\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "lets-go-evoli",
+   "method": "[b][color=#dea150]Route 1, Route 2, Route 3, Route 4, Route 5, Route 6, Route 7, Route 8, Route 9, Route 10, Route 11, Route 12, Route 13, Route 14, Route 15, Route 16, Route 17, Route 18, Chenal 19, Chenal 20, Chenal 21, Route 22, Route 23 Route 24 et Route 25[/color][/b] : \n[u]Dans les airs[/u] après la Ligue, Apparition rare.\n\n[b][color=#dea150]Kanto[/color][/b] : \n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#dea150][b]Menu[/b], [i]Communication[/i][/color]:\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "epee",
+   "method": "[color=#00a1e9][b]Terres Sauvages[/b], [i]Raid Dynamax[/i] :[/color]\n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782916757/0006_raid_terres_sauvages_epee_bouclier_vaibdf.png[/img]\n\n[color=#00a1e9][b]Isolarmure[/b], [i]Raid Dynamax[/i] :[/color]\n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782916898/0006_raid_isolarmure_epee_bouclier_ymln1k.png[/img]\n\n[color=#00a1e9][b]Galar :[/b][/color]\n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#00a1e9][b]Comm-Y :[/b][/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "bouclier",
+   "method": "[color=#e4005a][b]Terres Sauvages[/b], [i]Raid Dynamax[/i] :[/color]\n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782916757/0006_raid_terres_sauvages_epee_bouclier_vaibdf.png[/img]\n\n[color=#e4005a][b]Isolarmure[/b], [i]Raid Dynamax[/i] :[/color]\n[img native]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782916898/0006_raid_isolarmure_epee_bouclier_ymln1k.png[/img]\n\n[color=#e4005a][b]Galar :[/b][/color]\n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#e4005a][b]Comm-Y :[/b][/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "diamant-etincelant",
+   "method": "[color=#d7ebf7][b]Sinnoh :[/b][/color]\n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#d7ebf7][b]Salle Union[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  },
+  {
+   "game_slug": "perle-scintillante",
+   "method": "[color=#d9b1c5][b]Sinnoh :[/b][/color]\n[u]Évolution[/u] de [b]Reptincel[/b].\n\n[color=#d9b1c5][b]Salle Union[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+  }
+ ],
+ "fetchEvolutionChain([{\"id\":128,\"number\":128,\"name_fr\":\"Tauros\",\"name_en\":\"tauros\",\"generation\":1,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_kreriv.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478490/128_tauros_shiny_lwkdvg.png\",\"description_fr\":\"Réputé pour sa nature violente, Tauros agite frénétiquement ses trois longues queues pour décupler son agressivité avant de fouetter l'air et de foncer tête baissée sur sa cible, qu'il charge en ligne droite à une vitesse démentielle. D'une endurance redoutable, il ne s'arrête pas tant qu'il n'a pas pulvérisé son adversaire, et faute d'ennemi, il passe ses nerfs en déracinant de gros arbres. Au sein du troupeau, les mâles s'affrontent à coups de cornes pour désigner le chef, dont celles-ci — les plus grosses et les plus longues — se couvrent de cicatrices. Les Tauros d'Alola, adoucis par la douceur du climat, sont d'un tempérament plus paisible que leurs congénères, là où ceux de Galar restent farouches et ne tolèrent aucun cavalier.\",\"evolves_from_number\":null,\"can_be_baron\":false,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"normal\"}],\"types\":[\"normal\"]}])": {
+  "node": {
+   "id": 128,
+   "number": 128,
+   "name_fr": "Tauros",
+   "name_en": "tauros",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_kreriv.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478490/128_tauros_shiny_lwkdvg.png",
+   "description_fr": "Réputé pour sa nature violente, Tauros agite frénétiquement ses trois longues queues pour décupler son agressivité avant de fouetter l'air et de foncer tête baissée sur sa cible, qu'il charge en ligne droite à une vitesse démentielle. D'une endurance redoutable, il ne s'arrête pas tant qu'il n'a pas pulvérisé son adversaire, et faute d'ennemi, il passe ses nerfs en déracinant de gros arbres. Au sein du troupeau, les mâles s'affrontent à coups de cornes pour désigner le chef, dont celles-ci — les plus grosses et les plus longues — se couvrent de cicatrices. Les Tauros d'Alola, adoucis par la douceur du climat, sont d'un tempérament plus paisible que leurs congénères, là où ceux de Galar restent farouches et ne tolèrent aucun cavalier.",
+   "evolves_from_number": null,
+   "can_be_baron": false,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "normal"
+    }
+   ],
+   "types": [
+    "normal"
+   ]
+  },
+  "children": []
+ },
+ "fetchEvolutionChain([{\"id\":144,\"number\":144,\"name_fr\":\"Artikodin\",\"name_en\":\"articuno\",\"generation\":1,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032459/144_artikodin_ye3iha.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032462/144_artikodin_shiny_e9sp4m.png\",\"description_fr\":\"Artikodin est le Pokémon oiseau légendaire des glaces, aux longues plumes bleues que l'on dit faites de glace et aux majestueuses ailes translucides qui semblent taillées dans le givre. Il vit sur les sommets recouverts de neiges éternelles, où l'on raconte qu'il apparaît aux voyageurs perdus ou gelés en montagne. Maître de la glace, il gèle l'humidité de l'air d'un simple battement d'ailes : partout où il vole, l'air se rafraîchit et la neige se met à tomber, et il peut même déclencher d'épais blizzards — dont il s'entoure aussi pour se protéger du danger. Sa longue queue, qui flotte au vent lorsqu'il survole les monts enneigés, laisse bouche bée tous ceux qui ont la chance de l'apercevoir.\",\"evolves_from_number\":null,\"can_be_baron\":false,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"ice\"},{\"slot\":2,\"type_name\":\"flying\"}],\"types\":[\"ice\",\"flying\"]}])": {
+  "node": {
+   "id": 144,
+   "number": 144,
+   "name_fr": "Artikodin",
+   "name_en": "articuno",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032459/144_artikodin_ye3iha.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032462/144_artikodin_shiny_e9sp4m.png",
+   "description_fr": "Artikodin est le Pokémon oiseau légendaire des glaces, aux longues plumes bleues que l'on dit faites de glace et aux majestueuses ailes translucides qui semblent taillées dans le givre. Il vit sur les sommets recouverts de neiges éternelles, où l'on raconte qu'il apparaît aux voyageurs perdus ou gelés en montagne. Maître de la glace, il gèle l'humidité de l'air d'un simple battement d'ailes : partout où il vole, l'air se rafraîchit et la neige se met à tomber, et il peut même déclencher d'épais blizzards — dont il s'entoure aussi pour se protéger du danger. Sa longue queue, qui flotte au vent lorsqu'il survole les monts enneigés, laisse bouche bée tous ceux qui ont la chance de l'apercevoir.",
+   "evolves_from_number": null,
+   "can_be_baron": false,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "ice"
+    },
+    {
+     "slot": 2,
+     "type_name": "flying"
+    }
+   ],
+   "types": [
+    "ice",
+    "flying"
+   ]
+  },
+  "children": []
+ },
+ "fetchEvolutionChain([{\"id\":194,\"number\":194,\"name_fr\":\"Axoloto\",\"name_en\":\"wooper\",\"generation\":2,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328943/194_axoloto_etaptv.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328951/194_axoloto_shiny_rbr1tg.png\",\"description_fr\":\"Ce Pokémon vit dans les eaux froides, où il dort à moitié enfoui dans la boue des profondeurs. Il ne les quitte que pour se nourrir, émergeant en fin de journée lorsque l'air se rafraîchit pour aller chasser sur les berges. Sur la terre ferme, il recouvre son corps d'une fine membrane transparente, visqueuse et toxique, qui le protège de la déshydratation ; à son seul contact, elle provoque une terrible douleur, des engourdissements et des picotements chez quiconque le touche. Même lorsqu'il dort hors de l'eau, il s'enfonce entièrement dans la vase pour préserver son corps du dessèchement. Si peureux qu'il reste toujours à proximité d'un Maraiste.\",\"evolves_from_number\":null,\"can_be_baron\":false,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"water\"},{\"slot\":2,\"type_name\":\"ground\"}],\"types\":[\"water\",\"ground\"]}])": {
+  "node": {
+   "id": 194,
+   "number": 194,
+   "name_fr": "Axoloto",
+   "name_en": "wooper",
+   "generation": 2,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328943/194_axoloto_etaptv.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328951/194_axoloto_shiny_rbr1tg.png",
+   "description_fr": "Ce Pokémon vit dans les eaux froides, où il dort à moitié enfoui dans la boue des profondeurs. Il ne les quitte que pour se nourrir, émergeant en fin de journée lorsque l'air se rafraîchit pour aller chasser sur les berges. Sur la terre ferme, il recouvre son corps d'une fine membrane transparente, visqueuse et toxique, qui le protège de la déshydratation ; à son seul contact, elle provoque une terrible douleur, des engourdissements et des picotements chez quiconque le touche. Même lorsqu'il dort hors de l'eau, il s'enfonce entièrement dans la vase pour préserver son corps du dessèchement. Si peureux qu'il reste toujours à proximité d'un Maraiste.",
+   "evolves_from_number": null,
+   "can_be_baron": false,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "water"
+    },
+    {
+     "slot": 2,
+     "type_name": "ground"
+    }
+   ],
+   "types": [
+    "water",
+    "ground"
+   ]
+  },
+  "children": [
+   {
+    "node": {
+     "number": 195,
+     "name_fr": "Maraiste",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785333788/195_maraiste_uuwvdw.png",
+     "evolves_from_number": 194,
+     "evolution_condition": "Niv. 20",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "water"
+      },
+      {
+       "slot": 2,
+       "type_name": "ground"
+      }
+     ],
+     "types": [
+      "water",
+      "ground"
+     ]
+    },
+    "children": []
+   },
+   {
+    "node": {
+     "number": 980,
+     "name_fr": "Terraiste",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785335663/980_terraiste_um9bti.png",
+     "evolves_from_number": 194,
+     "evolution_condition": "Niv. 20",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "poison"
+      },
+      {
+       "slot": 2,
+       "type_name": "ground"
+      }
+     ],
+     "types": [
+      "poison",
+      "ground"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"id\":201,\"number\":201,\"name_fr\":\"Zarbi\",\"name_en\":\"unown\",\"generation\":2,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030858/201_zarbi_f_eemnp0.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030863/201_zarbi_f_shiny_gobpqi.png\",\"description_fr\":\"Ce Pokémon a la forme d'un caractère d'écriture antique. On ne sait toujours pas si ces écritures sont apparues avant les Zarbi ou le contraire. Son corps plat et fin reste collé aux murs, et sa forme semble avoir une signification particulière. Il existe de nombreuses variantes, chacune possédant probablement des pouvoirs différents. Ils communiquent entre eux par télépathie : seul, il ne se passe rien, mais en groupe, ils semblent habités par un mystérieux pouvoir.\",\"evolves_from_number\":null,\"can_be_baron\":true,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"psychic\"}],\"types\":[\"psychic\"]}])": {
+  "node": {
+   "id": 201,
+   "number": 201,
+   "name_fr": "Zarbi",
+   "name_en": "unown",
+   "generation": 2,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030858/201_zarbi_f_eemnp0.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030863/201_zarbi_f_shiny_gobpqi.png",
+   "description_fr": "Ce Pokémon a la forme d'un caractère d'écriture antique. On ne sait toujours pas si ces écritures sont apparues avant les Zarbi ou le contraire. Son corps plat et fin reste collé aux murs, et sa forme semble avoir une signification particulière. Il existe de nombreuses variantes, chacune possédant probablement des pouvoirs différents. Ils communiquent entre eux par télépathie : seul, il ne se passe rien, mais en groupe, ils semblent habités par un mystérieux pouvoir.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "psychic"
+    }
+   ],
+   "types": [
+    "psychic"
+   ]
+  },
+  "children": []
+ },
+ "fetchEvolutionChain([{\"id\":215,\"number\":215,\"name_fr\":\"Farfuret\",\"name_en\":\"sneasel\",\"generation\":2,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_qwsmfe.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572964/215_farfuret_shiny_gr1zkr.png\",\"description_fr\":\"Sous ses doigts se dissimulent de longues griffes rétractiles qu'il déploie d'un coup sec pour effrayer ou lacérer quiconque l'agresse — des lames crochues assez solides pour lui permettre d'escalader les troncs en les plantant dans l'écorce, et assez perçantes pour transpercer les défenses d'un adversaire et atteindre ses organes vitaux. Fourbe, roublard et sans pitié, il se tapit dans l'ombre, guette patiemment le moment de fondre sur sa proie et s'acharne jusqu'à ce qu'elle ne puisse plus bouger ; il lui arrive aussi de projeter des blocs de glace et de déchaîner des rafales de vent noir. Sa spécialité reste toutefois le vol d'œufs : il déloge les Roucool de leur nid ou s'y glisse en l'absence des parents, perce la coquille d'un ongle pour en aspirer le contenu, et opère parfois à deux — l'un faisant diversion pendant que l'autre commet le larcin —, quitte à se quereller ensuite pour savoir qui se régalera du butin, ce qui en fait la bête noire des Éleveurs. La nuit venue, ce chasseur s'attaque également aux Sabelette, au risque de se briser les serres sur leur peau coriace. Il partage ses origines avec le Farfuret de Hisui, et l'on suppose que la terre et l'eau de sa région ont façonné son corps autant que son tempérament ténébreux. Très rarement, on le surprend pourtant assoupi, paisible, ventre en l'air, occupé à se laver nonchalamment le visage.\",\"evolves_from_number\":null,\"can_be_baron\":true,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"dark\"},{\"slot\":2,\"type_name\":\"ice\"}],\"types\":[\"dark\",\"ice\"]}])": {
+  "node": {
+   "id": 215,
+   "number": 215,
+   "name_fr": "Farfuret",
+   "name_en": "sneasel",
+   "generation": 2,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_qwsmfe.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572964/215_farfuret_shiny_gr1zkr.png",
+   "description_fr": "Sous ses doigts se dissimulent de longues griffes rétractiles qu'il déploie d'un coup sec pour effrayer ou lacérer quiconque l'agresse — des lames crochues assez solides pour lui permettre d'escalader les troncs en les plantant dans l'écorce, et assez perçantes pour transpercer les défenses d'un adversaire et atteindre ses organes vitaux. Fourbe, roublard et sans pitié, il se tapit dans l'ombre, guette patiemment le moment de fondre sur sa proie et s'acharne jusqu'à ce qu'elle ne puisse plus bouger ; il lui arrive aussi de projeter des blocs de glace et de déchaîner des rafales de vent noir. Sa spécialité reste toutefois le vol d'œufs : il déloge les Roucool de leur nid ou s'y glisse en l'absence des parents, perce la coquille d'un ongle pour en aspirer le contenu, et opère parfois à deux — l'un faisant diversion pendant que l'autre commet le larcin —, quitte à se quereller ensuite pour savoir qui se régalera du butin, ce qui en fait la bête noire des Éleveurs. La nuit venue, ce chasseur s'attaque également aux Sabelette, au risque de se briser les serres sur leur peau coriace. Il partage ses origines avec le Farfuret de Hisui, et l'on suppose que la terre et l'eau de sa région ont façonné son corps autant que son tempérament ténébreux. Très rarement, on le surprend pourtant assoupi, paisible, ventre en l'air, occupé à se laver nonchalamment le visage.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "dark"
+    },
+    {
+     "slot": 2,
+     "type_name": "ice"
+    }
+   ],
+   "types": [
+    "dark",
+    "ice"
+   ]
+  },
+  "children": [
+   {
+    "node": {
+     "number": 461,
+     "name_fr": "Dimoret",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787578096/461_dimoret_ibdnql.png",
+     "evolves_from_number": 215,
+     "evolution_condition": "+ 1 niv. avec Griffe Rasoir, de Nuit",
+     "evolution_item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787574442/griffe_rasoir_gdaivr.png",
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "dark"
+      },
+      {
+       "slot": 2,
+       "type_name": "ice"
+      }
+     ],
+     "types": [
+      "dark",
+      "ice"
+     ]
+    },
+    "children": []
+   },
+   {
+    "node": {
+     "number": 903,
+     "name_fr": "Farfurex",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787581554/903_farfurex_u6vfex.png",
+     "evolves_from_number": 215,
+     "evolution_condition": null,
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "fighting"
+      },
+      {
+       "slot": 2,
+       "type_name": "poison"
+      }
+     ],
+     "types": [
+      "fighting",
+      "poison"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"id\":25,\"number\":25,\"name_fr\":\"Pikachu\",\"name_en\":\"pikachu\",\"generation\":1,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798970/025_pikachu_mworv5.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798971/025_pikachu_shiny_cnrhie.png\",\"description_fr\":\"Pokémon Souris vivant en forêt avec ses pairs. Ses joues renferment de petites poches électriques qui se rechargent pendant son sommeil — il lui arrive de libérer des décharges en somnolant. Il dresse sa queue pour surveiller les environs ; elle attire souvent la foudre. Menacé ou énervé, il relâche instantanément l'énergie accumulée. Son astuce : électrifier les Baies pas assez mûres pour les rendre tendres. Quand plusieurs Pikachu se rassemblent, ils peuvent déclencher de gigantesques orages.\",\"evolves_from_number\":172,\"can_be_baron\":true,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"electric\"}],\"types\":[\"electric\"]}])": {
+  "node": {
+   "number": 172,
+   "name_fr": "Pichu",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779755985/172_pichu_ihpohe.png",
+   "evolves_from_number": null,
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "electric"
+    }
+   ],
+   "types": [
+    "electric"
+   ]
+  },
+  "children": [
+   {
+    "node": {
+     "number": 25,
+     "name_fr": "Pikachu",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798970/025_pikachu_mworv5.png",
+     "evolves_from_number": 172,
+     "evolution_condition": "Bonheur",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "electric"
+      }
+     ],
+     "types": [
+      "electric"
+     ]
+    },
+    "children": [
+     {
+      "node": {
+       "number": 26,
+       "name_fr": "Raichu",
+       "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820462/026_raichu_uhtiqa.png",
+       "evolves_from_number": 25,
+       "evolution_condition": "Pierre Foudre",
+       "evolution_item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798824/pierre_foudre_vqfews.png",
+       "pokemon_types": [
+        {
+         "slot": 1,
+         "type_name": "electric"
+        }
+       ],
+       "types": [
+        "electric"
+       ]
+      },
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"id\":307,\"number\":307,\"name_fr\":\"Méditikka\",\"name_en\":\"meditite\",\"generation\":3,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_b7d3nn.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_shiny_ymt4lr.png\",\"description_fr\":\"Méditikka mène dans les montagnes un rude entraînement d'ermite : il pratique le yoga chaque jour et médite des heures durant pour affûter son esprit et accroître son énergie intérieure. Sa concentration lui échappe pourtant à chaque séance, si bien que cet apprentissage ne s'achève jamais. La diète fait partie de sa discipline : il ne mange qu'une seule Baie par jour, et la faim lui a forgé une volonté de fer. À force de persévérance, ce Pokémon est désormais capable de léviter par la seule force de sa pensée, et ses petites mains suffisent à briser les murs fragiles.\",\"evolves_from_number\":null,\"can_be_baron\":true,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"fighting\"},{\"slot\":2,\"type_name\":\"psychic\"}],\"types\":[\"fighting\",\"psychic\"]}])": {
+  "node": {
+   "id": 307,
+   "number": 307,
+   "name_fr": "Méditikka",
+   "name_en": "meditite",
+   "generation": 3,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_b7d3nn.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_shiny_ymt4lr.png",
+   "description_fr": "Méditikka mène dans les montagnes un rude entraînement d'ermite : il pratique le yoga chaque jour et médite des heures durant pour affûter son esprit et accroître son énergie intérieure. Sa concentration lui échappe pourtant à chaque séance, si bien que cet apprentissage ne s'achève jamais. La diète fait partie de sa discipline : il ne mange qu'une seule Baie par jour, et la faim lui a forgé une volonté de fer. À force de persévérance, ce Pokémon est désormais capable de léviter par la seule force de sa pensée, et ses petites mains suffisent à briser les murs fragiles.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "fighting"
+    },
+    {
+     "slot": 2,
+     "type_name": "psychic"
+    }
+   ],
+   "types": [
+    "fighting",
+    "psychic"
+   ]
+  },
+  "children": [
+   {
+    "node": {
+     "number": 308,
+     "name_fr": "Charmina",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101021/308_charmina_s0f2yj.png",
+     "evolves_from_number": 307,
+     "evolution_condition": "Niv. 37",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "fighting"
+      },
+      {
+       "slot": 2,
+       "type_name": "psychic"
+      }
+     ],
+     "types": [
+      "fighting",
+      "psychic"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"id\":308,\"number\":308,\"name_fr\":\"Charmina\",\"name_en\":\"medicham\",\"generation\":3,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101021/308_charmina_s0f2yj.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101097/308_charmina_shiny_rjqthk.png\",\"description_fr\":\"Par la méditation et la pratique assidue du yoga, Charmina accumule de l'énergie dans son corps et aiguise son sixième sens, au point de lire dans l'esprit des gens et de manier la télékinésie. Le jeûne affine encore sa concentration : il peut rester un mois entier en contemplation sans s'alimenter et perçoit l'aura de ses adversaires, dont il anticipe ainsi chaque mouvement. Au combat, il esquive les attaques avec une grâce de danseur, puis profite de son élan pour décocher un coup de pied dévastateur. Pour échapper aux regards, il se fond dans les champs et les montagnes.\",\"evolves_from_number\":307,\"can_be_baron\":true,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"fighting\"},{\"slot\":2,\"type_name\":\"psychic\"}],\"types\":[\"fighting\",\"psychic\"]}])": {
+  "node": {
+   "number": 307,
+   "name_fr": "Méditikka",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_b7d3nn.png",
+   "evolves_from_number": null,
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "fighting"
+    },
+    {
+     "slot": 2,
+     "type_name": "psychic"
+    }
+   ],
+   "types": [
+    "fighting",
+    "psychic"
+   ]
+  },
+  "children": [
+   {
+    "node": {
+     "number": 308,
+     "name_fr": "Charmina",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101021/308_charmina_s0f2yj.png",
+     "evolves_from_number": 307,
+     "evolution_condition": "Niv. 37",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "fighting"
+      },
+      {
+       "slot": 2,
+       "type_name": "psychic"
+      }
+     ],
+     "types": [
+      "fighting",
+      "psychic"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"id\":52,\"number\":52,\"name_fr\":\"Miaouss\",\"name_en\":\"meowth\",\"generation\":1,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_kybsvf.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245794/052_miaouss_shiny_zch7iu.png\",\"description_fr\":\"Pokémon nocturne, Miaouss dort le jour et patrouille ses territoires la nuit, les yeux brillants. Il est fasciné par les objets ronds et brillants — les pièces de monnaie avant tout — qu'il ramasse, accumule en secret et montre parfois fièrement à son Dresseur s'il est de bonne humeur. Il peut se laisser amadouer par une pièce, mais son caractère versatile fait que cela ne dure jamais longtemps. Lorsqu'il aperçoit un objet qui brille, la pièce sur son front se met à luire ; il peut alors jouer avec jusqu'à l'épuisement. Il rentre ses griffes dans ses pattes pour rôder gracieusement sans laisser de traces, et marche sur ses pattes arrières. On le croise parfois dans les décharges, où il se dispute volontiers un trophée brillant avec un Cornèbre. Tatillon sur la propreté, il se lave la figure avec grand soin pour que sa pièce reste impeccable, et ne s'entend pas avec les Miaouss de Galar.\",\"evolves_from_number\":null,\"can_be_baron\":true,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"normal\"}],\"types\":[\"normal\"]}])": {
+  "node": {
+   "id": 52,
+   "number": 52,
+   "name_fr": "Miaouss",
+   "name_en": "meowth",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_kybsvf.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245794/052_miaouss_shiny_zch7iu.png",
+   "description_fr": "Pokémon nocturne, Miaouss dort le jour et patrouille ses territoires la nuit, les yeux brillants. Il est fasciné par les objets ronds et brillants — les pièces de monnaie avant tout — qu'il ramasse, accumule en secret et montre parfois fièrement à son Dresseur s'il est de bonne humeur. Il peut se laisser amadouer par une pièce, mais son caractère versatile fait que cela ne dure jamais longtemps. Lorsqu'il aperçoit un objet qui brille, la pièce sur son front se met à luire ; il peut alors jouer avec jusqu'à l'épuisement. Il rentre ses griffes dans ses pattes pour rôder gracieusement sans laisser de traces, et marche sur ses pattes arrières. On le croise parfois dans les décharges, où il se dispute volontiers un trophée brillant avec un Cornèbre. Tatillon sur la propreté, il se lave la figure avec grand soin pour que sa pièce reste impeccable, et ne s'entend pas avec les Miaouss de Galar.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "normal"
+    }
+   ],
+   "types": [
+    "normal"
+   ]
+  },
+  "children": [
+   {
+    "node": {
+     "number": 53,
+     "name_fr": "Persian",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780249417/053_persian_o3sa8j.png",
+     "evolves_from_number": 52,
+     "evolution_condition": "Niv. 28",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "normal"
+      }
+     ],
+     "types": [
+      "normal"
+     ]
+    },
+    "children": []
+   },
+   {
+    "node": {
+     "number": 863,
+     "name_fr": "Berserkatt",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780250812/863_berserkatt_zqmdgu.png",
+     "evolves_from_number": 52,
+     "evolution_condition": "Niv. 28",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "steel"
+      }
+     ],
+     "types": [
+      "steel"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"id\":6,\"number\":6,\"name_fr\":\"Dracaufeu\",\"name_en\":\"charizard\",\"generation\":1,\"image_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1779118844/006_dracaufeu_a0sfg3.png\",\"shiny_artwork_url\":\"https://res.cloudinary.com/dkgfa4apm/image/upload/v1779571654/006_dracaufeu_shiny_t995th.png\",\"description_fr\":\"Dracaufeu parcourt les cieux à plus de 1 400 mètres d'altitude en quête d'adversaires à sa mesure — il ne dirigera jamais ses flammes vers un ennemi plus faible. Son souffle atteint des températures capables de faire fondre rochers et glaciers, et peut déclencher des incendies de forêt. Plus il traverse de combats difficiles, plus sa flamme gagne en intensité ; lorsqu'il s'énerve vraiment, elle vire au bleu.\",\"evolves_from_number\":5,\"can_be_baron\":true,\"pokemon_types\":[{\"slot\":1,\"type_name\":\"fire\"},{\"slot\":2,\"type_name\":\"flying\"}],\"types\":[\"fire\",\"flying\"]}])": {
+  "node": {
+   "number": 4,
+   "name_fr": "Salamèche",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779565996/004_salameche_p3kpxb.png",
+   "evolves_from_number": null,
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "fire"
+    }
+   ],
+   "types": [
+    "fire"
+   ]
+  },
+  "children": [
+   {
+    "node": {
+     "number": 5,
+     "name_fr": "Reptincel",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779118258/005_reptincel_dkpzit.png",
+     "evolves_from_number": 4,
+     "evolution_condition": "Niv. 16",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "fire"
+      }
+     ],
+     "types": [
+      "fire"
+     ]
+    },
+    "children": [
+     {
+      "node": {
+       "number": 6,
+       "name_fr": "Dracaufeu",
+       "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779118844/006_dracaufeu_a0sfg3.png",
+       "evolves_from_number": 5,
+       "evolution_condition": "Niv. 36",
+       "evolution_item_image_url": null,
+       "pokemon_types": [
+        {
+         "slot": 1,
+         "type_name": "fire"
+        },
+        {
+         "slot": 2,
+         "type_name": "flying"
+        }
+       ],
+       "types": [
+        "fire",
+        "flying"
+       ]
+      },
+      "children": []
+     }
+    ]
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"number\":128,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 128,
+   "evolves_from_number": null
+  },
+  "children": []
+ },
+ "fetchEvolutionChain([{\"number\":144,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 144,
+   "evolves_from_number": null
+  },
+  "children": []
+ },
+ "fetchEvolutionChain([{\"number\":194,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 194,
+   "evolves_from_number": null
+  },
+  "children": [
+   {
+    "node": {
+     "number": 195,
+     "name_fr": "Maraiste",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785333788/195_maraiste_uuwvdw.png",
+     "evolves_from_number": 194,
+     "evolution_condition": "Niv. 20",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "water"
+      },
+      {
+       "slot": 2,
+       "type_name": "ground"
+      }
+     ],
+     "types": [
+      "water",
+      "ground"
+     ]
+    },
+    "children": []
+   },
+   {
+    "node": {
+     "number": 980,
+     "name_fr": "Terraiste",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785335663/980_terraiste_um9bti.png",
+     "evolves_from_number": 194,
+     "evolution_condition": "Niv. 20",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "poison"
+      },
+      {
+       "slot": 2,
+       "type_name": "ground"
+      }
+     ],
+     "types": [
+      "poison",
+      "ground"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"number\":201,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 201,
+   "evolves_from_number": null
+  },
+  "children": []
+ },
+ "fetchEvolutionChain([{\"number\":215,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 215,
+   "evolves_from_number": null
+  },
+  "children": [
+   {
+    "node": {
+     "number": 461,
+     "name_fr": "Dimoret",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787578096/461_dimoret_ibdnql.png",
+     "evolves_from_number": 215,
+     "evolution_condition": "+ 1 niv. avec Griffe Rasoir, de Nuit",
+     "evolution_item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787574442/griffe_rasoir_gdaivr.png",
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "dark"
+      },
+      {
+       "slot": 2,
+       "type_name": "ice"
+      }
+     ],
+     "types": [
+      "dark",
+      "ice"
+     ]
+    },
+    "children": []
+   },
+   {
+    "node": {
+     "number": 903,
+     "name_fr": "Farfurex",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787581554/903_farfurex_u6vfex.png",
+     "evolves_from_number": 215,
+     "evolution_condition": null,
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "fighting"
+      },
+      {
+       "slot": 2,
+       "type_name": "poison"
+      }
+     ],
+     "types": [
+      "fighting",
+      "poison"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"number\":25,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 25,
+   "evolves_from_number": null
+  },
+  "children": [
+   {
+    "node": {
+     "number": 26,
+     "name_fr": "Raichu",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820462/026_raichu_uhtiqa.png",
+     "evolves_from_number": 25,
+     "evolution_condition": "Pierre Foudre",
+     "evolution_item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798824/pierre_foudre_vqfews.png",
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "electric"
+      }
+     ],
+     "types": [
+      "electric"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"number\":307,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 307,
+   "evolves_from_number": null
+  },
+  "children": [
+   {
+    "node": {
+     "number": 308,
+     "name_fr": "Charmina",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101021/308_charmina_s0f2yj.png",
+     "evolves_from_number": 307,
+     "evolution_condition": "Niv. 37",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "fighting"
+      },
+      {
+       "slot": 2,
+       "type_name": "psychic"
+      }
+     ],
+     "types": [
+      "fighting",
+      "psychic"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"number\":308,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 308,
+   "evolves_from_number": null
+  },
+  "children": []
+ },
+ "fetchEvolutionChain([{\"number\":52,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 52,
+   "evolves_from_number": null
+  },
+  "children": [
+   {
+    "node": {
+     "number": 53,
+     "name_fr": "Persian",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780249417/053_persian_o3sa8j.png",
+     "evolves_from_number": 52,
+     "evolution_condition": "Niv. 28",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "normal"
+      }
+     ],
+     "types": [
+      "normal"
+     ]
+    },
+    "children": []
+   },
+   {
+    "node": {
+     "number": 863,
+     "name_fr": "Berserkatt",
+     "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780250812/863_berserkatt_zqmdgu.png",
+     "evolves_from_number": 52,
+     "evolution_condition": "Niv. 28",
+     "evolution_item_image_url": null,
+     "pokemon_types": [
+      {
+       "slot": 1,
+       "type_name": "steel"
+      }
+     ],
+     "types": [
+      "steel"
+     ]
+    },
+    "children": []
+   }
+  ]
+ },
+ "fetchEvolutionChain([{\"number\":6,\"evolves_from_number\":null}])": {
+  "node": {
+   "number": 6,
+   "evolves_from_number": null
+  },
+  "children": []
+ },
+ "fetchFormAppearances([128])": {
+  "paldean_aqua": [
+   {
+    "game_slug": "ecarlate",
+    "method": "[color=#99241d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\n\n[color=#99241d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+   },
+   {
+    "game_slug": "violet",
+    "method": "[color=#4c1c6d][b]Paldea[/b] :[/color]\n[u]Zone Est n°1, Zone Est n°2, Zone Ouest n°2[/u], [i]Biome Herbe[/i].\n\n[color=#4c1c6d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782148926/raid_teracristal_nuy08i.png[/icon] [u]Raid Téracristal[/u] ★★★★★, ★★★★★★\n\n[color=#4c1c6d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\n\n[color=#4c1c6d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+   }
+  ],
+  "paldean_blaze": [
+   {
+    "game_slug": "ecarlate",
+    "method": "[color=#99241d][b]Paldea[/b] :[/color]\n[u]Zone Est n°1, Zone Est n°2, Zone Ouest n°2[/u], [i]Biome Herbe[/i].\n\n[color=#99241d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782148926/raid_teracristal_nuy08i.png[/icon] [u]Raid Téracristal[/u] ★★★★★, ★★★★★★\n\n[color=#99241d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\n\n[color=#99241d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+   },
+   {
+    "game_slug": "violet",
+    "method": "[color=#4c1c6d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\n\n[color=#4c1c6d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+   }
+  ],
+  "paldean_combat": [
+   {
+    "game_slug": "ecarlate",
+    "method": "[color=#99241d][b]Institut Myrtille[/b], [i]Club de la Ligue[/i] :[/color]\r\nInviter (200 PM) et dialoguer avec [b]Menzi[/b] (après avoir complété l'épilogue \"La nuit des kibi\") durant 3 de ses visites, [u]échange[/u] son Tauros (Race Combative) contre n'importe lequel Pokémon.\r\n[img]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782308081/club_de_la_ligue_ecarlate_violet_hdyklz.png[/img] [img]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782485498/0128_echange_menzi_iverra.png[/img] [img]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782485499/menzi_suldt1.png[/img]\r\n\r\n[color=#99241d][b]Paldea[/b] :[/color]\r\n[u]Zone Est n°1, Zone Est n°2, Zone Ouest n°2[/u], [i]Biome Herbe[/i].\r\n\r\n[color=#99241d][b]Paldea[/b] :[/color]\r\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782148926/raid_teracristal_nuy08i.png[/icon] [u]Raid Téracristal[/u] ★★★★, ★★★★★★\r\n\r\n[color=#99241d][b]Paldea[/b] :[/color]\r\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\r\n\r\n[color=#99241d][b]Poké Portail[/b] :[/color]\r\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+   },
+   {
+    "game_slug": "violet",
+    "method": "[color=#4c1c6d][b]Institut Myrtille[/b], [i]Club de la Ligue[/i] :[/color]\nInviter (200 PM) et dialoguer avec [b]Menzi[/b] (après avoir complété l'épilogue \"La nuit des kibi\") durant 3 de ses visites, [u]échange[/u] son Tauros (Race Combative) contre n'importe lequel Pokémon.\n[img]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782308081/club_de_la_ligue_ecarlate_violet_hdyklz.png[/img] [img]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782485498/0128_echange_menzi_iverra.png[/img] [img]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782485499/menzi_suldt1.png[/img]\n\n[color=#4c1c6d][b]Paldea[/b] :[/color]\n[u]Zone Est n°1, Zone Est n°2, Zone Ouest n°2[/u], [i]Biome Herbe[/i].\n\n[color=#4c1c6d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1782148926/raid_teracristal_nuy08i.png[/icon] [u]Raid Téracristal[/u] ★★★★, ★★★★★★\n\n[color=#4c1c6d][b]Paldea[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781969868/reproduction_q65dn2.png[/icon] [u]Reproduction[/u] au [b]Pique-nique[/b].\n\n[color=#4c1c6d][b]Poké Portail[/b] :[/color]\n[icon]https://res.cloudinary.com/dkgfa4apm/image/upload/v1781968772/internet_owd9bi.png[/icon] [u]Échange locale ou en ligne.[/u]"
+   }
+  ]
+ },
+ "fetchFormAppearances([144])": {},
+ "fetchFormAppearances([194])": {},
+ "fetchFormAppearances([201])": {},
+ "fetchFormAppearances([215])": {},
+ "fetchFormAppearances([25])": {},
+ "fetchFormAppearances([307])": {},
+ "fetchFormAppearances([308])": {},
+ "fetchFormAppearances([52])": {},
+ "fetchFormAppearances([6])": {},
+ "fetchForms([128])": [
+  "Forme de Paldea"
+ ],
+ "fetchForms([144])": [
+  "Forme de Galar"
+ ],
+ "fetchForms([194])": [
+  "Forme de Paldea"
+ ],
+ "fetchForms([201])": [],
+ "fetchForms([215])": [
+  "Forme de Hisui"
+ ],
+ "fetchForms([25])": [
+  "Belle",
+  "Cosplay",
+  "Forme d'Alola",
+  "Forme Originelle",
+  "Gigamax",
+  "Hoenn Cap",
+  "Kalos Cap",
+  "Libre",
+  "Partenaire",
+  "Phd",
+  "Pop Star",
+  "Rock Star",
+  "Sinnoh Cap",
+  "Starter",
+  "Unova Cap",
+  "World Cap"
+ ],
+ "fetchForms([307])": [],
+ "fetchForms([308])": [
+  "Méga-Évolution"
+ ],
+ "fetchForms([52])": [
+  "Forme d'Alola",
+  "Forme de Galar",
+  "Gigamax"
+ ],
+ "fetchForms([6])": [
+  "Gigamax",
+  "Méga-Évolution"
+ ],
+ "fetchGigamax([128])": [],
+ "fetchGigamax([144])": [],
+ "fetchGigamax([194])": [],
+ "fetchGigamax([201])": [],
+ "fetchGigamax([215])": [],
+ "fetchGigamax([25])": [
+  {
+   "name": "Pikachu Gigamax",
+   "description_fr": "L'énergie du phénomène Gigamax l'a tellement fait grossir que sa queue touche le ciel. Un coup de sa queue en forme d'éclair donne à l'adversaire un choc électrique ayant l'intensité et la tension de la foudre qui tombe.",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779800171/025_pikachu_gigamax_eem3at.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779800288/025_pikachu_gigamax_icon_shiny_zsewyj.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128653/poignet_dynamax_bs38rl.png"
+  }
+ ],
+ "fetchGigamax([307])": [],
+ "fetchGigamax([308])": [],
+ "fetchGigamax([52])": [
+  {
+   "name": "Miaouss Gigamax",
+   "description_fr": "On pense que le motif qui apparaît sur la grande pièce ornant son front permettrait de comprendre le phénomène Dynamax. La puissance du Gigamax a fait pousser son torse de façon démesurée, et la pièce sur son front a encore gagné en valeur.",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_gigamax_akgcnl.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245794/052_miaouss_gigamax_shiny_g9rcl0.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128653/poignet_dynamax_bs38rl.png"
+  }
+ ],
+ "fetchGigamax([6])": [
+  {
+   "name": "Dracaufeu Gigamax",
+   "description_fr": "Le phénomène Gigamax lui confère une silhouette colossale aux ailes de feu. Des flammes à 2 000 °C couvent en lui — et s'embrasent encore davantage à chacun de ses rugissements.",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779124796/006_dracaufeu_gigamax_l64wbk.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779571546/006_dracaufeu_gigamax_shiny_hi5laf.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128653/poignet_dynamax_bs38rl.png"
+  }
+ ],
+ "fetchGigamaxForChain([[128]])": [],
+ "fetchGigamaxForChain([[144]])": [],
+ "fetchGigamaxForChain([[172,25,26]])": [
+  {
+   "pokemon_number": 25,
+   "name": "Pikachu Gigamax",
+   "condition_label": "Poignet Dynamax",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128653/poignet_dynamax_bs38rl.png"
+  }
+ ],
+ "fetchGigamaxForChain([[194,195,980]])": [],
+ "fetchGigamaxForChain([[201]])": [],
+ "fetchGigamaxForChain([[215,461,903]])": [],
+ "fetchGigamaxForChain([[307,308]])": [],
+ "fetchGigamaxForChain([[4,5,6]])": [
+  {
+   "pokemon_number": 6,
+   "name": "Dracaufeu Gigamax",
+   "condition_label": "Poignet Dynamax",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128653/poignet_dynamax_bs38rl.png"
+  }
+ ],
+ "fetchGigamaxForChain([[52,53,863]])": [
+  {
+   "pokemon_number": 52,
+   "name": "Miaouss Gigamax",
+   "condition_label": "Poignet Dynamax",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779128653/poignet_dynamax_bs38rl.png"
+  }
+ ],
+ "fetchGigamaxVariantIcons([[128]])": [],
+ "fetchGigamaxVariantIcons([[144]])": [],
+ "fetchGigamaxVariantIcons([[172,25,26]])": [
+  {
+   "pokemon_number": 25,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779800287/025_pikachu_gigamax_icon_bmxfha.png"
+  }
+ ],
+ "fetchGigamaxVariantIcons([[194,195,980]])": [],
+ "fetchGigamaxVariantIcons([[201]])": [],
+ "fetchGigamaxVariantIcons([[215,461,903]])": [],
+ "fetchGigamaxVariantIcons([[307,308]])": [],
+ "fetchGigamaxVariantIcons([[4,5,6]])": [
+  {
+   "pokemon_number": 6,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779124794/006_dracaufeu_gigamax_icon_uenjq4.png"
+  }
+ ],
+ "fetchGigamaxVariantIcons([[52,53,863]])": [
+  {
+   "pokemon_number": 52,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_gigamax_icon_oq7s8y.png"
+  }
+ ],
+ "fetchMegaEvolutions([[128]])": [],
+ "fetchMegaEvolutions([[144]])": [],
+ "fetchMegaEvolutions([[172,25,26]])": [
+  {
+   "pokemon_number": 26,
+   "name": "Méga-Raichu X",
+   "condition_label": "Raichuïte X",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820655/026_mega_raichu_x_icon_fums73.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820378/raichuite_x_ryfzqv.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820652/026_mega_raichu_x_hj5xhy.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820660/026_mega_raichu_x_shiny_wbke0b.png",
+   "description_fr": "Pour voler, il prend la forme de la lettre X et émet une décharge électrique de 50 millions de volts à partir de ses oreilles et de sa double queue.",
+   "types": "electric"
+  },
+  {
+   "pokemon_number": 26,
+   "name": "Méga-Raichu Y",
+   "condition_label": "Raichuïte Y",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820892/026_mega_raichu_y_icon_bamyno.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820379/raichuite_y_jkn32t.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820889/026_mega_raichu_y_xhprac.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779820897/026_mega_raichu_y_shiny_xwfiz5.png",
+   "description_fr": "Il émet de l'électricité depuis les extrémités de sa queue et des poils en zigzag qui ont poussé sous ses tempes. Le courant forme un Y sur son corps.",
+   "types": "electric"
+  }
+ ],
+ "fetchMegaEvolutions([[194,195,980]])": [],
+ "fetchMegaEvolutions([[201]])": [],
+ "fetchMegaEvolutions([[215,461,903]])": [],
+ "fetchMegaEvolutions([[307,308]])": [
+  {
+   "pokemon_number": 308,
+   "name": "Méga-Charmina",
+   "condition_label": "Charminite",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101035/308_mega__charmina_icon_vr08wl.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1792614698/charminite_c7gcuk.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101032/308_mega__charmina_hyuqp1.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101038/308_mega__charmina_shiny_qijjqq.png",
+   "description_fr": "Grâce à la Méga-Évolution, sa force spirituelle n'a plus de limites. Il matérialise des bras maléfiques par la pensée pour terrasser ses adversaires.",
+   "types": "fighting, psychic"
+  }
+ ],
+ "fetchMegaEvolutions([[4,5,6]])": [
+  {
+   "pokemon_number": 6,
+   "name": "Méga-Dracaufeu X",
+   "condition_label": "Dracaufite X",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779120806/006_mega_dracaufeu_x_icon_qyexhd.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779117269/dracaufite_x_k9mhr8.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779119729/006_mega_dracaufeu_x_s2vxim.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779571581/006_mega_dracaufeu_shiny_mu4af6.png",
+   "description_fr": "La puissance incommensurable parcourant son corps est à l'origine des flammes bleues qu'il déploie et de la teinte sombre de sa peau.",
+   "types": "fire,dragon"
+  },
+  {
+   "pokemon_number": 6,
+   "name": "Méga-Dracaufeu Y",
+   "condition_label": "Dracaufite Y",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779124404/006_mega_dracaufeu_y_icon_hihxfr.png",
+   "item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779117268/dracaufite_y_qbs4wi.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779122543/006_mega_dracaufeu_y_mqeyc8.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779571627/006_mega_dracaufeu_y_shiny_sdeaz6.png",
+   "description_fr": "Il tire sa puissance du lien qui l'unit à son Dresseur. Sa capacité à voler plus rapidement qu'un avion à réaction fait toute sa fierté.",
+   "types": "fire,flying"
+  }
+ ],
+ "fetchMegaEvolutions([[52,53,863]])": [],
+ "fetchPokemonByNumber([128])": {
+  "data": {
+   "id": 128,
+   "number": 128,
+   "name_fr": "Tauros",
+   "name_en": "tauros",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_kreriv.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478490/128_tauros_shiny_lwkdvg.png",
+   "description_fr": "Réputé pour sa nature violente, Tauros agite frénétiquement ses trois longues queues pour décupler son agressivité avant de fouetter l'air et de foncer tête baissée sur sa cible, qu'il charge en ligne droite à une vitesse démentielle. D'une endurance redoutable, il ne s'arrête pas tant qu'il n'a pas pulvérisé son adversaire, et faute d'ennemi, il passe ses nerfs en déracinant de gros arbres. Au sein du troupeau, les mâles s'affrontent à coups de cornes pour désigner le chef, dont celles-ci — les plus grosses et les plus longues — se couvrent de cicatrices. Les Tauros d'Alola, adoucis par la douceur du climat, sont d'un tempérament plus paisible que leurs congénères, là où ceux de Galar restent farouches et ne tolèrent aucun cavalier.",
+   "evolves_from_number": null,
+   "can_be_baron": false,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "normal"
+    }
+   ],
+   "types": [
+    "normal"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([144])": {
+  "data": {
+   "id": 144,
+   "number": 144,
+   "name_fr": "Artikodin",
+   "name_en": "articuno",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032459/144_artikodin_ye3iha.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032462/144_artikodin_shiny_e9sp4m.png",
+   "description_fr": "Artikodin est le Pokémon oiseau légendaire des glaces, aux longues plumes bleues que l'on dit faites de glace et aux majestueuses ailes translucides qui semblent taillées dans le givre. Il vit sur les sommets recouverts de neiges éternelles, où l'on raconte qu'il apparaît aux voyageurs perdus ou gelés en montagne. Maître de la glace, il gèle l'humidité de l'air d'un simple battement d'ailes : partout où il vole, l'air se rafraîchit et la neige se met à tomber, et il peut même déclencher d'épais blizzards — dont il s'entoure aussi pour se protéger du danger. Sa longue queue, qui flotte au vent lorsqu'il survole les monts enneigés, laisse bouche bée tous ceux qui ont la chance de l'apercevoir.",
+   "evolves_from_number": null,
+   "can_be_baron": false,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "ice"
+    },
+    {
+     "slot": 2,
+     "type_name": "flying"
+    }
+   ],
+   "types": [
+    "ice",
+    "flying"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([194])": {
+  "data": {
+   "id": 194,
+   "number": 194,
+   "name_fr": "Axoloto",
+   "name_en": "wooper",
+   "generation": 2,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328943/194_axoloto_etaptv.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328951/194_axoloto_shiny_rbr1tg.png",
+   "description_fr": "Ce Pokémon vit dans les eaux froides, où il dort à moitié enfoui dans la boue des profondeurs. Il ne les quitte que pour se nourrir, émergeant en fin de journée lorsque l'air se rafraîchit pour aller chasser sur les berges. Sur la terre ferme, il recouvre son corps d'une fine membrane transparente, visqueuse et toxique, qui le protège de la déshydratation ; à son seul contact, elle provoque une terrible douleur, des engourdissements et des picotements chez quiconque le touche. Même lorsqu'il dort hors de l'eau, il s'enfonce entièrement dans la vase pour préserver son corps du dessèchement. Si peureux qu'il reste toujours à proximité d'un Maraiste.",
+   "evolves_from_number": null,
+   "can_be_baron": false,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "water"
+    },
+    {
+     "slot": 2,
+     "type_name": "ground"
+    }
+   ],
+   "types": [
+    "water",
+    "ground"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([201])": {
+  "data": {
+   "id": 201,
+   "number": 201,
+   "name_fr": "Zarbi",
+   "name_en": "unown",
+   "generation": 2,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030858/201_zarbi_f_eemnp0.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030863/201_zarbi_f_shiny_gobpqi.png",
+   "description_fr": "Ce Pokémon a la forme d'un caractère d'écriture antique. On ne sait toujours pas si ces écritures sont apparues avant les Zarbi ou le contraire. Son corps plat et fin reste collé aux murs, et sa forme semble avoir une signification particulière. Il existe de nombreuses variantes, chacune possédant probablement des pouvoirs différents. Ils communiquent entre eux par télépathie : seul, il ne se passe rien, mais en groupe, ils semblent habités par un mystérieux pouvoir.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "psychic"
+    }
+   ],
+   "types": [
+    "psychic"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([215])": {
+  "data": {
+   "id": 215,
+   "number": 215,
+   "name_fr": "Farfuret",
+   "name_en": "sneasel",
+   "generation": 2,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_qwsmfe.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572964/215_farfuret_shiny_gr1zkr.png",
+   "description_fr": "Sous ses doigts se dissimulent de longues griffes rétractiles qu'il déploie d'un coup sec pour effrayer ou lacérer quiconque l'agresse — des lames crochues assez solides pour lui permettre d'escalader les troncs en les plantant dans l'écorce, et assez perçantes pour transpercer les défenses d'un adversaire et atteindre ses organes vitaux. Fourbe, roublard et sans pitié, il se tapit dans l'ombre, guette patiemment le moment de fondre sur sa proie et s'acharne jusqu'à ce qu'elle ne puisse plus bouger ; il lui arrive aussi de projeter des blocs de glace et de déchaîner des rafales de vent noir. Sa spécialité reste toutefois le vol d'œufs : il déloge les Roucool de leur nid ou s'y glisse en l'absence des parents, perce la coquille d'un ongle pour en aspirer le contenu, et opère parfois à deux — l'un faisant diversion pendant que l'autre commet le larcin —, quitte à se quereller ensuite pour savoir qui se régalera du butin, ce qui en fait la bête noire des Éleveurs. La nuit venue, ce chasseur s'attaque également aux Sabelette, au risque de se briser les serres sur leur peau coriace. Il partage ses origines avec le Farfuret de Hisui, et l'on suppose que la terre et l'eau de sa région ont façonné son corps autant que son tempérament ténébreux. Très rarement, on le surprend pourtant assoupi, paisible, ventre en l'air, occupé à se laver nonchalamment le visage.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "dark"
+    },
+    {
+     "slot": 2,
+     "type_name": "ice"
+    }
+   ],
+   "types": [
+    "dark",
+    "ice"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([25])": {
+  "data": {
+   "id": 25,
+   "number": 25,
+   "name_fr": "Pikachu",
+   "name_en": "pikachu",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798970/025_pikachu_mworv5.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798971/025_pikachu_shiny_cnrhie.png",
+   "description_fr": "Pokémon Souris vivant en forêt avec ses pairs. Ses joues renferment de petites poches électriques qui se rechargent pendant son sommeil — il lui arrive de libérer des décharges en somnolant. Il dresse sa queue pour surveiller les environs ; elle attire souvent la foudre. Menacé ou énervé, il relâche instantanément l'énergie accumulée. Son astuce : électrifier les Baies pas assez mûres pour les rendre tendres. Quand plusieurs Pikachu se rassemblent, ils peuvent déclencher de gigantesques orages.",
+   "evolves_from_number": 172,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "electric"
+    }
+   ],
+   "types": [
+    "electric"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([307])": {
+  "data": {
+   "id": 307,
+   "number": 307,
+   "name_fr": "Méditikka",
+   "name_en": "meditite",
+   "generation": 3,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_b7d3nn.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_shiny_ymt4lr.png",
+   "description_fr": "Méditikka mène dans les montagnes un rude entraînement d'ermite : il pratique le yoga chaque jour et médite des heures durant pour affûter son esprit et accroître son énergie intérieure. Sa concentration lui échappe pourtant à chaque séance, si bien que cet apprentissage ne s'achève jamais. La diète fait partie de sa discipline : il ne mange qu'une seule Baie par jour, et la faim lui a forgé une volonté de fer. À force de persévérance, ce Pokémon est désormais capable de léviter par la seule force de sa pensée, et ses petites mains suffisent à briser les murs fragiles.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "fighting"
+    },
+    {
+     "slot": 2,
+     "type_name": "psychic"
+    }
+   ],
+   "types": [
+    "fighting",
+    "psychic"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([308])": {
+  "data": {
+   "id": 308,
+   "number": 308,
+   "name_fr": "Charmina",
+   "name_en": "medicham",
+   "generation": 3,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101021/308_charmina_s0f2yj.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101097/308_charmina_shiny_rjqthk.png",
+   "description_fr": "Par la méditation et la pratique assidue du yoga, Charmina accumule de l'énergie dans son corps et aiguise son sixième sens, au point de lire dans l'esprit des gens et de manier la télékinésie. Le jeûne affine encore sa concentration : il peut rester un mois entier en contemplation sans s'alimenter et perçoit l'aura de ses adversaires, dont il anticipe ainsi chaque mouvement. Au combat, il esquive les attaques avec une grâce de danseur, puis profite de son élan pour décocher un coup de pied dévastateur. Pour échapper aux regards, il se fond dans les champs et les montagnes.",
+   "evolves_from_number": 307,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "fighting"
+    },
+    {
+     "slot": 2,
+     "type_name": "psychic"
+    }
+   ],
+   "types": [
+    "fighting",
+    "psychic"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([52])": {
+  "data": {
+   "id": 52,
+   "number": 52,
+   "name_fr": "Miaouss",
+   "name_en": "meowth",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_kybsvf.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245794/052_miaouss_shiny_zch7iu.png",
+   "description_fr": "Pokémon nocturne, Miaouss dort le jour et patrouille ses territoires la nuit, les yeux brillants. Il est fasciné par les objets ronds et brillants — les pièces de monnaie avant tout — qu'il ramasse, accumule en secret et montre parfois fièrement à son Dresseur s'il est de bonne humeur. Il peut se laisser amadouer par une pièce, mais son caractère versatile fait que cela ne dure jamais longtemps. Lorsqu'il aperçoit un objet qui brille, la pièce sur son front se met à luire ; il peut alors jouer avec jusqu'à l'épuisement. Il rentre ses griffes dans ses pattes pour rôder gracieusement sans laisser de traces, et marche sur ses pattes arrières. On le croise parfois dans les décharges, où il se dispute volontiers un trophée brillant avec un Cornèbre. Tatillon sur la propreté, il se lave la figure avec grand soin pour que sa pièce reste impeccable, et ne s'entend pas avec les Miaouss de Galar.",
+   "evolves_from_number": null,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "normal"
+    }
+   ],
+   "types": [
+    "normal"
+   ]
+  },
+  "error": null
+ },
+ "fetchPokemonByNumber([6])": {
+  "data": {
+   "id": 6,
+   "number": 6,
+   "name_fr": "Dracaufeu",
+   "name_en": "charizard",
+   "generation": 1,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779118844/006_dracaufeu_a0sfg3.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779571654/006_dracaufeu_shiny_t995th.png",
+   "description_fr": "Dracaufeu parcourt les cieux à plus de 1 400 mètres d'altitude en quête d'adversaires à sa mesure — il ne dirigera jamais ses flammes vers un ennemi plus faible. Son souffle atteint des températures capables de faire fondre rochers et glaciers, et peut déclencher des incendies de forêt. Plus il traverse de combats difficiles, plus sa flamme gagne en intensité ; lorsqu'il s'énerve vraiment, elle vire au bleu.",
+   "evolves_from_number": 5,
+   "can_be_baron": true,
+   "pokemon_types": [
+    {
+     "slot": 1,
+     "type_name": "fire"
+    },
+    {
+     "slot": 2,
+     "type_name": "flying"
+    }
+   ],
+   "types": [
+    "fire",
+    "flying"
+   ]
+  },
+  "error": null
+ },
+ "fetchRegionalForms([[128]])": [
+  {
+   "pokemon_number": 128,
+   "name": "Tauros de Paldea (Race Flamboyante)",
+   "region": "paldean_blaze",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478489/128_tauros_race_flamboyante_d5lhmu.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478490/128_tauros_race_flamboyante_shiny_vjfrur.png",
+   "description_fr": "Ses cornes atteignent les 1 000 °C lorsqu'elles sont chauffées par énergie incandescente. Elles infligent blessures et brûlures à ses adversaires. Le Tauros de la Race Flamboyante doit son nom au fait qu'il expire de l'air brûlant par les naseaux. Il possède trois queues tressées.",
+   "types": "fighting,fire",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478489/128_tauros_race_flamboyante_icon_mt3vsb.png",
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "evolution_into_number": null,
+   "can_be_baron": false
+  },
+  {
+   "pokemon_number": 128,
+   "name": "Tauros de Paldea (Race Aquatique)",
+   "region": "paldean_aqua",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_race_aquatique_ozwj0m.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478489/128_tauros_race_aquatique_shiny_swcj2x.png",
+   "description_fr": "Il expulse de l'eau à haute pression par le trou situé à l'extrémité de ses cornes pour nager. Ces jets d’eau transpercent ses adversaires. Le Tauros de la Race Aquatique se caractérise par sa graisse abondante, qui lui permet de flotter.",
+   "types": "fighting,water",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_race_aquatique_icon_kappu7.png",
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "evolution_into_number": null,
+   "can_be_baron": false
+  },
+  {
+   "pokemon_number": 128,
+   "name": "Tauros de Paldea (Race Combative)",
+   "region": "paldean_combat",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478489/128_tauros_race_combative_q7p67q.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_race_combative_shiny_vh4idi.png",
+   "description_fr": "Ce Pokémon aux muscles développés excelle en combat rapproché. Il vise le point faible de ses adversaires avec ses courtes cornes. Il se caractérise par son tempérament agressif et par ses muscles aussi puissants que développés.",
+   "types": "fighting",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_race_combative_icon_yixaeb.png",
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "evolution_into_number": null,
+   "can_be_baron": false
+  }
+ ],
+ "fetchRegionalForms([[144]])": [
+  {
+   "pokemon_number": 144,
+   "name": "Artikodin de Galar",
+   "region": "galarian",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032468/144_artikodin_galar_xnsmu4.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032460/144_artikodin_galar_shiny_fgmdfw.png",
+   "description_fr": "Les lames en forme de plumes qu'il crée grâce à ses pouvoirs psychiques peuvent trancher une épaisse plaque de fer comme si c'était du papier. Artikodin est le nom qui a été choisi pour ce Pokémon capable de projeter un rayon qui immobilise sa cible comme s'il la gelait.",
+   "types": "psychic,flying",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032468/144_artikodin_galar_icon_jclub7.png",
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "evolution_into_number": null,
+   "can_be_baron": false
+  }
+ ],
+ "fetchRegionalForms([[172,25,26]])": [
+  {
+   "pokemon_number": 26,
+   "name": "Raichu d'Alola",
+   "region": "alolan",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779822941/026_raichu_alola_nmhm8i.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779822951/026_raichu_alola_shiny_aw5cpj.png",
+   "description_fr": "Cette forme d'évolution ne se produit qu'à Alola — les scientifiques l'attribuent à la nourriture locale, notamment les pancakes traditionnels dont il est friand. Il maîtrise l'électricité par télékinésie et monte sur sa queue qu'il fait léviter pour se déplacer ou surfer sur l'eau, ce qui lui vaut le surnom de « surfeur tellurique ». Si l'on pince ses joues rondes, une douce odeur sucrée se dégage… accompagnée d'une petite décharge électrique.",
+   "types": "electric,psychic",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779822944/026_raichu_alola_icon_ukhz5z.png",
+   "evolution_condition": "Pierre Foudre à Alola",
+   "evolution_item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779798824/pierre_foudre_vqfews.png",
+   "evolution_into_number": null,
+   "can_be_baron": null
+  }
+ ],
+ "fetchRegionalForms([[194,195,980]])": [
+  {
+   "pokemon_number": 194,
+   "name": "Axoloto de Paldea",
+   "region": "paldean",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328944/194_axoloto_paldea_o0ricc.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328946/194_axoloto_paldea_shiny_ql6lo5.png",
+   "description_fr": "Une dispute territoriale l'a autrefois contraint à quitter l'eau : s'il y vivait jadis, il vit désormais aussi sur la terre ferme, où il protège son corps en le recouvrant d'un fluide toxique. Il s'établit généralement dans les marais, où on peut parfois l'apercevoir couvert de boue, en train de se reposer. Comme il est dangereux pour eux de se déplacer seuls, ces Axoloto forment des groupes de trois ou quatre et parcourent les marais à la queue leu leu.",
+   "types": "poison,ground",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328944/194_axoloto_paldea_icon_jn5q65.png",
+   "evolution_condition": "Niv. 20",
+   "evolution_item_image_url": null,
+   "evolution_into_number": 980,
+   "can_be_baron": false
+  }
+ ],
+ "fetchRegionalForms([[201]])": [],
+ "fetchRegionalForms([[215,461,903]])": [
+  {
+   "pokemon_number": 215,
+   "name": "Farfuret de Hisui",
+   "region": "hisuian",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_hisui_lwykdn.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572957/215_farfuret_hisui_shiny_l9oekn.png",
+   "description_fr": "La forme de ses griffes puissantes lui procure un avantage pour escalader les précipices escarpés. Le poison qui flue de leur extrémité agit sur les nerfs des proies capturées par Farfuret.",
+   "types": "fighting,poison",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_hisui_male_icon_p01bre.png",
+   "evolution_condition": "+ 1 niv. avec Griffe Rasoir, de Jour",
+   "evolution_item_image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787574442/griffe_rasoir_gdaivr.png",
+   "evolution_into_number": 903,
+   "can_be_baron": true
+  }
+ ],
+ "fetchRegionalForms([[307,308]])": [],
+ "fetchRegionalForms([[4,5,6]])": [],
+ "fetchRegionalForms([[52,53,863]])": [
+  {
+   "pokemon_number": 52,
+   "name": "Miaouss d'Alola",
+   "region": "alolan",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_alola_qg6v2i.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_alola_shiny_tsvndo.png",
+   "description_fr": "Miaouss d'Alola n'est pas natif de la région : introduit par une ancienne dynastie royale prospère, il a longtemps mené une vie de luxe auprès de la famille royale avant de retourner à l'état sauvage, conservant au passage des goûts alimentaires très sélectifs. Intelligent, fier, égoïste, capricieux et inconstant, il use de la ruse pour cibler sans relâche les points faibles de ses adversaires. La moindre insulte à son orgueil ou une salissure sur la pièce de son front suffit à le plonger dans une rage hystérique. Malgré son caractère difficile à amadouer, il est très populaire auprès des Dresseurs qui aiment relever des défis sans rien attendre en retour.",
+   "types": "dark",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_alola_icon_cakeax.png",
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "evolution_into_number": null,
+   "can_be_baron": null
+  },
+  {
+   "pokemon_number": 52,
+   "name": "Miaouss de Galar",
+   "region": "galarian",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_galar_hvggfl.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_galar_shiny_ribvet.png",
+   "description_fr": "Après avoir longtemps vécu avec une tribu de barbares des mers dans les régions froides, il est devenu plus musclé : des éléments métalliques lui ont poussé sur le corps, et sa barbe hirsute en est l'héritage. Aguerri et sans peur, il se bat valeureusement avec ses griffes d'acier. Plus la pièce de son front est sombre, plus elle est dure — signe de puissance qui lui vaut le respect de ses congénères.",
+   "types": "steel",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_galar_icon_amxulb.png",
+   "evolution_condition": null,
+   "evolution_item_image_url": null,
+   "evolution_into_number": null,
+   "can_be_baron": null
+  },
+  {
+   "pokemon_number": 53,
+   "name": "Persian d'Alola",
+   "region": "alolan",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780249417/053_persian_alola_sb1o2v.png",
+   "shiny_artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780249417/053_persian_alola_shiny_wzlxvv.png",
+   "description_fr": "Très populaire à Alola, Persian d'Alola est apprécié pour son visage rond et son pelage plus doux que le plus raffiné des velours — qui ondule magnifiquement, comme des vagues, lorsque l'excitation du combat est à son comble. Sa tête ronde est considérée comme un symbole de prospérité, et sa rondeur comme sa grosseur sont des critères de beauté ; il est ainsi traité avec le plus grand respect. Mais ne vous fiez pas à son air aimable : c'est un Pokémon cruel et méprisant qui regarde toutes les autres créatures de haut, affectionne les stratégies déloyales — attaques dans le dos, embuscades — et aime jouer avec ses proies blessées sans daigner les achever. Son incroyable agilité alliée à ce goût pour la ruse en fait un adversaire très difficile à affronter.",
+   "types": "dark",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780249417/053_persian_alolan_icon_wkbkeh.png",
+   "evolution_condition": "Bonheur",
+   "evolution_item_image_url": null,
+   "evolution_into_number": null,
+   "can_be_baron": null
+  }
+ ],
+ "fetchSpecialFormsByNumber([128])": [],
+ "fetchSpecialFormsByNumber([144])": [],
+ "fetchSpecialFormsByNumber([194])": [],
+ "fetchSpecialFormsByNumber([201])": [
+  {
+   "form_key": "unown_a",
+   "form_label_fr": "Forme A",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030839/201_zarbi_a_icon_xiagaz.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030839/201_zarbi_a_icon_shiny_fsjqbz.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 1,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_b",
+   "form_label_fr": "Forme B",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030839/201_zarbi_b_icon_g7t3am.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030839/201_zarbi_b_icon_shiny_rl5pwu.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 2,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_c",
+   "form_label_fr": "Forme C",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030839/201_zarbi_c_icon_hqetjl.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030851/201_zarbi_c_icon_shiny_xu5kf3.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 3,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_d",
+   "form_label_fr": "Forme D",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030851/201_zarbi_d_icon_ayfv8k.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030852/201_zarbi_d_icon_shiny_js8vvj.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 4,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_e",
+   "form_label_fr": "Forme E",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030857/201_zarbi_e_icon_pn9bwc.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030857/201_zarbi_e_icon_shiny_iew0wb.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 5,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_f",
+   "form_label_fr": "Forme F",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030862/201_zarbi_f_icon_cw6z66.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030863/201_zarbi_f_icon_shiny_rb9ahi.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 6,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_g",
+   "form_label_fr": "Forme G",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030865/201_zarbi_g_icon_tkhqzx.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030870/201_zarbi_g_icon_shiny_aizzk2.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 7,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_h",
+   "form_label_fr": "Forme H",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030870/201_zarbi_h_icon_dkfarl.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030871/201_zarbi_h_icon_shiny_yqvta8.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 8,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_i",
+   "form_label_fr": "Forme I",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030873/201_zarbi_i_icon_ntzb2x.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030877/201_zarbi_i_icon_shiny_hzh8xw.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 9,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_j",
+   "form_label_fr": "Forme J",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030883/201_zarbi_j_icon_nkfil2.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030883/201_zarbi_j_icon_shiny_jznuxt.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 10,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_k",
+   "form_label_fr": "Forme K",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030884/201_zarbi_k_icon_rtl1li.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030886/201_zarbi_k_icon_shiny_lsrxo4.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 11,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_l",
+   "form_label_fr": "Forme L",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030891/201_zarbi_l_icon_zg3wud.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030891/201_zarbi_l_icon_shiny_orsn9h.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 12,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_m",
+   "form_label_fr": "Forme M",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030891/201_zarbi_m_icon_wwuhlw.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030893/201_zarbi_m_icon_shiny_avooz8.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 13,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_n",
+   "form_label_fr": "Forme N",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030898/201_zarbi_n_icon_qgx9nn.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030899/201_zarbi_n_icon_shiny_r86gdz.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 14,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_o",
+   "form_label_fr": "Forme O",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030899/201_zarbi_o_icon_qcewtv.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030901/201_zarbi_o_icon_shiny_gsi5d7.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 15,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_p",
+   "form_label_fr": "Forme P",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030906/201_zarbi_p_icon_oedtun.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030906/201_zarbi_p_icon_shiny_mjg9ih.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 16,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_q",
+   "form_label_fr": "Forme Q",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030907/201_zarbi_q_icon_r6l85r.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030909/201_zarbi_q_icon_shiny_lcgcxx.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 17,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_r",
+   "form_label_fr": "Forme R",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030914/201_zarbi_r_icon_hqs51r.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030914/201_zarbi_r_icon_shiny_a0rsqt.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 18,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_s",
+   "form_label_fr": "Forme S",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030914/201_zarbi_s_icon_nup8zf.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030919/201_zarbi_s_icon_shiny_htyloe.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 19,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_t",
+   "form_label_fr": "Forme T",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030919/201_zarbi_t_icon_ldmibq.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030920/201_zarbi_t_icon_shiny_vb1srm.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 20,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_u",
+   "form_label_fr": "Forme U",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030920/201_zarbi_u_icon_cosivl.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030926/201_zarbi_u_icon_shiny_gumlyc.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 21,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_v",
+   "form_label_fr": "Forme V",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030927/201_zarbi_v_icon_enfx9f.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030927/201_zarbi_v_icon_shiny_boxdig.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 22,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_w",
+   "form_label_fr": "Forme W",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030929/201_zarbi_w_icon_iwyyy3.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030934/201_zarbi_w_icon_shiny_fwcotw.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 23,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_x",
+   "form_label_fr": "Forme X",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030934/201_zarbi_x_icon_xplplt.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030935/201_zarbi_x_icon_shiny_b5wi5a.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 24,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_y",
+   "form_label_fr": "Forme Y",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030939/201_zarbi_y_icon_snwjco.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030940/201_zarbi_y_icon_shiny_ggoznp.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 25,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_z",
+   "form_label_fr": "Forme Z",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030940/201_zarbi_z_icon_ppgffp.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030940/201_zarbi_z_icon_shiny_feq0id.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 26,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_exclamation",
+   "form_label_fr": "Forme !",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030839/201_zarbi___icon_mespgb.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030839/201_zarbi___icon_shiny_tpiz6m.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 27,
+   "description_fr": null
+  },
+  {
+   "form_key": "unown_question",
+   "form_label_fr": "Forme ?",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030878/201_zarbi_interrogation_icon_hudrsb.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030878/201_zarbi_interrogation_icon_shiny_dfa9sh.png",
+   "artwork_url": "",
+   "artwork_url_shiny": "",
+   "form_group": "Zarbidex",
+   "sort_order": 28,
+   "description_fr": null
+  }
+ ],
+ "fetchSpecialFormsByNumber([215])": [],
+ "fetchSpecialFormsByNumber([25])": [
+  {
+   "form_key": "cap_originale",
+   "form_label_fr": "Casquette Originale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813190/025_pikachu_casquette_originale_icon_cr1bcn.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813190/025_pikachu_casquette_originale_icon_cr1bcn.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813189/025_pikachu_casquette_originale_h5zoer.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 1,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leurs aventures à travers de nombreuses régions."
+  },
+  {
+   "form_key": "partenaire",
+   "form_label_fr": "Pikachu Partenaire",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779814317/025_pikachu_partenaire_icon_zymiwi.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779814320/025_pikachu_partenaire_icon_shiny_ibfytj.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779814316/025_pikachu_partenaire_uyplnp.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Partenaire",
+   "sort_order": 1,
+   "description_fr": null
+  },
+  {
+   "form_key": "cosplay_cosplayeur",
+   "form_label_fr": "Pikachu Cosplayeur",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779810849/025_pikachu_cosplayeur_icon_utjmvv.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779810850/025_pikachu_cosplayeur_icon_shiny_z5mnsx.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779810847/025_pikachu_cosplayeur_gfx9iw.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Cosplayeur",
+   "sort_order": 1,
+   "description_fr": null
+  },
+  {
+   "form_key": "cosplay_rockeur",
+   "form_label_fr": "Pikachu Rockeur",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779811210/025_pikachu_rocker_icon_jed7jw.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779811211/025_pikachu_rocker_shiny_ozkb0n.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779811025/025_pikachu_rocker_ggwgci.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Cosplayeur",
+   "sort_order": 2,
+   "description_fr": null
+  },
+  {
+   "form_key": "cap_hoenn",
+   "form_label_fr": "Casquette de Hoenn",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813358/025_pikachu_casquette_de_hoenn_icon_qpfuyn.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813358/025_pikachu_casquette_de_hoenn_icon_qpfuyn.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813357/025_pikachu_casquette_de_hoenn_fhjcam.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 2,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leurs aventures à travers la région de Hoenn."
+  },
+  {
+   "form_key": "cap_sinnoh",
+   "form_label_fr": "Casquette de Sinnoh",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813500/025_pikachu_casquette_de_sinnoh_icon_ht1gf1.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813500/025_pikachu_casquette_de_sinnoh_icon_ht1gf1.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813499/025_pikachu_casquette_de_sinnoh_hvgxlh.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 3,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leurs aventures à travers la région de Sinnoh."
+  },
+  {
+   "form_key": "cosplay_docteur",
+   "form_label_fr": "Pikachu Docteur",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812115/025_pikachu_docteur_icon_pdmzpd.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812116/025_pikachu_docteur_icon_shiny_ovksav.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812115/025_pikachu_docteur_f6ew5j.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Cosplayeur",
+   "sort_order": 3,
+   "description_fr": null
+  },
+  {
+   "form_key": "cosplay_beaute",
+   "form_label_fr": "Pikachu Star",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812376/025_pikachu_star_icon_y9xuc3.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812378/025_pikachu_star_icon_shiny_mqeuke.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812375/025_pikachu_star_t1ppfl.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Cosplayeur",
+   "sort_order": 4,
+   "description_fr": null
+  },
+  {
+   "form_key": "cap_unys",
+   "form_label_fr": "Casquette d'Unys",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813702/025_pikachu_casquette_d_unys_icon_gndorp.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813702/025_pikachu_casquette_d_unys_icon_gndorp.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813700/025_pikachu_casquette_d_unys_v8wifr.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 4,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leurs aventures à travers la région d'Unys."
+  },
+  {
+   "form_key": "cap_kalos",
+   "form_label_fr": "Casquette de Kalos",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813805/025_pikachu_casquette_de_kalos_icon_zrs7g0.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813805/025_pikachu_casquette_de_kalos_icon_zrs7g0.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813803/025_pikachu_casquette_de_kalos_jiopnt.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 5,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leurs aventures à travers la région de Kalos."
+  },
+  {
+   "form_key": "cosplay_snob",
+   "form_label_fr": "Pikachu Lady",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812576/025_pikachu_lady_icon_kqvmpv.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812579/025_pikachu_lady_icon_shiny_k2cw7c.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812575/025_pikachu_lady_u1o6mo.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Cosplayeur",
+   "sort_order": 5,
+   "description_fr": null
+  },
+  {
+   "form_key": "cosplay_catcheur",
+   "form_label_fr": "Pikachu Catcheur",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812710/025_pikachu_catcheur_icon_r5o20g.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812712/025_pikachu_catcheur_icon_shiny_rinzze.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779812708/025_pikachu_catcheur_fr3sth.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Cosplayeur",
+   "sort_order": 6,
+   "description_fr": null
+  },
+  {
+   "form_key": "cap_alola",
+   "form_label_fr": "Casquette d'Alola",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813882/025_pikachu_casquette_d_alola_icon_vhyqzj.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813882/025_pikachu_casquette_d_alola_icon_vhyqzj.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813875/025_pikachu_casquette_d_alola_asbfu2.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 6,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leurs aventures à travers la région d'Alola."
+  },
+  {
+   "form_key": "cap_partner",
+   "form_label_fr": "Casquette Partenaire",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813997/025_pikachu_casquette_partenaire_icon_mrzoev.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813997/025_pikachu_casquette_partenaire_icon_mrzoev.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779813995/025_pikachu_casquette_partenaire_t4iemk.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 7,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leur rencontre prédestinée et des liens tissés en surmontant ensemble de nombreux obstacles."
+  },
+  {
+   "form_key": "cap_monde",
+   "form_label_fr": "Casquette Monde",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779814080/025_pikachu_casquette_monde_icon_tn8ghn.png",
+   "image_url_shiny": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779814080/025_pikachu_casquette_monde_icon_tn8ghn.png",
+   "artwork_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779814077/025_pikachu_casquette_monde_unbs9w.png",
+   "artwork_url_shiny": null,
+   "form_group": "Pikachu Casquette",
+   "sort_order": 8,
+   "description_fr": "Ce Pikachu porte la casquette de son Dresseur, qu'il considère comme son partenaire. Trop grande pour lui, elle glisse légèrement — mais reste chargée des souvenirs de leurs aventures à travers le monde entier."
+  }
+ ],
+ "fetchSpecialFormsByNumber([307])": [],
+ "fetchSpecialFormsByNumber([308])": [],
+ "fetchSpecialFormsByNumber([52])": [],
+ "fetchSpecialFormsByNumber([6])": [],
+ "fetchVariantIcons([[128]])": [
+  {
+   "pokemon_number": 128,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_icon_zr5vdk.png"
+  }
+ ],
+ "fetchVariantIcons([[144]])": [
+  {
+   "pokemon_number": 144,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032459/144_artikodin_icon_r91wr7.png"
+  }
+ ],
+ "fetchVariantIcons([[172,25,26]])": [
+  {
+   "pokemon_number": 25,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779801402/025_pikachu_male_icon_whvkkh.png"
+  },
+  {
+   "pokemon_number": 26,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779823352/026_raichu_male_icon_ronu6j.png"
+  },
+  {
+   "pokemon_number": 172,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779755985/172_pichu_icon_lni4ru.png"
+  }
+ ],
+ "fetchVariantIcons([[194,195,980]])": [
+  {
+   "pokemon_number": 194,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328943/194_axoloto_male_icon_cpurj2.png"
+  },
+  {
+   "pokemon_number": 195,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785333789/195_maraiste_male_icon_zxlojb.png"
+  },
+  {
+   "pokemon_number": 980,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785335663/980_terraiste_icon_useiiy.png"
+  }
+ ],
+ "fetchVariantIcons([[201]])": [
+  {
+   "pokemon_number": 201,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030862/201_zarbi_f_icon_cw6z66.png"
+  }
+ ],
+ "fetchVariantIcons([[215,461,903]])": [
+  {
+   "pokemon_number": 215,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572954/215_farfuret_male_icon_xvsavx.png"
+  },
+  {
+   "pokemon_number": 461,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787578096/461_dimoret_male_icon_qllhwd.png"
+  },
+  {
+   "pokemon_number": 903,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787581554/903_farfurex_icon_iu1o4d.png"
+  }
+ ],
+ "fetchVariantIcons([[307,308]])": [
+  {
+   "pokemon_number": 307,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_male_icon_cpzhsm.png"
+  },
+  {
+   "pokemon_number": 308,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101027/308_charmina_male_icon_va4e3g.png"
+  }
+ ],
+ "fetchVariantIcons([[4,5,6]])": [
+  {
+   "pokemon_number": 4,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779567005/004_salameche_icon_t5xrcr.png"
+  },
+  {
+   "pokemon_number": 5,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779568741/005_reptincel_icon_yn7obw.png"
+  },
+  {
+   "pokemon_number": 6,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779119589/006_dracaufeu_icon_vvdt4e.png"
+  }
+ ],
+ "fetchVariantIcons([[52,53,863]])": [
+  {
+   "pokemon_number": 52,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245794/052_miaouss_icon_ymw8cc.png"
+  },
+  {
+   "pokemon_number": 53,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780249417/053_persian_icon_shiny_t7ykje.png"
+  },
+  {
+   "pokemon_number": 863,
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780250812/863_berserkatt_icon_gd0lrm.png"
+  }
+ ],
+ "fetchVariants([128])": [
+  {
+   "variant_type": "male",
+   "label": "Mâle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_icon_zr5vdk.png"
+  },
+  {
+   "variant_type": "shiny_male",
+   "label": "Mâle Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_icon_shiny_sevd1u.png"
+  },
+  {
+   "variant_type": "paldean_combat",
+   "label": "Paldea Race Combative ",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_race_combative_icon_yixaeb.png"
+  },
+  {
+   "variant_type": "paldean_combat_shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_race_combative_icon_shiny_kbfcxx.png"
+  },
+  {
+   "variant_type": "paldean_blaze",
+   "label": "Paldea Race Flamboyante",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478489/128_tauros_race_flamboyante_icon_mt3vsb.png"
+  },
+  {
+   "variant_type": "paldean_blaze_shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478490/128_tauros_race_flamboyante_icon_shiny_vcb0zc.png"
+  },
+  {
+   "variant_type": "paldean_aqua",
+   "label": "Paldea Race Aquatique",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478488/128_tauros_race_aquatique_icon_kappu7.png"
+  },
+  {
+   "variant_type": "paldean_aqua_shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1782478489/128_tauros_race_aquatique_icon_shiny_s7svqx.png"
+  }
+ ],
+ "fetchVariants([144])": [
+  {
+   "variant_type": "asexue",
+   "label": "Normale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032459/144_artikodin_icon_r91wr7.png"
+  },
+  {
+   "variant_type": "asexue_shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032459/144_artikodin_icon_shiny_ajvmfd.png"
+  },
+  {
+   "variant_type": "galarian_asexue",
+   "label": "Galar",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032468/144_artikodin_galar_icon_jclub7.png"
+  },
+  {
+   "variant_type": "galarian_asexue_shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1784032471/144_artikodin_galar_icon_shiny_m1myee.png"
+  }
+ ],
+ "fetchVariants([194])": [
+  {
+   "variant_type": "male",
+   "label": "Mâle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328943/194_axoloto_male_icon_cpurj2.png"
+  },
+  {
+   "variant_type": "shiny_male",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328943/194_axoloto_male_icon_shiny_uw9xeb.png"
+  },
+  {
+   "variant_type": "female",
+   "label": "Femelle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328951/194_axoloto_female_icon_e6juwk.png"
+  },
+  {
+   "variant_type": "shiny_female",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328945/194_axoloto_female_icon_shiny_yu6ayi.png"
+  },
+  {
+   "variant_type": "paldean",
+   "label": "Paldea",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328944/194_axoloto_paldea_icon_jn5q65.png"
+  },
+  {
+   "variant_type": "paldean_shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1785328951/194_axoloto_paldea_icon_shiny_mmg9ls.png"
+  }
+ ],
+ "fetchVariants([201])": [
+  {
+   "variant_type": "asexue",
+   "label": "Normale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030862/201_zarbi_f_icon_cw6z66.png"
+  },
+  {
+   "variant_type": "asexue_shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1786030863/201_zarbi_f_icon_shiny_rb9ahi.png"
+  }
+ ],
+ "fetchVariants([215])": [
+  {
+   "variant_type": "male",
+   "label": "Mâle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572954/215_farfuret_male_icon_xvsavx.png"
+  },
+  {
+   "variant_type": "shiny_male",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572954/215_farfuret_male_icon_shiny_q49nxp.png"
+  },
+  {
+   "variant_type": "female",
+   "label": "Femelle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_female_icon_wmbbqc.png"
+  },
+  {
+   "variant_type": "shiny_female",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572961/215_farfuret_female_icon_shiny_okie29.png"
+  },
+  {
+   "variant_type": "hisuian_male",
+   "label": "Hisui Mâle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_hisui_male_icon_p01bre.png"
+  },
+  {
+   "variant_type": "hisuian_shiny_male",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572960/215_farfuret_hisui_male_icon_shiny_dfcoix.png"
+  },
+  {
+   "variant_type": "hisuian_female",
+   "label": "Hisui Femelle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572953/215_farfuret_hisui_female_icon_dogxj7.png"
+  },
+  {
+   "variant_type": "hisuian_shiny_female",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1787572959/215_farfuret_hisui_female_icon_shiny_snnlsc.png"
+  }
+ ],
+ "fetchVariants([25])": [
+  {
+   "variant_type": "male",
+   "label": "Mâle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779801402/025_pikachu_male_icon_whvkkh.png"
+  },
+  {
+   "variant_type": "shiny_male",
+   "label": "Mâle Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779801403/025_pikachu_male_icon_shiny_yxdbw8.png"
+  },
+  {
+   "variant_type": "female",
+   "label": "Femelle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779802444/025_pikachu_female_icon_kmhri5.png"
+  },
+  {
+   "variant_type": "shiny_female",
+   "label": "Femelle Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779804459/025_pikachu_female_icon_shiny_cb6ihe.png"
+  },
+  {
+   "variant_type": "gigamax",
+   "label": "Gigamax",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779800287/025_pikachu_gigamax_icon_bmxfha.png"
+  },
+  {
+   "variant_type": "shiny_gigamax",
+   "label": "Gigamax Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779800288/025_pikachu_gigamax_icon_shiny_zsewyj.png"
+  }
+ ],
+ "fetchVariants([307])": [
+  {
+   "variant_type": "male",
+   "label": "Mâle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887295/307_meditikka_male_icon_cpzhsm.png"
+  },
+  {
+   "variant_type": "shiny_male",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887296/307_meditikka_male_icon_shiny_abvuf6.png"
+  },
+  {
+   "variant_type": "female",
+   "label": "Femelle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887294/307_meditikka_female_icon_zlj7kt.png"
+  },
+  {
+   "variant_type": "shiny_female",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1790887294/307_meditikka_fefemale_icon_shiny_eivoq8.png"
+  }
+ ],
+ "fetchVariants([308])": [
+  {
+   "variant_type": "male",
+   "label": "Mâle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101027/308_charmina_male_icon_va4e3g.png"
+  },
+  {
+   "variant_type": "shiny_male",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101028/308_charmina_male_icon_shiny_dpolvp.png"
+  },
+  {
+   "variant_type": "female",
+   "label": "Femelle",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101022/308_charmina_female_icon_jvqztm.png"
+  },
+  {
+   "variant_type": "shiny_female",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101026/308_charmina_female_icon_shiny_hl8w0b.png"
+  },
+  {
+   "variant_type": "mega",
+   "label": "Méga",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101035/308_mega__charmina_icon_vr08wl.png"
+  },
+  {
+   "variant_type": "shiny_mega",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1795101037/308_mega__charmina_icon_shiny_qnotq0.png"
+  }
+ ],
+ "fetchVariants([52])": [
+  {
+   "variant_type": "normal",
+   "label": "Normale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245794/052_miaouss_icon_ymw8cc.png"
+  },
+  {
+   "variant_type": "shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245794/052_miaouss_icon_shiny_v4mtdb.png"
+  },
+  {
+   "variant_type": "alolan",
+   "label": "Alola",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_alola_icon_cakeax.png"
+  },
+  {
+   "variant_type": "alolan_shiny",
+   "label": "Alola Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_alola_icon_shiny_cgv76v.png"
+  },
+  {
+   "variant_type": "galarian",
+   "label": "Galar",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_galar_icon_amxulb.png"
+  },
+  {
+   "variant_type": "galarian_shiny",
+   "label": "Galar Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245798/052_miaouss_galar_icon_shiny_ckcf3x.png"
+  },
+  {
+   "variant_type": "gigamax",
+   "label": "Gigamax",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245792/052_miaouss_gigamax_icon_oq7s8y.png"
+  },
+  {
+   "variant_type": "shiny_gigamax",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1780245793/052_miaouss_gigamax_icon_shiny_y76s5i.png"
+  }
+ ],
+ "fetchVariants([6])": [
+  {
+   "variant_type": "normal",
+   "label": "Normale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779119589/006_dracaufeu_icon_vvdt4e.png"
+  },
+  {
+   "variant_type": "shiny",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779119595/006_dracaufeu_icon_shiny_f9eoy9.png"
+  },
+  {
+   "variant_type": "mega_x",
+   "label": "Normale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779120806/006_mega_dracaufeu_x_icon_qyexhd.png"
+  },
+  {
+   "variant_type": "shiny_mega_x",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779120809/006_mega_dracaufeu_x_icon_shiny_mpz93e.png"
+  },
+  {
+   "variant_type": "mega_y",
+   "label": "Normale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779124404/006_mega_dracaufeu_y_icon_hihxfr.png"
+  },
+  {
+   "variant_type": "shiny_mega_y",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779124410/006_mega_dracaufeu_y_icon_shiny_zthhuw.png"
+  },
+  {
+   "variant_type": "gigamax",
+   "label": "Normale",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779124794/006_dracaufeu_gigamax_icon_uenjq4.png"
+  },
+  {
+   "variant_type": "shiny_gigamax",
+   "label": "Shiny",
+   "image_url": "https://res.cloudinary.com/dkgfa4apm/image/upload/v1779124798/006_dracaufeu_gigamax_icon_shiny_v5txxs.png"
+  }
+ ]
+}
