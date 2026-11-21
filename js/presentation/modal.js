@@ -1,7 +1,6 @@
 import { store } from '../store.js';
 import { esc } from '../utils.js';
 import { VARIANT_STATUS_META, padNumber, getImageUrl, toRoman } from '../domain/constants.js';
-import { artworkStatus, evoFormStatus } from '../domain/modal-status.js';
 import { cycleVariantStatus } from '../application/catches.js';
 import { loadModalData } from '../application/modal-data.js';
 import { buildEvolutionHtml } from './evolution.js';
@@ -9,15 +8,8 @@ import { appearanceBlockHtml, wireAppearanceBlocks } from './modal/appearance.js
 import { buildFormsSectionHtml } from './modal/forms-section.js';
 import { buildIllustrationsHtml } from './modal/illustrations.js';
 import { paldeanLabel, paldeanRacesOf } from './modal/paldea.js';
-
-// Type de colonne d'illustration (cf. illustrationCol), pour artworkStatus.
-function artworkColumnOf(col) {
-  if (col?.classList.contains('is-mega'))         return { kind: 'mega' };
-  if (col?.classList.contains('is-gigamax'))      return { kind: 'gigamax' };
-  if (col?.classList.contains('is-regional'))     return { kind: 'regional', region: col.dataset.region };
-  if (col?.classList.contains('is-special-form')) return { kind: 'special', sfKey: col.dataset.sfKey };
-  return { kind: 'base' };
-}
+import { paintArtworks, paintEvoStatuses, refreshEvoStatuses } from './modal/status-view.js';
+import { openIllustrationTab, wireFormsTabs, wireIllustrationTabs } from './modal/tabs.js';
 
 export async function openModal(number) {
   const modalOverlay = document.getElementById('modal-overlay');
@@ -38,7 +30,7 @@ export async function openModal(number) {
       evoTree: realEvoTree, megasByNumber, regionalsByNumber, gigamaxByNumber, iconByNumber,
     } = data;
 
-    // Capture utilisée plus bas par refreshArtworks (état des artworks).
+    // Capture au moment de l'ouverture : sert à colorer les illustrations.
     const catch_ = store.catchByNumber[p.number] || null;
 
     const imgSrc  = p.image_url || getImageUrl(p.number);
@@ -91,155 +83,34 @@ export async function openModal(number) {
       slot.innerHTML = appearanceBlockHtml(appearancesByTab[tab] || appearancesByTab.base || []);
       wireAppearanceBlocks(slot);
     }
-    modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
-        modalContent.querySelectorAll('.illus-tabs:not(.forms-tabs-nav) .illus-tab-btn').forEach(b => {
-          b.classList.toggle('active', b === btn);
-          b.setAttribute('aria-selected', String(b === btn));
-        });
-        modalContent.querySelectorAll('.illus-tab-panel').forEach(panel =>
-          panel.classList.toggle('active', panel.dataset.panel === tab)
-        );
-        if (isPaldeanFamily) setAppearanceForTab(tab);
-      });
-    });
-
+    wireIllustrationTabs(modalContent, isPaldeanFamily ? setAppearanceForTab : null);
     if (store.pendingIllusTab) {
-      const targetBtn = modalContent.querySelector(`.illus-tab-btn[data-tab="${CSS.escape(store.pendingIllusTab)}"]`);
-      if (targetBtn) targetBtn.click();
+      openIllustrationTab(modalContent, store.pendingIllusTab);
       store.pendingIllusTab = null;
     }
-
-    // Onglets formes
-    modalContent.querySelectorAll('.forms-tabs-nav .illus-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tab = btn.dataset.formsTab;
-        modalContent.querySelectorAll('.forms-tabs-nav .illus-tab-btn').forEach(b => {
-          b.classList.toggle('active', b === btn);
-          b.setAttribute('aria-selected', String(b === btn));
-        });
-        modalContent.querySelectorAll('.forms-tab-panel').forEach(panel =>
-          panel.classList.toggle('active', panel.dataset.formsPanel === tab)
-        );
-      });
-    });
+    wireFormsTabs(modalContent);
 
     const modalImg = modalContent.querySelector('.illus-col:first-child .modal-artwork');
     if (modalImg) modalImg.addEventListener('error', () => { modalImg.src = getImageUrl(p.number); });
 
-    const formStatus = (num, formType) => evoFormStatus(store.seenMap[num], store.catchByNumber[num], formType);
-
-    modalContent.querySelectorAll('.evo-portrait[data-number]').forEach(portrait => {
-      const num      = parseInt(portrait.dataset.number);
-      const formType = portrait.dataset.formType || null;
-      const img      = portrait.querySelector('.evo-img-wrap img');
-      if (!img) return;
-      if (formType) {
-        const st = formStatus(num, formType);
-        portrait.classList.add('evo-portrait--' + st);
-        if      (st === 'seen')   img.classList.add('evo-portrait-nb');
-        else if (st === 'unseen') img.classList.add('evo-portrait-silhouette');
-      } else {
-        if      (!store.catchByNumber[num] && store.seenSet.has(num)) img.classList.add('evo-portrait-nb');
-        else if (!store.catchByNumber[num])                           img.classList.add('evo-portrait-silhouette');
-      }
-    });
-
-    const applyPillStatus = (portrait, pill) => {
-      if (!portrait?.dataset.formType || !pill) return;
-      const st = formStatus(parseInt(portrait.dataset.number), portrait.dataset.formType);
-      pill.classList.add('evo-condition--' + st);
-    };
-    modalContent.querySelectorAll('.evo-branch-item').forEach(item =>
-      applyPillStatus(item.querySelector('.evo-portrait[data-form-type]'), item.querySelector('.evo-condition-item'))
-    );
-    modalContent.querySelectorAll('.evo-portrait[data-form-type]').forEach(portrait => {
-      if (portrait.closest('.evo-branch-item')) return;
-      const prev = portrait.closest('.evo-stage')?.previousElementSibling;
-      if (prev?.classList.contains('evo-arrow'))
-        applyPillStatus(portrait, prev.querySelector('.evo-condition-item'));
-    });
-
-    function refreshArtworks() {
-      const forms = store.seenMap[p.number] || {};
-
-      function applyImg(img, owned, seen) {
-        if (!img) return;
-        img.classList.remove('modal-artwork--nb', 'modal-artwork--silhouette');
-        if      (!owned && !seen) img.classList.add('modal-artwork--silhouette');
-        else if (!owned)          img.classList.add('modal-artwork--nb');
-      }
-
-      modalContent.querySelectorAll('.illus-col-wrapper').forEach(wrapper => {
-        const col = wrapper.querySelector('.illus-col');
-        const { ownedNormal, seenNormal, ownedShiny, seenShiny } = artworkStatus(forms, catch_, artworkColumnOf(col));
-        const items = wrapper.querySelectorAll('.illus-artwork-item');
-        if (items.length >= 2) {
-          applyImg(items[0].querySelector('.modal-artwork'), ownedNormal, seenNormal);
-          applyImg(items[1].querySelector('.modal-artwork'), ownedShiny,  seenShiny);
-        } else {
-          applyImg(wrapper.querySelector('.modal-artwork'), ownedNormal || ownedShiny, seenNormal || seenShiny);
-        }
-      });
-    }
-    refreshArtworks();
-
-    function refreshEvoPortraits() {
-      modalContent.querySelectorAll('.evo-portrait[data-number]').forEach(portrait => {
-        const num      = parseInt(portrait.dataset.number);
-        const formType = portrait.dataset.formType || null;
-        const img      = portrait.querySelector('.evo-img-wrap img');
-        if (!img || !formType) return;
-        const st = formStatus(num, formType);
-        portrait.className = portrait.className.replace(/\bevo-portrait--\S+/g, '').trim();
-        portrait.classList.add('evo-portrait--' + st);
-        img.classList.remove('evo-portrait-nb', 'evo-portrait-silhouette');
-        if      (st === 'seen')   img.classList.add('evo-portrait-nb');
-        else if (st === 'unseen') img.classList.add('evo-portrait-silhouette');
-      });
-      const refreshPill = (portrait, pill) => {
-        if (!portrait?.dataset.formType || !pill) return;
-        const st = formStatus(parseInt(portrait.dataset.number), portrait.dataset.formType);
-        pill.className = pill.className.replace(/\bevo-condition--\S+/g, '').trim();
-        pill.classList.add('evo-condition--' + st);
-      };
-      modalContent.querySelectorAll('.evo-branch-item').forEach(item =>
-        refreshPill(item.querySelector('.evo-portrait[data-form-type]'), item.querySelector('.evo-condition-item'))
-      );
-      modalContent.querySelectorAll('.evo-portrait[data-form-type]').forEach(portrait => {
-        if (portrait.closest('.evo-branch-item')) return;
-        const prev = portrait.closest('.evo-stage')?.previousElementSibling;
-        if (prev?.classList.contains('evo-arrow'))
-          refreshPill(portrait, prev.querySelector('.evo-condition-item'));
-      });
-    }
+    paintEvoStatuses(modalContent);
+    paintArtworks(modalContent, p.number, catch_);
 
     modalContent.querySelectorAll('.variant-status').forEach(btn => {
       btn.addEventListener('click', async () => {
-        const pokemonNumber = parseInt(btn.dataset.pkmn);
-        const variantType   = btn.dataset.variant;
-        const newStatus     = await cycleVariantStatus(pokemonNumber, variantType);
-        const meta          = VARIANT_STATUS_META[newStatus];
-        btn.className       = `variant-status ${meta.cls}`;
-        btn.textContent     = meta.label;
+        const newStatus = await cycleVariantStatus(parseInt(btn.dataset.pkmn), btn.dataset.variant);
+        const meta      = VARIANT_STATUS_META[newStatus];
+        btn.className   = `variant-status ${meta.cls}`;
+        btn.textContent = meta.label;
         const card = btn.closest('.variant-card');
         if (card) card.dataset.status = newStatus;
-        refreshArtworks();
-        refreshEvoPortraits();
+        paintArtworks(modalContent, p.number, catch_);
+        refreshEvoStatuses(modalContent);
       });
     });
 
     modalContent.querySelectorAll('.evo-portrait:not([disabled])').forEach(btn => {
       btn.addEventListener('click', () => openModal(parseInt(btn.dataset.number)));
-    });
-
-    requestAnimationFrame(() => {
-      modalContent.querySelectorAll('.stat-bar-fill').forEach(bar => {
-        const w = bar.style.width;
-        bar.style.width = '0';
-        requestAnimationFrame(() => { bar.style.width = w; });
-      });
     });
 
   } catch (err) {
