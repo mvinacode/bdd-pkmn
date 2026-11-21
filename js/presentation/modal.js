@@ -2,11 +2,12 @@ import { store } from '../store.js';
 import { esc, spriteUrl, GAMES } from '../utils.js';
 import {
   MEGA_ICON_URL, GIGAMAX_ICON_URL,
-  VARIANT_STATUS_META, ALOLA_FORM_VT, GALAR_FORM_VT, SPECIAL_FORM_VT, PALDEA_FORM_VT,
+  VARIANT_STATUS_META,
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_NO_DIMORPHISM_GROUPS, NO_BASE_FORM_NUMBERS,
   padNumber, normalizeVariantUrl, getImageUrl, toRoman, typeBadge,
 } from '../domain/constants.js';
 import { getVariantStatus } from '../domain/completion.js';
+import { artworkStatus, evoFormStatus } from '../domain/modal-status.js';
 import { cycleVariantStatus } from '../application/catches.js';
 import {
   fetchPokemonByNumber, fetchEvolutionChain, fetchForms, fetchVariants, fetchGigamax,
@@ -154,6 +155,15 @@ function wireAppearanceBlocks(root) {
       closePopover();
     });
   });
+}
+
+// Type de colonne d'illustration (cf. illustrationCol), pour artworkStatus.
+function artworkColumnOf(col) {
+  if (col?.classList.contains('is-mega'))         return { kind: 'mega' };
+  if (col?.classList.contains('is-gigamax'))      return { kind: 'gigamax' };
+  if (col?.classList.contains('is-regional'))     return { kind: 'regional', region: col.dataset.region };
+  if (col?.classList.contains('is-special-form')) return { kind: 'special', sfKey: col.dataset.sfKey };
+  return { kind: 'base' };
 }
 
 export async function openModal(number) {
@@ -602,16 +612,7 @@ export async function openModal(number) {
     const modalImg = modalContent.querySelector('.illus-col:first-child .modal-artwork');
     if (modalImg) modalImg.addEventListener('error', () => { modalImg.src = getImageUrl(p.number); });
 
-    function formStatus(num, formType) {
-      const seenVariants = store.seenMap[num];
-      if (seenVariants) {
-        if (Object.entries(seenVariants).some(([vt, d]) => vt.includes(formType) && d.status === 'owned')) return 'caught';
-        if (Object.keys(seenVariants).some(vt => vt.includes(formType))) return 'seen';
-      }
-      const c = store.catchByNumber[num];
-      if (c && (c.variant_type?.includes(formType) || c.form_label?.toLowerCase().includes(formType === 'mega' ? 'méga' : 'gigamax'))) return 'caught';
-      return 'unseen';
-    }
+    const formStatus = (num, formType) => evoFormStatus(store.seenMap[num], store.catchByNumber[num], formType);
 
     modalContent.querySelectorAll('.evo-portrait[data-number]').forEach(portrait => {
       const num      = parseInt(portrait.dataset.number);
@@ -645,13 +646,7 @@ export async function openModal(number) {
     });
 
     function refreshArtworks() {
-      const forms   = store.seenMap[p.number] || {};
-      const entries = Object.entries(forms);
-      const isBaseCatch  = catch_ && !ALOLA_FORM_VT[catch_.form_label] && !GALAR_FORM_VT[catch_.form_label] && !PALDEA_FORM_VT[catch_.form_label] && !SPECIAL_FORM_VT[catch_.form_label] && !/^(Méga|Gigamax|Baron)/.test(catch_.form_label || '');
-      const captNormal = (isBaseCatch && !catch_.is_shiny) || entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'owned');
-      const captShiny  = (isBaseCatch &&  catch_.is_shiny) || entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'owned');
-      const seenNormal = entries.some(([vt, d]) => !vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'seen');
-      const seenShiny  = entries.some(([vt, d]) =>  vt.includes('shiny') && !vt.startsWith('alolan') && !vt.startsWith('galarian') && !vt.startsWith('paldean') && d.status === 'seen');
+      const forms = store.seenMap[p.number] || {};
 
       function applyImg(img, owned, seen) {
         if (!img) return;
@@ -661,50 +656,14 @@ export async function openModal(number) {
       }
 
       modalContent.querySelectorAll('.illus-col-wrapper').forEach(wrapper => {
-        const col       = wrapper.querySelector('.illus-col');
-        const isMega    = col?.classList.contains('is-mega');
-        const isGigamax = col?.classList.contains('is-gigamax');
-        const isRegional= col?.classList.contains('is-regional');
-        const items     = wrapper.querySelectorAll('.illus-artwork-item');
-        let ownedNorm, seenNorm, ownedShiny, seenShinyF;
-        if (isMega) {
-          ownedNorm  = entries.some(([vt, d]) => vt.includes('mega') && !vt.includes('shiny') && d.status === 'owned');
-          seenNorm   = entries.some(([vt, d]) => vt.includes('mega') && !vt.includes('shiny') && d.status === 'seen');
-          ownedShiny = entries.some(([vt, d]) => vt.includes('mega') &&  vt.includes('shiny') && d.status === 'owned');
-          seenShinyF = entries.some(([vt, d]) => vt.includes('mega') &&  vt.includes('shiny') && d.status === 'seen');
-        } else if (isGigamax) {
-          ownedNorm  = entries.some(([vt, d]) => vt.includes('gigamax') && !vt.includes('shiny') && d.status === 'owned');
-          seenNorm   = entries.some(([vt, d]) => vt.includes('gigamax') && !vt.includes('shiny') && d.status === 'seen');
-          ownedShiny = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'owned');
-          seenShinyF = entries.some(([vt, d]) => vt.includes('gigamax') &&  vt.includes('shiny') && d.status === 'seen');
-        } else if (isRegional) {
-          // Chaque colonne régionale porte sa région (data-region). On révèle donc la
-          // bonne race (ex. paldean_combat) ; repli sur l'ancien comportement groupé
-          // Alola/Galar/Hisui si l'attribut manque.
-          const region = col?.dataset.region;
-          const matchReg = vt => region ? vt.startsWith(region) : (vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian'));
-          ownedNorm  = entries.some(([vt, d]) => matchReg(vt) && !vt.includes('shiny') && d.status === 'owned');
-          seenNorm   = entries.some(([vt, d]) => matchReg(vt) && !vt.includes('shiny') && d.status === 'seen');
-          ownedShiny = entries.some(([vt, d]) => matchReg(vt) &&  vt.includes('shiny') && d.status === 'owned');
-          seenShinyF = entries.some(([vt, d]) => matchReg(vt) &&  vt.includes('shiny') && d.status === 'seen');
-        } else if (col?.classList.contains('is-special-form')) {
-          const sfKey = col.dataset.sfKey;
-          if (sfKey) {
-            ownedNorm  = entries.some(([vt, d]) => vt === sfKey            && d.status === 'owned');
-            seenNorm   = entries.some(([vt, d]) => vt === sfKey            && d.status === 'seen');
-            ownedShiny = entries.some(([vt, d]) => vt === sfKey + '_shiny' && d.status === 'owned');
-            seenShinyF = entries.some(([vt, d]) => vt === sfKey + '_shiny' && d.status === 'seen');
-          } else {
-            ownedNorm = captNormal; seenNorm = seenNormal; ownedShiny = captShiny; seenShinyF = seenShiny;
-          }
-        } else {
-          ownedNorm = captNormal; seenNorm = seenNormal; ownedShiny = captShiny; seenShinyF = seenShiny;
-        }
+        const col = wrapper.querySelector('.illus-col');
+        const { ownedNormal, seenNormal, ownedShiny, seenShiny } = artworkStatus(forms, catch_, artworkColumnOf(col));
+        const items = wrapper.querySelectorAll('.illus-artwork-item');
         if (items.length >= 2) {
-          applyImg(items[0].querySelector('.modal-artwork'), ownedNorm,  seenNorm);
-          applyImg(items[1].querySelector('.modal-artwork'), ownedShiny, seenShinyF);
+          applyImg(items[0].querySelector('.modal-artwork'), ownedNormal, seenNormal);
+          applyImg(items[1].querySelector('.modal-artwork'), ownedShiny,  seenShiny);
         } else {
-          applyImg(wrapper.querySelector('.modal-artwork'), ownedNorm || ownedShiny, seenNorm || seenShinyF);
+          applyImg(wrapper.querySelector('.modal-artwork'), ownedNormal || ownedShiny, seenNormal || seenShiny);
         }
       });
     }
