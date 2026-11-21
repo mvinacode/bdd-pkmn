@@ -1,5 +1,5 @@
 import { store } from '../store.js';
-import { esc, BALLS, GAMES, ballUrl, spriteUrl, getOwnerUuid } from '../utils.js';
+import { esc, BALLS, GAMES, ballUrl, spriteUrl } from '../utils.js';
 import {
   ICON_MALE_LG, ICON_MALE_SM, ICON_FEMALE_LG, ICON_FEMALE_SM,
   ICON_UNISEX_LG, ICON_UNISEX_SM, ICON_SHINY_SM,
@@ -8,8 +8,8 @@ import {
   normalizeVariantUrl, padNumber,
   SF_MALE_GROUPS, SF_GENDERED_GROUPS, SF_UNISEX_GROUPS, NO_BASE_FORM_NUMBERS,
 } from '../domain/constants.js';
-import { getVariantStatus } from '../domain/completion.js';
-import { addToSeen } from '../application/catches.js';
+import { addToSeen, updateCapturedCounter } from '../application/catches.js';
+import { createCatchRecorder } from '../application/catch-recording.js';
 import {
   fetchPokemon, fetchPokemonByNumber, fetchVariants, fetchMegaEvolutions,
   fetchCardIcons, fetchAlolanVariantsForNumbers, fetchGalarianVariantsForNumbers,
@@ -30,6 +30,10 @@ const paldeanRaceLabel = race => {
 // Callbacks injectés par app.js (évite circulaire drawer ↔ modal)
 let _openModal = null;
 let _updateCardAfterCatch = null;
+const catchRecorder = createCatchRecorder({
+  insertCatch, addToSeen, fetchVariantMap, fetchSpecialFormsForNumbers,
+});
+
 export function setDrawerCallbacks({ openModal, updateCardAfterCatch }) {
   _openModal = openModal;
   _updateCardAfterCatch = updateCardAfterCatch;
@@ -573,51 +577,50 @@ export function bindDrawerEvents() {
   $('save-catch-btn').addEventListener('click', saveCatchFromMain);
 }
 
+// Onglet d'illustrations à ouvrir dans la modale après un enregistrement.
+// Onglet race Tauros seulement (region 'paldean_…') : la forme régionale simple
+// 'paldean' (Axoloto) ouvre l'onglet groupé « Formes régionales ».
+function illusTabAfterSave(pokemon, savedVts) {
+  const paldeanRaceTab = pokemon.isPaldean && pokemon.paldeanRegion !== 'paldean'
+    ? `Forme Paldea ${paldeanRaceLabel({ name: pokemon.paldeanName, region: pokemon.paldeanRegion })}` : null;
+  if (savedVts.some(vt => vt.includes('mega'))) return 'Méga-Évolution';
+  if (paldeanRaceTab && savedVts.some(vt => vt.startsWith('paldean'))) return paldeanRaceTab;
+  if (savedVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian') || vt.startsWith('paldean'))) return 'Formes régionales';
+  if (savedVts.some(vt => vt.includes('gigamax'))) return 'Gigamax';
+  return null;
+}
+
+// Après un enregistrement : rafraîchit la carte, ferme le tiroir et, si la
+// modale de ce Pokémon est ouverte, la recharge sur l'onglet concerné.
+function refreshAfterSave(pokemon, forms) {
+  _updateCardAfterCatch?.(pokemon.number);
+  closeCatchDrawer();
+  const modalOverlay = document.getElementById('modal-overlay');
+  if (!modalOverlay?.hidden && store.currentModalPokemonNumber === pokemon.number) {
+    const tab = illusTabAfterSave(pokemon, forms.map(f => f.variant_type || ''));
+    if (tab) store.pendingIllusTab = tab;
+    _openModal?.(pokemon.number);
+  }
+}
+
+const selectedDrawerForms = () =>
+  store.drawerForms.length ? store.drawerForms : (store.drawerForm ? [store.drawerForm] : []);
+
 export async function saveCatchFromMain() {
-  if (!store.drawerPokemon) { alert('Choisis un Pokémon.'); return; }
+  const pokemon = store.drawerPokemon;
+  if (!pokemon) { alert('Choisis un Pokémon.'); return; }
+  const date = $('catch-date').value || new Date().toISOString().slice(0, 10);
+  const game = store.drawerGame?.name || $('catch-game')?.value.trim() || null;
+  const saveBtn = $('save-catch-btn');
 
   if (store.drawerMode === 'seen') {
-    const formsToMark = store.drawerForms.length ? store.drawerForms : (store.drawerForm ? [store.drawerForm] : []);
-    if (!formsToMark.length) { alert('Choisis un Pokémon.'); return; }
-    const saveBtn = $('save-catch-btn');
+    const forms = selectedDrawerForms();
+    if (!forms.length) { alert('Choisis un Pokémon.'); return; }
     saveBtn.disabled = true;
     saveBtn.textContent = 'Sauvegarde…';
-    const savedSeenNum = store.drawerPokemon.number;
-    const savedSeenVts = formsToMark.map(f => f.variant_type || '');
-    // Onglet race Tauros seulement (region 'paldean_…'). La forme régionale simple
-    // 'paldean' (Axoloto) ouvre l'onglet groupé « Formes régionales » (cf. plus bas).
-    const savedPaldeanTab = store.drawerPokemon.isPaldean && store.drawerPokemon.paldeanRegion !== 'paldean'
-      ? `Forme Paldea ${paldeanRaceLabel({ name: store.drawerPokemon.paldeanName, region: store.drawerPokemon.paldeanRegion })}` : null;
-    const date = $('catch-date').value || new Date().toISOString().slice(0, 10);
-    const game = store.drawerGame?.name || $('catch-game')?.value.trim() || null;
     try {
-      for (const form of formsToMark) {
-        const isShiny = form.variant_type?.includes('shiny') || false;
-        const sprite  = form.sprite
-          ? normalizeVariantUrl(form.sprite)
-          : (isShiny
-              ? (store.drawerPokemon.iconShiny  ? normalizeVariantUrl(store.drawerPokemon.iconShiny)  : spriteUrl(store.drawerPokemon.number, true))
-              : (store.drawerPokemon.iconNormal ? normalizeVariantUrl(store.drawerPokemon.iconNormal) : spriteUrl(store.drawerPokemon.number, false)));
-        await addToSeen(store.drawerPokemon.number, {
-          variant_type: form.variant_type || 'normal',
-          status:       getVariantStatus(store.drawerPokemon.number, form.variant_type) === 'owned' ? 'owned' : 'seen',
-          form_label:   form.label || (isShiny ? 'Shiny' : 'Normale'),
-          is_shiny:     isShiny,
-          sprite_url:   sprite,
-          caught_at:    date,
-          game,
-        });
-      }
-      _updateCardAfterCatch?.(store.drawerPokemon.number);
-      closeCatchDrawer();
-      const modalOverlay = document.getElementById('modal-overlay');
-      if (!modalOverlay?.hidden && store.currentModalPokemonNumber === savedSeenNum) {
-        if (savedSeenVts.some(vt => vt.includes('mega'))) store.pendingIllusTab = 'Méga-Évolution';
-        else if (savedPaldeanTab && savedSeenVts.some(vt => vt.startsWith('paldean'))) store.pendingIllusTab = savedPaldeanTab;
-        else if (savedSeenVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian') || vt.startsWith('paldean'))) store.pendingIllusTab = 'Formes régionales';
-        else if (savedSeenVts.some(vt => vt.includes('gigamax'))) store.pendingIllusTab = 'Gigamax';
-        _openModal?.(savedSeenNum);
-      }
+      await catchRecorder.markFormsSeen(pokemon, forms, { date, game });
+      refreshAfterSave(pokemon, forms);
     } catch (err) {
       console.error('[saveCatchFromMain seen]', err);
       saveBtn.disabled    = false;
@@ -628,87 +631,29 @@ export async function saveCatchFromMain() {
   }
 
   if (!store.drawerBall) { alert('Choisis une Ball.'); return; }
-  const formsToCapture = store.drawerForms.length ? store.drawerForms : (store.drawerForm ? [store.drawerForm] : []);
-  if (!formsToCapture.length) return;
+  const forms = selectedDrawerForms();
+  if (!forms.length) return;
 
-  const saveBtn = $('save-catch-btn');
   saveBtn.disabled    = true;
   saveBtn.textContent = 'Sauvegarde…';
 
-  const date      = $('catch-date').value || new Date().toISOString().slice(0, 10);
-  const game      = store.drawerGame?.name || $('catch-game')?.value.trim() || null;
-  const notes     = $('catch-notes')?.value.trim() || null;
-  const sessionId = crypto.randomUUID();
-
-  let lastData  = null;
-  let lastError = null;
-
-  for (const form of formsToCapture) {
-    const isShiny = form.variant_type?.includes('shiny') || false;
-    const sprite  = form.sprite
-      ? normalizeVariantUrl(form.sprite)
-      : (isShiny
-          ? (store.drawerPokemon.iconShiny  ? normalizeVariantUrl(store.drawerPokemon.iconShiny)  : spriteUrl(store.drawerPokemon.number, true))
-          : (store.drawerPokemon.iconNormal ? normalizeVariantUrl(store.drawerPokemon.iconNormal) : spriteUrl(store.drawerPokemon.number, false)));
-    const { data, error } = await insertCatch({
-      owner_uuid:      getOwnerUuid(),
-      pokemon_number:  store.drawerPokemon.number,
-      pokemon_name_fr: store.drawerPokemon.name_fr,
-      is_shiny:        isShiny,
-      sprite_url:      sprite,
-      form_label:      form.label || (isShiny ? 'Shiny' : 'Normale'),
-      ball_name:       store.drawerBall.name,
-      ball_image_url:  ballUrl(store.drawerBall.slug),
-      caught_at:       date,
-      game,
-      notes,
-      session_id:      sessionId,
-    });
-    if (error) { lastError = error; break; }
-    lastData = data;
-    await addToSeen(store.drawerPokemon.number, {
-      variant_type: form.variant_type || 'normal',
-      status:       'owned',
-      form_label:   form.label || (isShiny ? 'Shiny' : 'Normale'),
-      is_shiny:     isShiny,
-      sprite_url:   sprite,
-      caught_at:    date,
-      game,
-    });
-  }
-
-  if (lastError) {
-    console.error(lastError);
+  const { error } = await catchRecorder.recordCatches(pokemon, forms, {
+    ball:      { name: store.drawerBall.name, imageUrl: ballUrl(store.drawerBall.slug) },
+    date,
+    game,
+    notes:     $('catch-notes')?.value.trim() || null,
+    sessionId: crypto.randomUUID(),
+  });
+  if (error) {
+    console.error(error);
     saveBtn.disabled    = false;
     saveBtn.textContent = 'Sauvegarder';
     alert('Erreur lors de la sauvegarde.');
     return;
   }
 
-  const savedCatchNum = store.drawerPokemon.number;
-  const savedCatchVts = formsToCapture.map(f => f.variant_type || '');
-  const savedCatchPaldeanTab = store.drawerPokemon.isPaldean && store.drawerPokemon.paldeanRegion !== 'paldean'
-    ? `Forme Paldea ${paldeanRaceLabel({ name: store.drawerPokemon.paldeanName, region: store.drawerPokemon.paldeanRegion })}` : null;
-  store.catchByNumber[store.drawerPokemon.number] = lastData;
-  if (lastData?.is_shiny) store.shinyCatchByNumber[store.drawerPokemon.number] = lastData;
-  if (!store.variantMap[store.drawerPokemon.number])
-    fetchVariantMap([store.drawerPokemon.number]).then(m => Object.assign(store.variantMap, m));
-  if (store.drawerPokemon.isSpecial && store.drawerPokemon.specialFormKey && !store.specialFormsMap[store.drawerPokemon.number]?.[store.drawerPokemon.specialFormKey])
-    fetchSpecialFormsForNumbers([store.drawerPokemon.number]).then(m => Object.assign(store.specialFormsMap, m));
-
-  const capturedCountEl = document.getElementById('captured-count');
-  if (capturedCountEl) capturedCountEl.textContent = Object.keys(store.catchByNumber).length;
-
-  _updateCardAfterCatch?.(store.drawerPokemon.number);
-  closeCatchDrawer();
-  const modalOverlay = document.getElementById('modal-overlay');
-  if (!modalOverlay?.hidden && store.currentModalPokemonNumber === savedCatchNum) {
-    if (savedCatchVts.some(vt => vt.includes('mega'))) store.pendingIllusTab = 'Méga-Évolution';
-    else if (savedCatchPaldeanTab && savedCatchVts.some(vt => vt.startsWith('paldean'))) store.pendingIllusTab = savedCatchPaldeanTab;
-    else if (savedCatchVts.some(vt => vt.startsWith('alolan') || vt.startsWith('galarian') || vt.startsWith('hisuian') || vt.startsWith('paldean'))) store.pendingIllusTab = 'Formes régionales';
-    else if (savedCatchVts.some(vt => vt.includes('gigamax'))) store.pendingIllusTab = 'Gigamax';
-    _openModal?.(savedCatchNum);
-  }
+  updateCapturedCounter();
+  refreshAfterSave(pokemon, forms);
 }
 
 export async function openDrawerWithPokemon(number) {
