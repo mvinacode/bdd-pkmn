@@ -7,6 +7,10 @@
   padding: 0;
 }
 
+/* L'attribut hidden doit primer sur les display: flex/grid des composants
+   (ex. champ « Forme » et aperçu du Pokémon dans le tiroir avant sélection). */
+[hidden] { display: none !important; }
+
 :root {
   /* Palette principale */
   --bg-root:        #0d1117;
